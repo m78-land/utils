@@ -1,0 +1,9 @@
+{
+  "name": "@lxjx/utils",
+  "version": "1.0.0",
+  "description": "a useful util functions kit",
+  "main": "./utils.js",
+  "repository": "https://github.com/qq1073830130/utils.git",
+  "author": "lxj <1073830130@qq.com>",
+  "license": "MIT"
+}
