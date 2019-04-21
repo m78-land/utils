@@ -1,6 +1,6 @@
 /**
  * @description 引入方式 import * as util from 'xxx || import { isObject } from 'xxx
- * @author lee https://github.com/qq1073830130
+ * @author lxj https://github.com/qq1073830130
  * @date 2018-09-06
  * @export
  * @param {*} arg
