@@ -1,11 +1,11 @@
 # utils
 
-### introduce
+## introduce
 常用工具函数
 
 <br>
 
-### Installation
+## Installation
 使用npm
 ```
 npm install @lxjx/utils
@@ -18,7 +18,7 @@ yarn add @lxjx/utils
 
 <br>
 
-### Usage
+## Usage
 ```js
 import { isEmpty } from '@lxjx/utils';
 
@@ -34,5 +34,5 @@ utils.isEmpty([])   // => true
 
 <br>
 
-### Todo
+## Todo
 [ ] 改为cmd模块，兼容node端
