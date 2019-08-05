@@ -178,6 +178,11 @@ export function datetime(date = new Date(), format = 'YYYY-MM-DD hh:mm:ss') {
  * @param {string} datestr 
  * @return {object} 格式化后的日期
  */
+export const oneMS = 100;
+export const oneS = oneMS * 10;
+export const oneM = 60 * oneS;
+export const oneH = 60 * oneM;
+export const oneD = 24 * oneH;
 export function getDateCountDown(datestr) {
   if (!datestr) {
     return {

@@ -172,6 +172,11 @@ function datetime() {
  * @return {object} 格式化后的日期
  */
 
+var oneMS = 100;
+var oneS = oneMS * 10;
+var oneM = 60 * oneS;
+var oneH = 60 * oneM;
+var oneD = 24 * oneH;
 function getDateCountDown(datestr) {
   if (!datestr) {
     return {
@@ -321,4 +326,4 @@ function obj2FormData(obj) {
   return form;
 }
 
-export { datetime, form2obj, getDateCountDown, isArray, isBoolean, isDate, isDom, isEmpty, isError, isFunction, isInt, isNull, isNullOrUndefined, isNumber, isObject, isPrimitive, isRegExp, isString, isSymbol, isTrueEmpty, isUndefined, obj2FormData, obj2Str, padSigleNumber, promisify };
+export { datetime, form2obj, getDateCountDown, isArray, isBoolean, isDate, isDom, isEmpty, isError, isFunction, isInt, isNull, isNullOrUndefined, isNumber, isObject, isPrimitive, isRegExp, isString, isSymbol, isTrueEmpty, isUndefined, obj2FormData, obj2Str, oneD, oneH, oneM, oneMS, oneS, padSigleNumber, promisify };

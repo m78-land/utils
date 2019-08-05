@@ -178,6 +178,11 @@
    * @return {object} 格式化后的日期
    */
 
+  var oneMS = 100;
+  var oneS = oneMS * 10;
+  var oneM = 60 * oneS;
+  var oneH = 60 * oneM;
+  var oneD = 24 * oneH;
   function getDateCountDown(datestr) {
     if (!datestr) {
       return {
@@ -350,6 +355,11 @@
   exports.isUndefined = isUndefined;
   exports.obj2FormData = obj2FormData;
   exports.obj2Str = obj2Str;
+  exports.oneD = oneD;
+  exports.oneH = oneH;
+  exports.oneM = oneM;
+  exports.oneMS = oneMS;
+  exports.oneS = oneS;
   exports.padSigleNumber = padSigleNumber;
   exports.promisify = promisify;
 
