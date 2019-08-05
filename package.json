@@ -1,6 +1,6 @@
 {
   "name": "@lxjx/utils",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "a useful util functions kit",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -13,9 +13,7 @@
     "dev": "umi-lib doc dev",
     "build": "umi-lib build"
   },
-  "peerDependencies": {
-
-  },
+  "peerDependencies": {},
   "devDependencies": {
     "umi-library": "^1.1.1"
   },
