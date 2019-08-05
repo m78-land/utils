@@ -178,7 +178,7 @@ export function datetime(date = new Date(), format = 'YYYY-MM-DD hh:mm:ss') {
  * @param {string} datestr 
  * @return {object} 格式化后的日期
  */
-export function getDiff(datestr) {
+export function getDateCountDown(datestr) {
   if (!datestr) {
     return {
       ms: '00',
