@@ -2,12 +2,9 @@
  * @description 引入方式 import * as util from 'xxx || import { isObject } from 'xxx
  * @author lxj https://github.com/qq1073830130
  * @date 2018-09-06
- * @export
- * @param {*} arg
- * @returns
  */
 
-/* Is */
+/* ================ is ================  */
 
 export function isArray(arg) {
   if (Array.isArray) {
@@ -143,13 +140,13 @@ export function isPrimitive(arg) {
   );
 }
 
-/* ===========================  Util =========================== */
+/* ================  date ================ */
 
 /**
  * 根据传入规则格式化一个日期对象
- * @param {Date|str} 待转换的日期对象
+ * @param {Date|string} 待转换的日期对象
  * @param {string} 'YYYY、MM、DD、hh、mm、ss'组成的字符串
- * @returns 格式化后的日期
+ * @return {string} 格式化后的日期
  */
 export function datetime(date = new Date(), format = 'YYYY-MM-DD hh:mm:ss') {
   if (isString(date)) {
@@ -176,15 +173,63 @@ export function datetime(date = new Date(), format = 'YYYY-MM-DD hh:mm:ss') {
   });
 }
 
-/* =========================== Format =========================== */
+/**
+ * 获取当前时间到指定时间相隔的d,h,m,s,ms, 当前时间超过传入时间的话全部返回为'00'且附带timeOut: true 这个属性
+ * @param {string} datestr 
+ * @return {object} 格式化后的日期
+ */
+export function getDateCountDown(datestr) {
+  if (!datestr) {
+    return {
+      ms: '00',
+      s: '00',
+      m: '00',
+      h: '00',
+      d: '00',
+      timeOut: true,
+    };
+  }
+  const start = Date.now();
+  const end = Date.parse(datestr);
+
+  const diff = end - start;
+
+  if(diff < 0) {
+    return getDiff();
+  }
+  
+  const fr = Math.floor;
+
+  // h、m、s 用单位总数取余就是该单位对应的ms，除单位总数获得单位
+  let d = fr(diff / oneD);
+  let h = fr(diff % oneD / oneH);  
+  let m = fr(diff % oneH / oneM);
+  let s = fr(diff % oneM / oneS);
+  let ms = fr(diff % oneMS);
+  
+  return {
+    d: padSigleNumber(d),
+    h: padSigleNumber(h),
+    m: padSigleNumber(m),
+    s: padSigleNumber(s),
+    ms: padSigleNumber(ms)
+  };
+}
+
+/* =========================== format =========================== */
+/** 
+ * 获取表示对象原始类型的字符串
+ * @param {object} o 待转换的对象 
+ * @return {void}
+ *  */
 export function obj2Str(o) {
   return Object.prototype.toString.call(o);
 }
 
 /**
- * callback2promise
- * @param  {Function} 要包装的函数
- * @param  {Object} 要绑定作用域的对象
+ * 将一个优先错误且回调位于最后一个参数的node风格的callback函数转为return Promise的函数
+ * @param  {function} 要包装的函数
+ * @param  {object} 要绑定作用域的对象
  * @return {Promise}
  */
 export function promisify(fn, receiver) {
@@ -200,6 +245,21 @@ export function promisify(fn, receiver) {
   };
 }
 
+/**
+ * 将小于10切大于0的数字转为填充0的字符 如 '01' '05', 小于1的数字始终返回'00'
+ * @param {number} number
+ */
+export function padSigleNumber(number) {
+  if (number < 1) {
+    return '00';
+  }
+
+  if (number < 10) {
+    return '0' + number;
+  }
+
+  return String(number);
+}
 
 /**
  * 收集指定对象内带name属性的所有输入控件(input,select,textarea)的值，并按一定规则整合
@@ -207,16 +267,16 @@ export function promisify(fn, receiver) {
  * radio: 选中项的value，没有value的话作为默认行为浏览器会返回 "on"
  * file: 选择的文件组成的数组，没有的话返回 []
  * 其他: 表单元素的value属性值
- * @param {dom} el
- * @returns obj;
+ * @param {Element} el
+ * @return {object}
  */
 export function form2obj(el) {
   if (!isDom(el)) {
-    console.error('请传入dom元素');
+    console.error('Please pass in the dom element');
     return;
   }
   if (!el.querySelectorAll) {
-    console.error('当前浏览器不支持querySelectorAll API');
+    console.error('The passed in element does not support the querySelectorAll API');
     return;
   }
   let tempObj = {};
@@ -245,9 +305,9 @@ export function form2obj(el) {
 }
 
 /**
- * Object 转 FormData 对象
- * @param {obj} obj
- * @returns {FormData}
+ * 将一个object转为对应键值对的 FormData 对象
+ * @param {object} obj
+ * @return {FormData}
  */
 export function obj2FormData(obj) {
   let keys = Object.keys(obj);

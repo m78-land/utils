@@ -20,12 +20,9 @@ function _typeof(obj) {
  * @description 引入方式 import * as util from 'xxx || import { isObject } from 'xxx
  * @author lxj https://github.com/qq1073830130
  * @date 2018-09-06
- * @export
- * @param {*} arg
- * @returns
  */
 
-/* Is */
+/* ================ is ================  */
 function isArray(arg) {
   if (Array.isArray) {
     return Array.isArray(arg);
@@ -138,13 +135,13 @@ function isPrimitive(arg) {
   return arg === null || typeof arg === 'boolean' || typeof arg === 'number' || typeof arg === 'string' || _typeof(arg) === 'symbol' || // ES6 symbol
   typeof arg === 'undefined';
 }
-/* ===========================  Util =========================== */
+/* ================  date ================ */
 
 /**
  * 根据传入规则格式化一个日期对象
- * @param {Date|str} 待转换的日期对象
+ * @param {Date|string} 待转换的日期对象
  * @param {string} 'YYYY、MM、DD、hh、mm、ss'组成的字符串
- * @returns 格式化后的日期
+ * @return {string} 格式化后的日期
  */
 
 function datetime() {
@@ -173,15 +170,62 @@ function datetime() {
     return formats[a] || a;
   });
 }
-/* =========================== Format =========================== */
+/**
+ * 获取当前时间到指定时间相隔的d,h,m,s,ms, 当前时间超过传入时间的话全部返回为'00'且附带timeOut: true 这个属性
+ * @param {string} datestr 
+ * @return {object} 格式化后的日期
+ */
+
+function getDateCountDown(datestr) {
+  if (!datestr) {
+    return {
+      ms: '00',
+      s: '00',
+      m: '00',
+      h: '00',
+      d: '00',
+      timeOut: true
+    };
+  }
+
+  var start = Date.now();
+  var end = Date.parse(datestr);
+  var diff = end - start;
+
+  if (diff < 0) {
+    return getDiff();
+  }
+
+  var fr = Math.floor; // h、m、s 用单位总数取余就是该单位对应的ms，除单位总数获得单位
+
+  var d = fr(diff / oneD);
+  var h = fr(diff % oneD / oneH);
+  var m = fr(diff % oneH / oneM);
+  var s = fr(diff % oneM / oneS);
+  var ms = fr(diff % oneMS);
+  return {
+    d: padSigleNumber(d),
+    h: padSigleNumber(h),
+    m: padSigleNumber(m),
+    s: padSigleNumber(s),
+    ms: padSigleNumber(ms)
+  };
+}
+/* =========================== format =========================== */
+
+/** 
+ * 获取表示对象原始类型的字符串
+ * @param {object} o 待转换的对象 
+ * @return {void}
+ *  */
 
 function obj2Str(o) {
   return Object.prototype.toString.call(o);
 }
 /**
- * callback2promise
- * @param  {Function} 要包装的函数
- * @param  {Object} 要绑定作用域的对象
+ * 将一个优先错误且回调位于最后一个参数的node风格的callback函数转为return Promise的函数
+ * @param  {function} 要包装的函数
+ * @param  {object} 要绑定作用域的对象
  * @return {Promise}
  */
 
@@ -199,23 +243,39 @@ function promisify(fn, receiver) {
   };
 }
 /**
+ * 将小于10切大于0的数字转为填充0的字符 如 '01' '05', 小于1的数字始终返回'00'
+ * @param {number} number
+ */
+
+function padSigleNumber(number) {
+  if (number < 1) {
+    return '00';
+  }
+
+  if (number < 10) {
+    return '0' + number;
+  }
+
+  return String(number);
+}
+/**
  * 收集指定对象内带name属性的所有输入控件(input,select,textarea)的值，并按一定规则整合
  * checkbox: 选中值的value组成的数组，没有的话返回 []
  * radio: 选中项的value，没有value的话作为默认行为浏览器会返回 "on"
  * file: 选择的文件组成的数组，没有的话返回 []
  * 其他: 表单元素的value属性值
- * @param {dom} el
- * @returns obj;
+ * @param {Element} el
+ * @return {object}
  */
 
 function form2obj(el) {
   if (!isDom(el)) {
-    console.error('请传入dom元素');
+    console.error('Please pass in the dom element');
     return;
   }
 
   if (!el.querySelectorAll) {
-    console.error('当前浏览器不支持querySelectorAll API');
+    console.error('The passed in element does not support the querySelectorAll API');
     return;
   }
 
@@ -244,9 +304,9 @@ function form2obj(el) {
   return tempObj;
 }
 /**
- * Object 转 FormData 对象
- * @param {obj} obj
- * @returns {FormData}
+ * 将一个object转为对应键值对的 FormData 对象
+ * @param {object} obj
+ * @return {FormData}
  */
 
 function obj2FormData(obj) {
@@ -267,6 +327,7 @@ function obj2FormData(obj) {
 
 exports.datetime = datetime;
 exports.form2obj = form2obj;
+exports.getDateCountDown = getDateCountDown;
 exports.isArray = isArray;
 exports.isBoolean = isBoolean;
 exports.isDate = isDate;
@@ -287,4 +348,5 @@ exports.isTrueEmpty = isTrueEmpty;
 exports.isUndefined = isUndefined;
 exports.obj2FormData = obj2FormData;
 exports.obj2Str = obj2Str;
+exports.padSigleNumber = padSigleNumber;
 exports.promisify = promisify;
