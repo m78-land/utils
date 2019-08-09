@@ -194,7 +194,7 @@ function getDateCountDown(datestr) {
   var diff = end - start;
 
   if (diff < 0) {
-    return getDiff();
+    return getDateCountDown();
   }
 
   var fr = Math.floor; // h、m、s 用单位总数取余就是该单位对应的ms，除单位总数获得单位
