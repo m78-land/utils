@@ -200,7 +200,7 @@ export function getDateCountDown(datestr) {
   const diff = end - start;
 
   if(diff < 0) {
-    return getDiff();
+    return getDateCountDown();
   }
   
   const fr = Math.floor;
