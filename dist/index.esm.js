@@ -190,7 +190,7 @@ function getDateCountDown(datestr) {
   }
 
   var start = Date.now();
-  var end = Date.parse(datestr);
+  var end = Date.parse(datestr.replace(/-/g, '/'));
   var diff = end - start;
 
   if (diff < 0) {
@@ -254,7 +254,7 @@ function padSigleNumber(number) {
   }
 
   if (number < 10) {
-    return '0' + number;
+    return '0' + String(number);
   }
 
   return String(number);
