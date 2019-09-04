@@ -195,7 +195,7 @@ export function getDateCountDown(datestr) {
     };
   }
   const start = Date.now();
-  const end = Date.parse(datestr);
+  const end = Date.parse(datestr.replace(/-/g, '/'));
 
   const diff = end - start;
 
@@ -260,7 +260,7 @@ export function padSigleNumber(number) {
   }
 
   if (number < 10) {
-    return '0' + number;
+    return '0' + String(number);
   }
 
   return String(number);

@@ -1,4 +1,6 @@
 /yarn.lock
 /package-lock.json
 /.docz
+/.vscode
+/.idea
 /node_modules
