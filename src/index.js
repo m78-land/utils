@@ -331,3 +331,18 @@ export function obj2FormData(obj) {
 
   return form;
 }
+
+/** 
+ * 去掉对象falsy值(使用delete确保返回原对象)
+ * @source {object}
+ * @return {object} 返回原对象
+ */
+export const shakeFalsy = (source) => {
+  Object.keys(source).forEach((key) => {
+    const val = source[key];
+    if(!val && val !== 0) {
+      delete source[key];
+    }
+  });
+  return source;
+};
