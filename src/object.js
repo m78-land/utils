@@ -1,7 +1,7 @@
 /**
  * 去掉对象falsy值(除了0)(使用delete确保返回原对象)
  * @param { object } source
- * @return { object } 返回原对象
+ * @return { object } 返回修改后的原对象
  */
 export const shakeFalsy = (source) => {
   Object.keys(source).forEach((key) => {
