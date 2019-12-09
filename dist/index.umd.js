@@ -473,7 +473,7 @@
     if (!portalsEl) {
       var el = document.createElement('div');
       el.id = id;
-      el.setAttribute('warning', '⛔⛔HIGH ENERGY⛔⛔');
+      el.setAttribute('warning');
       portalsEl = document.body.appendChild(el);
     }
 
