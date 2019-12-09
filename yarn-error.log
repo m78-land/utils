@@ -2,7 +2,7 @@ Arguments:
   C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js publish --access public
 
 PATH: 
-  C:\java\jdk\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Users\lee\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\Git\cmd;C:\Users\lee\AppData\Local\Yarn\bin;C:\Program Files (x86)\Yarn\bin\;C:\comder;C:\Users\lee\AppData\Local\Microsoft\WindowsApps;C:\Users\lee\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Users\lee\AppData\Local\Programs\Microsoft VS Code\bin;C:\Program Files\JetBrains\WebStorm 2019.1.1\bin;;C:\Program Files\JetBrains\IntelliJ IDEA 2019.1.2\bin;;C:\Users\lee\AppData\Local\Yarn\bin
+  C:\Users\lee\Desktop\gits\utils\node_modules\.bin;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;%JAVA_HOME%\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Users\lee\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\Git\cmd;C:\Users\lee\AppData\Local\Yarn\bin;C:\Program Files (x86)\Yarn\bin\;C:\comder;C:\flutter\bin;C:\Users\lee\AppData\Local\Microsoft\WindowsApps;C:\Users\lee\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Users\lee\AppData\Local\Programs\Microsoft VS Code\bin;C:\Program Files\JetBrains\WebStorm 2019.1.1\bin;;C:\Program Files\JetBrains\IntelliJ IDEA 2019.1.2\bin;;C:\Users\lee\AppData\Local\Yarn\bin
 
 Yarn version: 
   1.16.0
@@ -14,28 +14,36 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: getaddrinfo EAI_AGAIN registry.npmjs.org registry.npmjs.org:443
-      at GetAddrInfoReqWrap.onlookup [as oncomplete] (dns.js:57:26)
+  Error: https://registry.npm.taobao.org/-/user/org.couchdb.user:lixianjie: [conflict] User lixianjie already exists
+      at Request.params.callback [as _callback] (C:\Program Files (x86)\Yarn\lib\cli.js:65200:18)
+      at Request.self.callback (C:\Program Files (x86)\Yarn\lib\cli.js:129590:22)
+      at Request.emit (events.js:189:13)
+      at Request.<anonymous> (C:\Program Files (x86)\Yarn\lib\cli.js:130562:10)
+      at Request.emit (events.js:189:13)
+      at IncomingMessage.<anonymous> (C:\Program Files (x86)\Yarn\lib\cli.js:130484:12)
+      at Object.onceWrapper (events.js:277:13)
+      at IncomingMessage.emit (events.js:194:15)
+      at endReadableNT (_stream_readable.js:1103:12)
+      at process._tickCallback (internal/process/next_tick.js:63:19)
 
 npm manifest: 
   {
     "name": "@lxjx/utils",
-    "version": "1.0.2",
+    "version": "1.0.11",
     "description": "a useful util functions kit",
     "main": "dist/index.js",
     "module": "dist/index.esm.js",
+    "typings": "./index.d.ts",
     "authors": {
       "name": "lixianjie",
       "email": "1073830130@qq.com"
     },
-    "repository": "https://github.com/Iixianjie/utils.git/utils",
+    "repository": "https://github.com/Iixianjie/utils",
     "scripts": {
       "dev": "umi-lib doc dev",
       "build": "umi-lib build"
     },
-    "peerDependencies": {
-  
-    },
+    "peerDependencies": {},
     "devDependencies": {
       "umi-library": "^1.1.1"
     },

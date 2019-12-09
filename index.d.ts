@@ -85,3 +85,5 @@ export function shakeFalsy (source: object): object;
 /* ======================== string ======================= */
 
 export function replaceTags (str: string): string;
+
+export function createRandString (number: number): string;
