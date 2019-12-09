@@ -47,7 +47,7 @@ export function isEmpty (arg: any): boolean;
 
 /* ======================== dom ======================= */
 
-export function getPortalsNode (): HTMLDivElement;
+export function getPortalsNode (namespace?: string): HTMLDivElement;
 
 /* ======================== date ======================= */
 
