@@ -8,7 +8,6 @@ export const getPortalsNode = (namespace) => {
   if (!portalsEl) {
     const el = document.createElement('div');
     el.id = id;
-    el.setAttribute('warning');
     portalsEl = document.body.appendChild(el);
   }
   return portalsEl;
