@@ -6,11 +6,11 @@
 
   function _typeof(obj) {
     if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-      _typeof = function (obj) {
+      _typeof = function _typeof(obj) {
         return typeof obj;
       };
     } else {
-      _typeof = function (obj) {
+      _typeof = function _typeof(obj) {
         return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
       };
     }
@@ -467,7 +467,7 @@
   /** 获取一个用于挂载Portals或动态弹窗等内容的节点, 多次调用时会获取到相同的节点 */
   var portalsID = 'J__PORTALS__NODE__';
   var getPortalsNode = function getPortalsNode(namespace) {
-    var id = portalsID + (namespace ? +namespace : 'DEFAULT');
+    var id = portalsID + (namespace ? namespace : 'DEFAULT');
     var portalsEl = document.getElementById(id);
 
     if (!portalsEl) {

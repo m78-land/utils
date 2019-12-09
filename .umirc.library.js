@@ -1,5 +1,6 @@
 export default {
   cjs: 'rollup',
   esm: 'rollup',
-  umd: true
+  umd: true,
+  runtimeHelpers: true,
 }
