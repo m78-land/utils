@@ -1,3 +1,5 @@
+import { isString } from './is';
+
 /**
  * 去掉对象falsy值(除了0)(使用delete确保返回原对象)
  * @param { object } source
@@ -11,4 +13,18 @@ export const shakeFalsy = (source) => {
     }
   });
   return source;
+};
+
+ export function omit(obj, props) {
+  if (isString(props)) {
+    props = props.split(',');
+  }
+  const keys = Object.keys(obj);
+  const result = {};
+  keys.forEach(item => {
+    if (props.indexOf(item) === -1) {
+      result[item] = obj[item];
+    }
+  });
+  return result;
 };

@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 /* 去掉html字符中的标签，返回纯文本 */
 export function replaceTags(str = '') {
   const reg = /(<\/?.+?\/?>|&nbsp;|&mdash;)/g;
@@ -14,3 +16,9 @@ export function createRandString(number = 1) {
     return prev + Math.random().toString(36).substr(2);
   }, '');
 }
+
+/**
+ * Generate RFC-compliant UUIDs
+ * @return {String}
+ */
+export const uuidV4 = uuidv4;

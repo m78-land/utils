@@ -13,3 +13,5 @@ export * from './string';
 export * from './number';
 
 export * from './dom';
+
+export * from './function';

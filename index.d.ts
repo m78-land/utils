@@ -70,8 +70,6 @@ export function obj2FormData (obj: AnyObject): FormData;
 
 /* ======================== format ======================= */
 
-export function promisify (fn: AnyFunction, receiver?: object): (...arg: any) => Promise<any>;
-
 export function padSingleNumber (number: number): string;
 
 /* ======================== number ======================= */
@@ -82,8 +80,14 @@ export function getRandRange (mix: number, max: number): number;
 
 export function shakeFalsy (source: object): object;
 
+export function omit<P extends string, O extends AnyObject = any>(obj: O, props: string): Omit<O, P>
+
 /* ======================== string ======================= */
 
 export function replaceTags (str: string): string;
 
 export function createRandString (number: number): string;
+
+export function promisify (fn: AnyFunction, receiver?: object): (...arg: any) => Promise<any>;
+
+export function delay<V = any>(time?: number, options?: { isReject?: boolean; value?: V }): Promise<V>;
