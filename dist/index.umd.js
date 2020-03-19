@@ -438,6 +438,62 @@
     return source;
   };
 
+  function _arrayWithoutHoles(arr) {
+    if (Array.isArray(arr)) {
+      for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) {
+        arr2[i] = arr[i];
+      }
+
+      return arr2;
+    }
+  }
+
+  function _iterableToArray(iter) {
+    if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
+  }
+
+  function _nonIterableSpread() {
+    throw new TypeError("Invalid attempt to spread non-iterable instance");
+  }
+
+  function _toConsumableArray(arr) {
+    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+  }
+
+  function _defineProperty(obj, key, value) {
+    if (key in obj) {
+      Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+      });
+    } else {
+      obj[key] = value;
+    }
+
+    return obj;
+  }
+
+  function _objectSpread(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i] != null ? arguments[i] : {};
+      var ownKeys = Object.keys(Object(source));
+
+      if (typeof Object.getOwnPropertySymbols === 'function') {
+        ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
+          return Object.getOwnPropertyDescriptor(source, sym).enumerable;
+        }));
+      }
+
+      ownKeys.forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      });
+    }
+
+    return target;
+  }
+
   /* 去掉html字符中的标签，返回纯文本 */
   function replaceTags() {
     var str = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
@@ -458,6 +514,147 @@
       return prev + Math.random().toString(36).substr(2);
     }, '');
   }
+  /* 以指定规则格式化字符 */
+
+  var validateFormatString = /^(\s?\d\s?,?)+$/;
+  var defaultConfig = {
+    delimiter: ' ',
+    repeat: false,
+    lastRepeat: false
+  };
+
+  function getPatterns(str, pattern) {
+    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+    var _defaultConfig$option = _objectSpread({}, defaultConfig, options),
+        repeat = _defaultConfig$option.repeat,
+        lastRepeat = _defaultConfig$option.lastRepeat;
+
+    if (!validateFormatString.test(pattern)) {
+      console.warn("invalid pattern: ".concat(pattern, ", must match the /^[\\s?\\d\\s?,?]+$/ rule"));
+      return;
+    } // 生成模式数组
+
+
+    var patterns = pattern.split(',').map(function (p) {
+      return p.trim();
+    }).filter(function (p) {
+      return !!p;
+    });
+    if (!patterns.length) return; // 字符转为数组方便操作
+
+    var strArr = str.split(''); // repeat处理
+
+    if (repeat || lastRepeat) {
+      // 传入模式能匹配到的最大长度
+      var maxLength = patterns.reduce(function (prevIndex, index) {
+        var currentIndex = prevIndex + Number(index);
+        return currentIndex;
+      }, 0); // 需要额外填充的模式长度
+
+      var fillLength; // 模式组最后一位，用于lastRepeat
+
+      var lastPatter = Number(patterns[patterns.length - 1]);
+
+      if (repeat) {
+        // (字符长度 - 最大匹配长度) / 最大匹配长度
+        fillLength = Math.ceil((strArr.length - maxLength) / maxLength);
+      }
+
+      if (lastRepeat) {
+        // (字符长度 - 最大匹配长度) / 最后一位匹配符能匹配的长度
+        fillLength = Math.ceil((strArr.length - maxLength) / lastPatter);
+      }
+
+      var originArr = lastRepeat ? [lastPatter] : _toConsumableArray(patterns);
+      Array.from({
+        length: fillLength
+      }).forEach(function () {
+        patterns = [].concat(_toConsumableArray(patterns), _toConsumableArray(originArr));
+      });
+    }
+
+    return {
+      patterns: patterns,
+      strArr: strArr
+    };
+  }
+  /**
+   * 根据传入的模式对字符进行格式化
+   * @param str {string} - 需要进行格式化的字符
+   * @param pattern {string} - 格式为 `1,2,3,4` 规则的模式字符，数字两端可包含空格
+   * @param options
+   * @param options.delimiter {string} - ' ' | 指定分割符
+   * @param options.repeat {boolean} -  false | 当字符长度超过pattern可匹配到的长度时，重复以当前pattern对剩余字符进行格式化
+   * @param options.lastRepeat {boolean} - false | 当字符长度超过pattern可匹配到的长度时，重复以当前pattern的最后一位对剩余字符进行格式化
+   */
+
+
+  function formatString(str, pattern) {
+    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+    var _defaultConfig$option2 = _objectSpread({}, defaultConfig, options),
+        delimiter = _defaultConfig$option2.delimiter,
+        repeat = _defaultConfig$option2.repeat,
+        lastRepeat = _defaultConfig$option2.lastRepeat;
+
+    var patternMeta = getPatterns(str, pattern, {
+      repeat: repeat,
+      lastRepeat: lastRepeat
+    });
+    if (!patternMeta) return;
+    var patterns = patternMeta.patterns,
+        strArr = patternMeta.strArr;
+    patterns.reduce(function (prevPattern, _pattern, ind) {
+      var currentIndex = prevPattern + Number(_pattern); // 替换位置为 前面所有pattern + 当前pattern + 已匹配次数
+
+      var replaceIndex = currentIndex + ind;
+
+      if (replaceIndex < strArr.length) {
+        strArr.splice(replaceIndex, 0, delimiter);
+      }
+
+      return currentIndex;
+    }, 0);
+    return strArr.join('');
+  }
+  /**
+   * 对被`format()`过的字符进行反格式化, 除了str, 其他参数必须与执行`format()`时传入的一致
+   * @param str {string} - 需要进行反格式化的字符
+   * @param pattern {string} - 格式为 `1,2,3,4` 规则的模式字符，数字两端可包含空格
+   * @param options
+   * @param options.delimiter {string} - ' ' | 指定分割符
+   * @param options.repeat {boolean} -  当字符长度超过pattern可匹配到的长度时，重复以当前pattern对剩余字符进行格式化
+   * @param options.lastRepeat {boolean} - 当字符长度超过pattern可匹配到的长度时，重复以当前pattern的最后一位对剩余字符进行格式化
+   */
+
+  function unFormatString(str, pattern) {
+    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+    var _defaultConfig$option3 = _objectSpread({}, defaultConfig, options),
+        delimiter = _defaultConfig$option3.delimiter,
+        repeat = _defaultConfig$option3.repeat,
+        lastRepeat = _defaultConfig$option3.lastRepeat;
+
+    var patternMeta = getPatterns(str, pattern, {
+      repeat: repeat,
+      lastRepeat: lastRepeat
+    });
+    if (!patternMeta) return;
+    var patterns = patternMeta.patterns,
+        strArr = patternMeta.strArr;
+    patterns.reduce(function (prev, pattern) {
+      var index = Number(pattern) + prev;
+      /* 只在字符首位匹配时才执行替换, 在某些场景会有用（fr的input处理双向绑定时） */
+
+      if (strArr[index] === delimiter[0]) {
+        strArr.splice(index, delimiter.length);
+      }
+
+      return index;
+    }, 0);
+    return strArr.join('');
+  }
 
   /* 获取指定区间内的随机数 */
   function getRandRange(min, max) {
@@ -467,7 +664,7 @@
   /** 获取一个用于挂载Portals或动态弹窗等内容的节点, 多次调用时会获取到相同的节点 */
   var portalsID = 'J__PORTALS__NODE__';
   var getPortalsNode = function getPortalsNode(namespace) {
-    var id = portalsID + (namespace ? namespace : 'DEFAULT');
+    var id = portalsID + (namespace ? namespace.toLocaleUpperCase() : 'DEFAULT');
     var portalsEl = document.getElementById(id);
 
     if (!portalsEl) {
@@ -482,6 +679,7 @@
   exports.createRandString = createRandString;
   exports.datetime = datetime;
   exports.form2obj = form2obj;
+  exports.formatString = formatString;
   exports.getDateCountDown = getDateCountDown;
   exports.getPortalsNode = getPortalsNode;
   exports.getProtoStr = getProtoStr;
@@ -509,6 +707,8 @@
   exports.promisify = promisify;
   exports.replaceTags = replaceTags;
   exports.shakeFalsy = shakeFalsy;
+  exports.unFormatString = unFormatString;
+  exports.validateFormatString = validateFormatString;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
