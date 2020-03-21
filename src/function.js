@@ -19,11 +19,11 @@ export function promisify(fn, receiver) {
 
 /**
  * 一个延迟指定时间后resolve的Promise
- * @param {function} time [2000] - 指定延迟时间
+ * @param {number} time [2000] - 指定延迟时间
  * @param {object} options
  * @param {boolean} options.isReject - 为true时reject Promise
  * @param {boolean} options.value - 指定resolve或reject时的值
- * @return Promise<>
+ * @return Promise
  */
 export function delay(time = 2000, { isReject, value } = {}) {
   return new Promise((resolve, reject) => {

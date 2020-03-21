@@ -89,16 +89,28 @@ export function replaceTags (str: string): string;
 export function createRandString (number: number): string;
 
 interface FormatStringOption {
-  delimiter: string;
-  repeat: boolean;
-  lastRepeat: boolean;
+  delimiter?: string;
+  repeat?: boolean;
+  lastRepeat?: boolean;
 }
 
 export const validateFormatString: RegExp;
 
-export function formatString(str: string, pattern: string, options:)
+export function formatString(str: string, pattern: string, options?: FormatStringOption): string;
 
-export function unFormatString(str: string, pattern: string, options:)
+export function unFormatString(str: string, pattern: string, options?: FormatStringOption): string;
+
 export function promisify (fn: AnyFunction, receiver?: object): (...arg: any) => Promise<any>;
 
 export function delay<V = any>(time?: number, options?: { isReject?: boolean; value?: V }): Promise<V>;
+
+/**
+ * const obj = {
+ *  name: 'lxj',
+ *  age: 18,
+ * };
+ * const obj2 = omit<typeof obj, 'age'>(obj, 'name');
+ *
+ * obj2.name
+ * */
+export function omit<O, P extends string>(obj: O, props: string): Omit<O, P>;

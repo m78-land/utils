@@ -288,29 +288,9 @@ function isEmpty(obj) {
 }
 
 /**
- * 将一个优先错误且回调位于最后一个参数的node风格的callback函数转为return Promise的函数
- * @param {function} fn - 要包装的函数
- * @param {object} receiver - 要绑定作用域的对象
- * @return {function(...[*]): Promise<unknown>}
- */
-function promisify(fn, receiver) {
-  return function () {
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    return new Promise(function (resolve, reject) {
-      fn.apply(receiver, [].concat(args, [function (err, res) {
-        return err ? reject(err) : resolve(res);
-      }]));
-    });
-  };
-}
-/**
  * 将小于10且大于0的数字转为填充0的字符 如 '01' '05', 小于1的数字始终返回'00'
  * @param {number} number
  */
-
 function padSingleNumber(number) {
   if (number < 1) {
     return '00';
@@ -321,6 +301,147 @@ function padSingleNumber(number) {
   }
 
   return String(number);
+}
+/* 以指定规则格式化字符 */
+
+var validateFormatString = /^(\s?\d\s?,?)+$/;
+var defaultConfig = {
+  delimiter: ' ',
+  repeat: false,
+  lastRepeat: false
+};
+
+function getPatterns(str, pattern) {
+  var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+  var _defaultConfig$option = _objectSpread({}, defaultConfig, options),
+      repeat = _defaultConfig$option.repeat,
+      lastRepeat = _defaultConfig$option.lastRepeat;
+
+  if (!validateFormatString.test(pattern)) {
+    console.warn("invalid pattern: ".concat(pattern, ", must match the /^[\\s?\\d\\s?,?]+$/ rule"));
+    return;
+  } // 生成模式数组
+
+
+  var patterns = pattern.split(',').map(function (p) {
+    return p.trim();
+  }).filter(function (p) {
+    return !!p;
+  });
+  if (!patterns.length) return; // 字符转为数组方便操作
+
+  var strArr = str.split(''); // repeat处理
+
+  if (repeat || lastRepeat) {
+    // 传入模式能匹配到的最大长度
+    var maxLength = patterns.reduce(function (prevIndex, index) {
+      var currentIndex = prevIndex + Number(index);
+      return currentIndex;
+    }, 0); // 需要额外填充的模式长度
+
+    var fillLength; // 模式组最后一位，用于lastRepeat
+
+    var lastPatter = Number(patterns[patterns.length - 1]);
+
+    if (repeat) {
+      // (字符长度 - 最大匹配长度) / 最大匹配长度
+      fillLength = Math.ceil((strArr.length - maxLength) / maxLength);
+    }
+
+    if (lastRepeat) {
+      // (字符长度 - 最大匹配长度) / 最后一位匹配符能匹配的长度
+      fillLength = Math.ceil((strArr.length - maxLength) / lastPatter);
+    }
+
+    var originArr = lastRepeat ? [lastPatter] : _toConsumableArray(patterns);
+    Array.from({
+      length: fillLength
+    }).forEach(function () {
+      patterns = [].concat(_toConsumableArray(patterns), _toConsumableArray(originArr));
+    });
+  }
+
+  return {
+    patterns: patterns,
+    strArr: strArr
+  };
+}
+/**
+ * 根据传入的模式对字符进行格式化
+ * @param str {string} - 需要进行格式化的字符
+ * @param pattern {string} - 格式为 `1,2,3,4` 规则的模式字符，数字两端可包含空格
+ * @param options
+ * @param options.delimiter {string} - ' ' | 指定分割符
+ * @param options.repeat {boolean} -  false | 当字符长度超过pattern可匹配到的长度时，重复以当前pattern对剩余字符进行格式化
+ * @param options.lastRepeat {boolean} - false | 当字符长度超过pattern可匹配到的长度时，重复以当前pattern的最后一位对剩余字符进行格式化
+ */
+
+
+function formatString(str, pattern) {
+  var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+  var _defaultConfig$option2 = _objectSpread({}, defaultConfig, options),
+      delimiter = _defaultConfig$option2.delimiter,
+      repeat = _defaultConfig$option2.repeat,
+      lastRepeat = _defaultConfig$option2.lastRepeat;
+
+  var patternMeta = getPatterns(str, pattern, {
+    repeat: repeat,
+    lastRepeat: lastRepeat
+  });
+  if (!patternMeta) return;
+  var patterns = patternMeta.patterns,
+      strArr = patternMeta.strArr;
+  patterns.reduce(function (prevPattern, _pattern, ind) {
+    var currentIndex = prevPattern + Number(_pattern); // 替换位置为 前面所有pattern + 当前pattern + 已匹配次数
+
+    var replaceIndex = currentIndex + ind;
+
+    if (replaceIndex < strArr.length) {
+      strArr.splice(replaceIndex, 0, delimiter);
+    }
+
+    return currentIndex;
+  }, 0);
+  return strArr.join('');
+}
+/**
+ * 对被`format()`过的字符进行反格式化, 除了str, 其他参数必须与执行`format()`时传入的一致
+ * @param str {string} - 需要进行反格式化的字符
+ * @param pattern {string} - 格式为 `1,2,3,4` 规则的模式字符，数字两端可包含空格
+ * @param options
+ * @param options.delimiter {string} - ' ' | 指定分割符
+ * @param options.repeat {boolean} -  当字符长度超过pattern可匹配到的长度时，重复以当前pattern对剩余字符进行格式化
+ * @param options.lastRepeat {boolean} - 当字符长度超过pattern可匹配到的长度时，重复以当前pattern的最后一位对剩余字符进行格式化
+ */
+
+function unFormatString(str, pattern) {
+  var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+  var _defaultConfig$option3 = _objectSpread({}, defaultConfig, options),
+      delimiter = _defaultConfig$option3.delimiter,
+      repeat = _defaultConfig$option3.repeat,
+      lastRepeat = _defaultConfig$option3.lastRepeat;
+
+  var patternMeta = getPatterns(str, pattern, {
+    repeat: repeat,
+    lastRepeat: lastRepeat
+  });
+  if (!patternMeta) return;
+  var patterns = patternMeta.patterns,
+      strArr = patternMeta.strArr;
+  patterns.reduce(function (prev, pattern) {
+    var index = Number(pattern) + prev;
+    /* 只在字符首位匹配时才执行替换, 在某些场景会有用（fr的input处理双向绑定时） */
+
+    if (strArr[index] === delimiter[0]) {
+      strArr.splice(index, delimiter.length);
+    }
+
+    return index;
+  }, 0);
+  return strArr.join('');
 }
 
 /**
@@ -479,6 +600,7 @@ function obj2FormData(obj) {
  * @param { object } source
  * @return { object } 返回修改后的原对象
  */
+
 var shakeFalsy = function shakeFalsy(source) {
   Object.keys(source).forEach(function (key) {
     var val = source[key];
@@ -489,6 +611,20 @@ var shakeFalsy = function shakeFalsy(source) {
   });
   return source;
 };
+function omit(obj, props) {
+  if (isString(props)) {
+    props = props.split(',');
+  }
+
+  var keys = Object.keys(obj);
+  var result = {};
+  keys.forEach(function (item) {
+    if (props.indexOf(item) === -1) {
+      result[item] = obj[item];
+    }
+  });
+  return result;
+}
 
 /* 去掉html字符中的标签，返回纯文本 */
 function replaceTags() {
@@ -509,147 +645,6 @@ function createRandString() {
   }).reduce(function (prev) {
     return prev + Math.random().toString(36).substr(2);
   }, '');
-}
-/* 以指定规则格式化字符 */
-
-var validateFormatString = /^(\s?\d\s?,?)+$/;
-var defaultConfig = {
-  delimiter: ' ',
-  repeat: false,
-  lastRepeat: false
-};
-
-function getPatterns(str, pattern) {
-  var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-
-  var _defaultConfig$option = _objectSpread({}, defaultConfig, options),
-      repeat = _defaultConfig$option.repeat,
-      lastRepeat = _defaultConfig$option.lastRepeat;
-
-  if (!validateFormatString.test(pattern)) {
-    console.warn("invalid pattern: ".concat(pattern, ", must match the /^[\\s?\\d\\s?,?]+$/ rule"));
-    return;
-  } // 生成模式数组
-
-
-  var patterns = pattern.split(',').map(function (p) {
-    return p.trim();
-  }).filter(function (p) {
-    return !!p;
-  });
-  if (!patterns.length) return; // 字符转为数组方便操作
-
-  var strArr = str.split(''); // repeat处理
-
-  if (repeat || lastRepeat) {
-    // 传入模式能匹配到的最大长度
-    var maxLength = patterns.reduce(function (prevIndex, index) {
-      var currentIndex = prevIndex + Number(index);
-      return currentIndex;
-    }, 0); // 需要额外填充的模式长度
-
-    var fillLength; // 模式组最后一位，用于lastRepeat
-
-    var lastPatter = Number(patterns[patterns.length - 1]);
-
-    if (repeat) {
-      // (字符长度 - 最大匹配长度) / 最大匹配长度
-      fillLength = Math.ceil((strArr.length - maxLength) / maxLength);
-    }
-
-    if (lastRepeat) {
-      // (字符长度 - 最大匹配长度) / 最后一位匹配符能匹配的长度
-      fillLength = Math.ceil((strArr.length - maxLength) / lastPatter);
-    }
-
-    var originArr = lastRepeat ? [lastPatter] : _toConsumableArray(patterns);
-    Array.from({
-      length: fillLength
-    }).forEach(function () {
-      patterns = [].concat(_toConsumableArray(patterns), _toConsumableArray(originArr));
-    });
-  }
-
-  return {
-    patterns: patterns,
-    strArr: strArr
-  };
-}
-/**
- * 根据传入的模式对字符进行格式化
- * @param str {string} - 需要进行格式化的字符
- * @param pattern {string} - 格式为 `1,2,3,4` 规则的模式字符，数字两端可包含空格
- * @param options
- * @param options.delimiter {string} - ' ' | 指定分割符
- * @param options.repeat {boolean} -  false | 当字符长度超过pattern可匹配到的长度时，重复以当前pattern对剩余字符进行格式化
- * @param options.lastRepeat {boolean} - false | 当字符长度超过pattern可匹配到的长度时，重复以当前pattern的最后一位对剩余字符进行格式化
- */
-
-
-function formatString(str, pattern) {
-  var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-
-  var _defaultConfig$option2 = _objectSpread({}, defaultConfig, options),
-      delimiter = _defaultConfig$option2.delimiter,
-      repeat = _defaultConfig$option2.repeat,
-      lastRepeat = _defaultConfig$option2.lastRepeat;
-
-  var patternMeta = getPatterns(str, pattern, {
-    repeat: repeat,
-    lastRepeat: lastRepeat
-  });
-  if (!patternMeta) return;
-  var patterns = patternMeta.patterns,
-      strArr = patternMeta.strArr;
-  patterns.reduce(function (prevPattern, _pattern, ind) {
-    var currentIndex = prevPattern + Number(_pattern); // 替换位置为 前面所有pattern + 当前pattern + 已匹配次数
-
-    var replaceIndex = currentIndex + ind;
-
-    if (replaceIndex < strArr.length) {
-      strArr.splice(replaceIndex, 0, delimiter);
-    }
-
-    return currentIndex;
-  }, 0);
-  return strArr.join('');
-}
-/**
- * 对被`format()`过的字符进行反格式化, 除了str, 其他参数必须与执行`format()`时传入的一致
- * @param str {string} - 需要进行反格式化的字符
- * @param pattern {string} - 格式为 `1,2,3,4` 规则的模式字符，数字两端可包含空格
- * @param options
- * @param options.delimiter {string} - ' ' | 指定分割符
- * @param options.repeat {boolean} -  当字符长度超过pattern可匹配到的长度时，重复以当前pattern对剩余字符进行格式化
- * @param options.lastRepeat {boolean} - 当字符长度超过pattern可匹配到的长度时，重复以当前pattern的最后一位对剩余字符进行格式化
- */
-
-function unFormatString(str, pattern) {
-  var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-
-  var _defaultConfig$option3 = _objectSpread({}, defaultConfig, options),
-      delimiter = _defaultConfig$option3.delimiter,
-      repeat = _defaultConfig$option3.repeat,
-      lastRepeat = _defaultConfig$option3.lastRepeat;
-
-  var patternMeta = getPatterns(str, pattern, {
-    repeat: repeat,
-    lastRepeat: lastRepeat
-  });
-  if (!patternMeta) return;
-  var patterns = patternMeta.patterns,
-      strArr = patternMeta.strArr;
-  patterns.reduce(function (prev, pattern) {
-    var index = Number(pattern) + prev;
-    /* 只在字符首位匹配时才执行替换, 在某些场景会有用（fr的input处理双向绑定时） */
-
-    if (strArr[index] === delimiter[0]) {
-      strArr.splice(index, delimiter.length);
-    }
-
-    return index;
-  }, 0);
-  return strArr.join('');
 }
 
 /* 获取指定区间内的随机数 */
@@ -672,8 +667,51 @@ var getPortalsNode = function getPortalsNode(namespace) {
   return portalsEl;
 };
 
+/**
+ * 将一个优先错误且回调位于最后一个参数的node风格的callback函数转为return Promise的函数
+ * @param {function} fn - 要包装的函数
+ * @param {object} receiver - 要绑定作用域的对象
+ * @return {function(...[*]): Promise<unknown>}
+ */
+function promisify(fn, receiver) {
+  return function () {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return new Promise(function (resolve, reject) {
+      fn.apply(receiver, [].concat(args, [function (err, res) {
+        return err ? reject(err) : resolve(res);
+      }]));
+    });
+  };
+}
+/**
+ * 一个延迟指定时间后resolve的Promise
+ * @param {number} time [2000] - 指定延迟时间
+ * @param {object} options
+ * @param {boolean} options.isReject - 为true时reject Promise
+ * @param {boolean} options.value - 指定resolve或reject时的值
+ * @return Promise
+ */
+
+function delay() {
+  var time = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 2000;
+
+  var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+      isReject = _ref.isReject,
+      value = _ref.value;
+
+  return new Promise(function (resolve, reject) {
+    setTimeout(function () {
+      isReject ? reject(value) : resolve(value);
+    }, time);
+  });
+}
+
 exports.createRandString = createRandString;
 exports.datetime = datetime;
+exports.delay = delay;
 exports.form2obj = form2obj;
 exports.formatString = formatString;
 exports.getDateCountDown = getDateCountDown;
@@ -699,6 +737,7 @@ exports.isSymbol = isSymbol;
 exports.isTrueEmpty = isTrueEmpty;
 exports.isUndefined = isUndefined;
 exports.obj2FormData = obj2FormData;
+exports.omit = omit;
 exports.padSingleNumber = padSingleNumber;
 exports.promisify = promisify;
 exports.replaceTags = replaceTags;
