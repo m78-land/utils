@@ -669,6 +669,6 @@ function getGlobal() {
 
   throw new Error('unable to locate global object');
 }
-var __GLOBAL__ = "getGlobal();";
+var __GLOBAL__ = getGlobal();
 
 export { __GLOBAL__, createRandString, datetime, delay, dumpFn, form2obj, formatString, getDateCountDown, getGlobal, getPortalsNode, getProtoStr, getRandRange, isArray, isBoolean, isDate, isDom, isEmpty, isError, isFunction, isInt, isNull, isNullOrUndefined, isNumber, isObject, isPrimitive, isRegExp, isString, isSymbol, isTrueEmpty, isUndefined, obj2FormData, omit, padSingleNumber, promisify, replaceTags, shakeFalsy, unFormatString, validateFormatString };

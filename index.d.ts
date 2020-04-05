@@ -121,4 +121,6 @@ export function omit<O, P extends string>(obj: O, props: string): Omit<O, P>;
 export const dumpFn: (...arg: any[]) => any;
 
 /** 根据不同的js运行环境返回`Global`对象 */
-export function getGlobal(): (Window & typeof globalThis) | NodeJS.Global
+export function getGlobal(): (Window & typeof globalThis) | NodeJS.Global;
+
+export const __GLOBAL__: (Window & typeof globalThis) | NodeJS.Global;

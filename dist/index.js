@@ -763,7 +763,7 @@ function getGlobal() {
 
   throw new Error('unable to locate global object');
 }
-var __GLOBAL__ = "getGlobal();";
+var __GLOBAL__ = getGlobal();
 
 exports.__GLOBAL__ = __GLOBAL__;
 exports.createRandString = createRandString;

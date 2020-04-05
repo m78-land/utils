@@ -14,4 +14,4 @@ export function getGlobal() {
   throw new Error('unable to locate global object');
 }
 
-export const __GLOBAL__ = `getGlobal();`
+export const __GLOBAL__ = getGlobal();
