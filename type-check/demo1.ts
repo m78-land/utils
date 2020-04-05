@@ -1,8 +1,2 @@
-import { omit } from '../';
+import { dumpFn } from '../';
 
-const obj = {
-  name: 'lxj',
-  age: 18,
-};
-
-const obj2 = omit<typeof obj, 'age'>(obj, 'name');

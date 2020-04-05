@@ -1,6 +1,6 @@
 import _typeof from '@babel/runtime/helpers/esm/typeof';
 import _toConsumableArray from '@babel/runtime/helpers/esm/toConsumableArray';
-import _objectSpread from '@babel/runtime/helpers/esm/objectSpread';
+import _defineProperty from '@babel/runtime/helpers/esm/defineProperty';
 
 /**
  * 获取表示对象原始类型的字符串
@@ -219,6 +219,10 @@ function isEmpty(obj) {
   return false;
 }
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
 /**
  * 将小于10且大于0的数字转为填充0的字符 如 '01' '05', 小于1的数字始终返回'00'
  * @param {number} number
@@ -246,7 +250,7 @@ var defaultConfig = {
 function getPatterns(str, pattern) {
   var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-  var _defaultConfig$option = _objectSpread({}, defaultConfig, options),
+  var _defaultConfig$option = _objectSpread({}, defaultConfig, {}, options),
       repeat = _defaultConfig$option.repeat,
       lastRepeat = _defaultConfig$option.lastRepeat;
 
@@ -313,7 +317,7 @@ function getPatterns(str, pattern) {
 function formatString(str, pattern) {
   var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-  var _defaultConfig$option2 = _objectSpread({}, defaultConfig, options),
+  var _defaultConfig$option2 = _objectSpread({}, defaultConfig, {}, options),
       delimiter = _defaultConfig$option2.delimiter,
       repeat = _defaultConfig$option2.repeat,
       lastRepeat = _defaultConfig$option2.lastRepeat;
@@ -351,7 +355,7 @@ function formatString(str, pattern) {
 function unFormatString(str, pattern) {
   var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-  var _defaultConfig$option3 = _objectSpread({}, defaultConfig, options),
+  var _defaultConfig$option3 = _objectSpread({}, defaultConfig, {}, options),
       delimiter = _defaultConfig$option3.delimiter,
       repeat = _defaultConfig$option3.repeat,
       lastRepeat = _defaultConfig$option3.lastRepeat;
@@ -640,5 +644,31 @@ function delay() {
     }, time);
   });
 }
+var dumpFn = function dumpFn() {
+  for (var _len2 = arguments.length, arg = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+    arg[_key2] = arguments[_key2];
+  }
 
-export { createRandString, datetime, delay, form2obj, formatString, getDateCountDown, getPortalsNode, getProtoStr, getRandRange, isArray, isBoolean, isDate, isDom, isEmpty, isError, isFunction, isInt, isNull, isNullOrUndefined, isNumber, isObject, isPrimitive, isRegExp, isString, isSymbol, isTrueEmpty, isUndefined, obj2FormData, omit, padSingleNumber, promisify, replaceTags, shakeFalsy, unFormatString, validateFormatString };
+  return arg;
+};
+
+function getGlobal() {
+  // eslint-disable-next-line no-restricted-globals
+  if (typeof self !== 'undefined') {
+    // eslint-disable-next-line no-restricted-globals
+    return self;
+  }
+
+  if (typeof window !== 'undefined') {
+    return window;
+  }
+
+  if (typeof global !== 'undefined') {
+    return global;
+  }
+
+  throw new Error('unable to locate global object');
+}
+var __GLOBAL__ = "getGlobal();";
+
+export { __GLOBAL__, createRandString, datetime, delay, dumpFn, form2obj, formatString, getDateCountDown, getGlobal, getPortalsNode, getProtoStr, getRandRange, isArray, isBoolean, isDate, isDom, isEmpty, isError, isFunction, isInt, isNull, isNullOrUndefined, isNumber, isObject, isPrimitive, isRegExp, isString, isSymbol, isTrueEmpty, isUndefined, obj2FormData, omit, padSingleNumber, promisify, replaceTags, shakeFalsy, unFormatString, validateFormatString };

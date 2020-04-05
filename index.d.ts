@@ -1,3 +1,5 @@
+/// <reference types="node" />
+
 export interface AnyObject {
   [key: string]: any;
 }
@@ -114,3 +116,9 @@ export function delay<V = any>(time?: number, options?: { isReject?: boolean; va
  * obj2.name
  * */
 export function omit<O, P extends string>(obj: O, props: string): Omit<O, P>;
+
+/** 一个便利函数，接收任意参数并返回 */
+export const dumpFn: (...arg: any[]) => any;
+
+/** 根据不同的js运行环境返回`Global`对象 */
+export function getGlobal(): (Window & typeof globalThis) | NodeJS.Global

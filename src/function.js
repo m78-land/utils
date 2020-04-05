@@ -32,3 +32,5 @@ export function delay(time = 2000, { isReject, value } = {}) {
     }, time);
   });
 }
+
+export const dumpFn = (...arg) => arg;
