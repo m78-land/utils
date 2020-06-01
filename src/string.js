@@ -1,17 +1,33 @@
-/* 去掉html字符中的标签，返回纯文本 */
-export function replaceTags(str = '') {
+export function replaceHtmlTags(str = '', val = '') {
   const reg = /(<\/?.+?\/?>|&nbsp;|&mdash;)/g;
-  return str.replace(reg, '');
+  return str.replace(reg, val);
 }
 
-/**
- *  生成一段随机字符
- *  @param number - 随机串的倍数，默认1倍，随机字符长度为10为
- *  @return string
- *  */
 export function createRandString(number = 1) {
-  return Array.from({ length: number }).reduce((prev) => {
-    return prev + Math.random().toString(36).substr(2);
+  return Array.from({ length: number }).reduce(prev => {
+    return (
+      prev +
+      Math.random()
+        .toString(36)
+        .substr(2)
+    );
   }, '');
 }
 
+const KB = 1024;
+const MB = KB * 1024;
+const GB = MB * 1024;
+const TB = GB * 1024;
+export const byte2text = (byte) => {
+  let s = `${(byte / KB).toFixed(2)}K`;
+
+  if (byte >= TB) {
+    s = `${(byte / TB).toFixed(2)}T`;
+  } else if (byte >= GB) {
+    s = `${(byte / GB).toFixed(2)}G`;
+  } else if (byte >= KB * 200) {
+    s = `${(byte / MB).toFixed(2)}M`;
+  }
+
+  return s;
+};
