@@ -3,8 +3,6 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 function _typeof(obj) {
-  "@babel/helpers - typeof";
-
   if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
     _typeof = function (obj) {
       return typeof obj;
@@ -33,71 +31,43 @@ function _defineProperty(obj, key, value) {
   return obj;
 }
 
-function ownKeys(object, enumerableOnly) {
-  var keys = Object.keys(object);
-
-  if (Object.getOwnPropertySymbols) {
-    var symbols = Object.getOwnPropertySymbols(object);
-    if (enumerableOnly) symbols = symbols.filter(function (sym) {
-      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-    });
-    keys.push.apply(keys, symbols);
-  }
-
-  return keys;
-}
-
-function _objectSpread2(target) {
+function _objectSpread(target) {
   for (var i = 1; i < arguments.length; i++) {
     var source = arguments[i] != null ? arguments[i] : {};
+    var ownKeys = Object.keys(source);
 
-    if (i % 2) {
-      ownKeys(Object(source), true).forEach(function (key) {
-        _defineProperty(target, key, source[key]);
-      });
-    } else if (Object.getOwnPropertyDescriptors) {
-      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-    } else {
-      ownKeys(Object(source)).forEach(function (key) {
-        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-      });
+    if (typeof Object.getOwnPropertySymbols === 'function') {
+      ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
+        return Object.getOwnPropertyDescriptor(source, sym).enumerable;
+      }));
     }
+
+    ownKeys.forEach(function (key) {
+      _defineProperty(target, key, source[key]);
+    });
   }
 
   return target;
 }
 
 function _toConsumableArray(arr) {
-  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
+  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
 }
 
 function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+
+    return arr2;
+  }
 }
 
 function _iterableToArray(iter) {
-  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
-}
-
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(n);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
-}
-
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-
-  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
-
-  return arr2;
+  if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
 }
 
 function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+  throw new TypeError("Invalid attempt to spread non-iterable instance");
 }
 
 /**
@@ -344,7 +314,7 @@ var defaultConfig = {
 function getPatterns(str, pattern) {
   var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-  var _defaultConfig$option = _objectSpread2({}, defaultConfig, {}, options),
+  var _defaultConfig$option = _objectSpread({}, defaultConfig, options),
       repeat = _defaultConfig$option.repeat,
       lastRepeat = _defaultConfig$option.lastRepeat;
 
@@ -411,7 +381,7 @@ function getPatterns(str, pattern) {
 function formatString(str, pattern) {
   var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-  var _defaultConfig$option2 = _objectSpread2({}, defaultConfig, {}, options),
+  var _defaultConfig$option2 = _objectSpread({}, defaultConfig, options),
       delimiter = _defaultConfig$option2.delimiter,
       repeat = _defaultConfig$option2.repeat,
       lastRepeat = _defaultConfig$option2.lastRepeat;
@@ -449,7 +419,7 @@ function formatString(str, pattern) {
 function unFormatString(str, pattern) {
   var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-  var _defaultConfig$option3 = _objectSpread2({}, defaultConfig, {}, options),
+  var _defaultConfig$option3 = _objectSpread({}, defaultConfig, options),
       delimiter = _defaultConfig$option3.delimiter,
       repeat = _defaultConfig$option3.repeat,
       lastRepeat = _defaultConfig$option3.lastRepeat;
@@ -474,28 +444,36 @@ function unFormatString(str, pattern) {
   return strArr.join('');
 }
 
-/**
- * 根据传入规则格式化一个日期对象
- * @param {Date|string} date - 待转换的日期对象, 传入string时，将其作为format并设置date为当前时间
- * @param {string} format - 'YYYY、MM、DD、hh、mm、ss'组成的字符串
- * @return {string} 格式化后的日期
- */
+function parseDate(date) {
+  var d = date;
 
+  if (typeof date === 'string') {
+    d = date.replace(/-/g, '/'); // Safari无法解析 2020-01-01 格式的日期
+  }
+
+  d = new Date(d); // 处理Invalid Date
+
+  if (d instanceof Date && isNaN(d.getTime())) {
+    return null;
+  }
+
+  return d;
+}
 function datetime() {
   var date = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new Date();
   var format = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'YYYY-MM-DD hh:mm:ss';
+  var d = parseDate(date);
 
-  if (isString(date)) {
-    format = date;
-    date = new Date();
+  if (!d) {
+    return '';
   }
 
   var fn = function fn(d) {
     return ('0' + d).slice(-2);
   };
 
-  var d = new Date(date);
   var formats = {
+    YY: String(d.getFullYear() + 1).slice(2),
     YYYY: d.getFullYear(),
     MM: fn(d.getMonth() + 1),
     DD: fn(d.getDate()),
@@ -507,19 +485,15 @@ function datetime() {
     return formats[a] || a;
   });
 }
-/**
- * 获取当前时间到指定时间相隔的d,h,m,s,ms, 当前时间超过传入时间的话全部返回为'00'且附带timeOut: true 这个属性
- * @param {string|Date} datestr - (YYYY-MM-DD hh:mm:ss / YYYY/MM/DD hh:mm:ss)
- * @returns {object} 格式化后的日期
- */
-
 var oneMS = 100;
 var oneS = oneMS * 10;
 var oneM = 60 * oneS;
 var oneH = 60 * oneM;
 var oneD = 24 * oneH;
 function getDateCountDown(date) {
-  if (!date) {
+  var dt = parseDate(date);
+
+  if (!dt) {
     return {
       ms: '00',
       s: '00',
@@ -530,12 +504,8 @@ function getDateCountDown(date) {
     };
   }
 
-  if (isString(date)) {
-    date = Date.parse(date.replace(/-/g, '/')); // 兼容ios
-  }
-
   var start = Date.now();
-  var end = date;
+  var end = dt.getTime();
   var diff = end - start;
 
   if (diff < 0) {
@@ -557,6 +527,18 @@ function getDateCountDown(date) {
     ms: padSingleNumber(ms),
     timeOut: false
   };
+}
+function getDateStringFirst() {
+  var dataString = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  if (!dataString) return '';
+  return dataString.split(' ')[0];
+}
+function isBetweenDate(startDate, endDate, currentDate) {
+  var s = parseDate(startDate);
+  var e = parseDate(endDate);
+  if (!s || !e) return false;
+  var c = currentDate ? parseDate(currentDate) : new Date();
+  return c <= e && c >= s;
 }
 
 /**
@@ -625,12 +607,6 @@ function obj2FormData(obj) {
   return form;
 }
 
-/**
- * 去掉对象falsy值(除了0)(使用delete确保返回原对象)
- * @param { object } source
- * @return { object } 返回修改后的原对象
- */
-
 var shakeFalsy = function shakeFalsy(source) {
   Object.keys(source).forEach(function (key) {
     var val = source[key];
@@ -643,7 +619,9 @@ var shakeFalsy = function shakeFalsy(source) {
 };
 function omit(obj, props) {
   if (isString(props)) {
-    props = props.split(',');
+    props = props.split(',').map(function (key) {
+      return key.trim();
+    });
   }
 
   var keys = Object.keys(obj);
@@ -656,18 +634,12 @@ function omit(obj, props) {
   return result;
 }
 
-/* 去掉html字符中的标签，返回纯文本 */
-function replaceTags() {
+function replaceHtmlTags() {
   var str = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+  var val = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
   var reg = /(<\/?.+?\/?>|&nbsp;|&mdash;)/g;
-  return str.replace(reg, '');
+  return str.replace(reg, val);
 }
-/**
- *  生成一段随机字符
- *  @param number - 随机串的倍数，默认1倍，随机字符长度为10为
- *  @return string
- *  */
-
 function createRandString() {
   var number = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
   return Array.from({
@@ -676,13 +648,53 @@ function createRandString() {
     return prev + Math.random().toString(36).substr(2);
   }, '');
 }
+var KB = 1024;
+var MB = KB * 1024;
+var GB = MB * 1024;
+var TB = GB * 1024;
+var byte2textDefaultConfig = {
+  precision: 1
+};
+var byte2text = function byte2text(byte, conf) {
+  var cf = _objectSpread({}, byte2textDefaultConfig, conf);
+
+  var s = '';
+
+  if (byte >= TB) {
+    s = "".concat((byte / TB).toFixed(cf.precision), "T");
+  } else if (byte >= GB) {
+    s = "".concat((byte / GB).toFixed(cf.precision), "G");
+  } else if (byte >= MB) {
+    s = "".concat((byte / MB).toFixed(cf.precision), "M");
+  } else {
+    s = "".concat((byte / KB).toFixed(cf.precision), "K");
+  }
+
+  return s;
+};
+byte2text.KB = KB;
+byte2text.MB = MB;
+byte2text.GB = GB;
+byte2text.TB = TB;
+var heightLightMatchStringDefaultConf = {
+  color: '#F83D48'
+};
+function heightLightMatchString(str, regExp, conf) {
+  if (!str || !regExp) return str || '';
+
+  var cf = _objectSpread({}, heightLightMatchStringDefaultConf, conf);
+
+  var reg = new RegExp(regExp, 'g');
+  return str.replace(reg, function (s) {
+    return "<span style=\"color: ".concat(cf.color, "\">").concat(s, "</span>");
+  });
+}
 
 /* 获取指定区间内的随机数 */
 function getRandRange(min, max) {
   return Math.round((max - min) * Math.random() + min);
 }
 
-/** 获取一个用于挂载Portals或动态弹窗等内容的节点, 多次调用时会获取到相同的节点 */
 var portalsID = 'J__PORTALS__NODE__';
 var getPortalsNode = function getPortalsNode(namespace) {
   var id = portalsID + (namespace ? namespace.toLocaleUpperCase() : 'DEFAULT');
@@ -765,7 +777,10 @@ function getGlobal() {
 }
 var __GLOBAL__ = getGlobal();
 
+var idCardRegexp = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+
 exports.__GLOBAL__ = __GLOBAL__;
+exports.byte2text = byte2text;
 exports.createRandString = createRandString;
 exports.datetime = datetime;
 exports.delay = delay;
@@ -773,11 +788,15 @@ exports.dumpFn = dumpFn;
 exports.form2obj = form2obj;
 exports.formatString = formatString;
 exports.getDateCountDown = getDateCountDown;
+exports.getDateStringFirst = getDateStringFirst;
 exports.getGlobal = getGlobal;
 exports.getPortalsNode = getPortalsNode;
 exports.getProtoStr = getProtoStr;
 exports.getRandRange = getRandRange;
+exports.heightLightMatchString = heightLightMatchString;
+exports.idCardRegexp = idCardRegexp;
 exports.isArray = isArray;
+exports.isBetweenDate = isBetweenDate;
 exports.isBoolean = isBoolean;
 exports.isDate = isDate;
 exports.isDom = isDom;
@@ -798,8 +817,9 @@ exports.isUndefined = isUndefined;
 exports.obj2FormData = obj2FormData;
 exports.omit = omit;
 exports.padSingleNumber = padSingleNumber;
+exports.parseDate = parseDate;
 exports.promisify = promisify;
-exports.replaceTags = replaceTags;
+exports.replaceHtmlTags = replaceHtmlTags;
 exports.shakeFalsy = shakeFalsy;
 exports.unFormatString = unFormatString;
 exports.validateFormatString = validateFormatString;

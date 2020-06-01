@@ -1,7 +1,8 @@
 import React from 'react';
-import { byte2text, datetime, getDateCountDown, isBetweenDate } from './index';
+import { heightLightMatchString } from './index';
 
-console.log(byte2text(1099511627776));
+console.log(heightLightMatchString('你好吗，我很好。', '好'));
+console.log(heightLightMatchString('你好吗，我很好。', /好/));
 
 const Test = () => {
   return (
