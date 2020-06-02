@@ -107,7 +107,7 @@ export function getDateStringFirst(dataString: string): string;
  * @param currentDate - 指定作为参照的时间，默认为当前时间
  * @return - 是否在时间段内
  * */
-export function isBetweenDate(startDate, endDate, currentDate?): boolean;
+export function isBetweenDate(startDate: any, endDate: any, currentDate?: any): boolean;
 
 /* ======================== form ======================= */
 
@@ -149,7 +149,7 @@ interface FormatStringOption {
 }
 
 interface Byte2Text {
-  (byte, conf?: { precision: number }): string;
+  (byte: number, conf?: { precision: number }): string;
   KB: number;
   MB: number;
   GB: number;
@@ -179,7 +179,7 @@ export const byte2text: Byte2Text;
  // 以上使用均输出:
  // => 你<span style="color: #F83D48">好</span>吗，我很<span style="color: #F83D48">好</span>。
  * */
-export function heightLightMatchString(str, regExp, conf?: {color}): string;
+export function heightLightMatchString(str: string, regExp: string | RegExp, conf?: { color?: string }): string;
 
 export const validateFormatString: RegExp;
 

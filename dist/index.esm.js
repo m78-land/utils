@@ -1,6 +1,6 @@
 import _typeof from '@babel/runtime/helpers/esm/typeof';
 import _toConsumableArray from '@babel/runtime/helpers/esm/toConsumableArray';
-import _objectSpread from '@babel/runtime/helpers/esm/objectSpread';
+import _defineProperty from '@babel/runtime/helpers/esm/defineProperty';
 
 /**
  * 获取表示对象原始类型的字符串
@@ -219,6 +219,10 @@ function isEmpty(obj) {
   return false;
 }
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
 /**
  * 将小于10且大于0的数字转为填充0的字符 如 '01' '05', 小于1的数字始终返回'00'
  * @param {number} number
@@ -246,7 +250,7 @@ var defaultConfig = {
 function getPatterns(str, pattern) {
   var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-  var _defaultConfig$option = _objectSpread({}, defaultConfig, options),
+  var _defaultConfig$option = _objectSpread({}, defaultConfig, {}, options),
       repeat = _defaultConfig$option.repeat,
       lastRepeat = _defaultConfig$option.lastRepeat;
 
@@ -313,7 +317,7 @@ function getPatterns(str, pattern) {
 function formatString(str, pattern) {
   var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-  var _defaultConfig$option2 = _objectSpread({}, defaultConfig, options),
+  var _defaultConfig$option2 = _objectSpread({}, defaultConfig, {}, options),
       delimiter = _defaultConfig$option2.delimiter,
       repeat = _defaultConfig$option2.repeat,
       lastRepeat = _defaultConfig$option2.lastRepeat;
@@ -351,7 +355,7 @@ function formatString(str, pattern) {
 function unFormatString(str, pattern) {
   var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-  var _defaultConfig$option3 = _objectSpread({}, defaultConfig, options),
+  var _defaultConfig$option3 = _objectSpread({}, defaultConfig, {}, options),
       delimiter = _defaultConfig$option3.delimiter,
       repeat = _defaultConfig$option3.repeat,
       lastRepeat = _defaultConfig$option3.lastRepeat;
@@ -566,6 +570,10 @@ function omit(obj, props) {
   return result;
 }
 
+function ownKeys$1(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread$1(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$1(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$1(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
 function replaceHtmlTags() {
   var str = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
   var val = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
@@ -588,7 +596,7 @@ var byte2textDefaultConfig = {
   precision: 1
 };
 var byte2text = function byte2text(byte, conf) {
-  var cf = _objectSpread({}, byte2textDefaultConfig, conf);
+  var cf = _objectSpread$1({}, byte2textDefaultConfig, {}, conf);
 
   var s = '';
 
@@ -614,7 +622,7 @@ var heightLightMatchStringDefaultConf = {
 function heightLightMatchString(str, regExp, conf) {
   if (!str || !regExp) return str || '';
 
-  var cf = _objectSpread({}, heightLightMatchStringDefaultConf, conf);
+  var cf = _objectSpread$1({}, heightLightMatchStringDefaultConf, {}, conf);
 
   var reg = new RegExp(regExp, 'g');
   return str.replace(reg, function (s) {
