@@ -220,3 +220,7 @@ export function isEmpty(obj) {
   }
   return false;
 }
+
+export function isNumerical(numLike) {
+  return !isNaN(Number(numLike));
+}

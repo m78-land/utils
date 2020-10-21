@@ -301,6 +301,9 @@ function isEmpty(obj) {
 
   return false;
 }
+function isNumerical(numLike) {
+  return !isNaN(Number(numLike));
+}
 
 /**
  * 将小于10且大于0的数字转为填充0的字符 如 '01' '05', 小于1的数字始终返回'00'
@@ -705,9 +708,17 @@ function heightLightMatchString(str, regExp, conf) {
   });
 }
 
-/* 获取指定区间内的随机数 */
 function getRandRange(min, max) {
   return Math.round((max - min) * Math.random() + min);
+}
+function decimalPrecision(num) {
+  var precision = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+  var mid = +"1".concat(Array.from({
+    length: precision
+  }).map(function () {
+    return '0';
+  }).join(''));
+  return Math.round(num * mid) / mid;
 }
 
 var portalsID = 'J__PORTALS__NODE__';
@@ -723,13 +734,19 @@ var getPortalsNode = function getPortalsNode(namespace) {
 
   return portalsEl;
 };
+function getScrollBarWidth(nodeTarget) {
+  var node = nodeTarget || document.body; // Create the measurement node
 
-/**
- * 将一个优先错误且回调位于最后一个参数的node风格的callback函数转为return Promise的函数
- * @param {function} fn - 要包装的函数
- * @param {object} receiver - 要绑定作用域的对象
- * @return {function(...[*]): Promise<unknown>}
- */
+  var scrollDiv = document.createElement('div');
+  scrollDiv.style.overflow = 'scroll';
+  node.appendChild(scrollDiv); // Get the scrollbar width
+
+  var scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth; // Delete the DIV
+
+  node.removeChild(scrollDiv);
+  return scrollbarWidth;
+}
+
 function promisify(fn, receiver) {
   return function () {
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
@@ -743,26 +760,11 @@ function promisify(fn, receiver) {
     });
   };
 }
-/**
- * 一个延迟指定时间后resolve的Promise
- * @param {number} time [2000] - 指定延迟时间
- * @param {object} options
- * @param {boolean} options.isReject - 为true时reject Promise
- * @param {boolean} options.value - 指定resolve或reject时的值
- * @return Promise
- */
-
-function delay() {
-  var time = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 2000;
-
-  var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-      isReject = _ref.isReject,
-      value = _ref.value;
-
-  return new Promise(function (resolve, reject) {
+function delay(ms, payload) {
+  return new Promise(function (res, rej) {
     setTimeout(function () {
-      isReject ? reject(value) : resolve(value);
-    }, time);
+      return payload instanceof Error ? rej(payload) : res(payload);
+    }, ms);
   });
 }
 var dumpFn = function dumpFn() {
@@ -798,6 +800,7 @@ exports.__GLOBAL__ = __GLOBAL__;
 exports.byte2text = byte2text;
 exports.createRandString = createRandString;
 exports.datetime = datetime;
+exports.decimalPrecision = decimalPrecision;
 exports.delay = delay;
 exports.dumpFn = dumpFn;
 exports.form2obj = form2obj;
@@ -808,6 +811,7 @@ exports.getGlobal = getGlobal;
 exports.getPortalsNode = getPortalsNode;
 exports.getProtoStr = getProtoStr;
 exports.getRandRange = getRandRange;
+exports.getScrollBarWidth = getScrollBarWidth;
 exports.heightLightMatchString = heightLightMatchString;
 exports.idCardRegexp = idCardRegexp;
 exports.isArray = isArray;
@@ -822,6 +826,7 @@ exports.isInt = isInt;
 exports.isNull = isNull;
 exports.isNullOrUndefined = isNullOrUndefined;
 exports.isNumber = isNumber;
+exports.isNumerical = isNumerical;
 exports.isObject = isObject;
 exports.isPrimitive = isPrimitive;
 exports.isRegExp = isRegExp;

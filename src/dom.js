@@ -11,3 +11,20 @@ export const getPortalsNode = (namespace) => {
   }
   return portalsEl;
 };
+
+export function getScrollBarWidth(nodeTarget) {
+  const node = nodeTarget || document.body;
+
+  // Create the measurement node
+  const scrollDiv = document.createElement('div');
+  scrollDiv.style.overflow = 'scroll';
+  node.appendChild(scrollDiv);
+
+  // Get the scrollbar width
+  const scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+
+  // Delete the DIV
+  node.removeChild(scrollDiv);
+
+  return scrollbarWidth;
+}

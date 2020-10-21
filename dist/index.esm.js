@@ -218,6 +218,9 @@ function isEmpty(obj) {
 
   return false;
 }
+function isNumerical(numLike) {
+  return !isNaN(Number(numLike));
+}
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -630,9 +633,17 @@ function heightLightMatchString(str, regExp, conf) {
   });
 }
 
-/* 获取指定区间内的随机数 */
 function getRandRange(min, max) {
   return Math.round((max - min) * Math.random() + min);
+}
+function decimalPrecision(num) {
+  var precision = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+  var mid = +"1".concat(Array.from({
+    length: precision
+  }).map(function () {
+    return '0';
+  }).join(''));
+  return Math.round(num * mid) / mid;
 }
 
 var portalsID = 'J__PORTALS__NODE__';
@@ -648,13 +659,19 @@ var getPortalsNode = function getPortalsNode(namespace) {
 
   return portalsEl;
 };
+function getScrollBarWidth(nodeTarget) {
+  var node = nodeTarget || document.body; // Create the measurement node
 
-/**
- * 将一个优先错误且回调位于最后一个参数的node风格的callback函数转为return Promise的函数
- * @param {function} fn - 要包装的函数
- * @param {object} receiver - 要绑定作用域的对象
- * @return {function(...[*]): Promise<unknown>}
- */
+  var scrollDiv = document.createElement('div');
+  scrollDiv.style.overflow = 'scroll';
+  node.appendChild(scrollDiv); // Get the scrollbar width
+
+  var scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth; // Delete the DIV
+
+  node.removeChild(scrollDiv);
+  return scrollbarWidth;
+}
+
 function promisify(fn, receiver) {
   return function () {
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
@@ -668,26 +685,11 @@ function promisify(fn, receiver) {
     });
   };
 }
-/**
- * 一个延迟指定时间后resolve的Promise
- * @param {number} time [2000] - 指定延迟时间
- * @param {object} options
- * @param {boolean} options.isReject - 为true时reject Promise
- * @param {boolean} options.value - 指定resolve或reject时的值
- * @return Promise
- */
-
-function delay() {
-  var time = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 2000;
-
-  var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-      isReject = _ref.isReject,
-      value = _ref.value;
-
-  return new Promise(function (resolve, reject) {
+function delay(ms, payload) {
+  return new Promise(function (res, rej) {
     setTimeout(function () {
-      isReject ? reject(value) : resolve(value);
-    }, time);
+      return payload instanceof Error ? rej(payload) : res(payload);
+    }, ms);
   });
 }
 var dumpFn = function dumpFn() {
@@ -719,4 +721,4 @@ var __GLOBAL__ = getGlobal();
 
 var idCardRegexp = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
 
-export { __GLOBAL__, byte2text, createRandString, datetime, delay, dumpFn, form2obj, formatString, getDateCountDown, getDateStringFirst, getGlobal, getPortalsNode, getProtoStr, getRandRange, heightLightMatchString, idCardRegexp, isArray, isBetweenDate, isBoolean, isDate, isDom, isEmpty, isError, isFunction, isInt, isNull, isNullOrUndefined, isNumber, isObject, isPrimitive, isRegExp, isString, isSymbol, isTrueEmpty, isUndefined, obj2FormData, omit, padSingleNumber, parseDate, promisify, replaceHtmlTags, shakeFalsy, unFormatString, validateFormatString };
+export { __GLOBAL__, byte2text, createRandString, datetime, decimalPrecision, delay, dumpFn, form2obj, formatString, getDateCountDown, getDateStringFirst, getGlobal, getPortalsNode, getProtoStr, getRandRange, getScrollBarWidth, heightLightMatchString, idCardRegexp, isArray, isBetweenDate, isBoolean, isDate, isDom, isEmpty, isError, isFunction, isInt, isNull, isNullOrUndefined, isNumber, isNumerical, isObject, isPrimitive, isRegExp, isString, isSymbol, isTrueEmpty, isUndefined, obj2FormData, omit, padSingleNumber, parseDate, promisify, replaceHtmlTags, shakeFalsy, unFormatString, validateFormatString };

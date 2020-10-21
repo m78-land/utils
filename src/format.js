@@ -14,8 +14,6 @@ export function padSingleNumber(number) {
   return String(number);
 }
 
-
-
 /* 以指定规则格式化字符 */
 
 export const validateFormatString = /^(\s?\d\s?,?)+$/;
