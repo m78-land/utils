@@ -143,3 +143,12 @@ export function unFormatString(str, pattern, options = {}) {
 
   return strArr.join('');
 }
+
+export function getFirstTruthyOrZero(...args) {
+  for (const arg of args) {
+    if (isTruthyOrZero(arg)) {
+      return arg;
+    }
+  }
+  return false;
+}

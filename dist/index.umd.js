@@ -116,7 +116,7 @@
    * @returns {boolean}
    * */
 
-  function isDom(o) {
+  function isDom$1(o) {
     if (!o) {
       return false;
     }
@@ -238,6 +238,9 @@
   }
   function isNumerical(numLike) {
     return !isNaN(Number(numLike));
+  }
+  function isTruthyOrZero$1(arg) {
+    return !!arg || arg === 0;
   }
 
   function _arrayWithoutHoles(arr) {
@@ -437,6 +440,21 @@
     }, 0);
     return strArr.join('');
   }
+  function getFirstTruthyOrZero() {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    for (var _i = 0, _args = args; _i < _args.length; _i++) {
+      var arg = _args[_i];
+
+      if (isTruthyOrZero(arg)) {
+        return arg;
+      }
+    }
+
+    return false;
+  }
 
   function parseDate(date) {
     var d = date;
@@ -546,7 +564,7 @@
    */
 
   function form2obj(el) {
-    if (!isDom(el)) {
+    if (!isDom$1(el)) {
       console.error('Please pass in the dom element');
       return;
     }
@@ -726,6 +744,71 @@
     node.removeChild(scrollDiv);
     return scrollbarWidth;
   }
+  function getStyle(dom) {
+    if (!dom) return {};
+    if (!dom.currentStyle && !window.getComputedStyle) return {};
+    return dom.currentStyle ? dom.currentStyle : window.getComputedStyle(dom);
+  }
+  function checkElementVisible(el) {
+    var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    var _option$fullVisible = option.fullVisible,
+        fullVisible = _option$fullVisible === void 0 ? false : _option$fullVisible,
+        wrapEl = option.wrapEl;
+    var yMin = 0;
+    var xMin = 0;
+    var yMax = window.innerHeight;
+    var xMax = window.innerWidth;
+
+    if (wrapEl) {
+      var _wrapEl$getBoundingCl = wrapEl.getBoundingClientRect(),
+          _top = _wrapEl$getBoundingCl.top,
+          _left = _wrapEl$getBoundingCl.left,
+          _bottom = _wrapEl$getBoundingCl.bottom,
+          _right = _wrapEl$getBoundingCl.right;
+
+      yMin += _top;
+      xMin += _left;
+      yMax -= yMax - _bottom;
+      xMax -= xMax - _right; // 减去元素右边到视口右边
+    }
+
+    var _el$getBoundingClient = el.getBoundingClientRect(),
+        top = _el$getBoundingClient.top,
+        left = _el$getBoundingClient.left,
+        bottom = _el$getBoundingClient.bottom,
+        right = _el$getBoundingClient.right;
+
+    var bottomPass = (fullVisible ? bottom : top) < yMax;
+    var topPass = (fullVisible ? top : bottom) > yMin;
+    var leftPass = (fullVisible ? left : right) > xMin;
+    var rightPass = (fullVisible ? right : left) < xMax;
+    return topPass && rightPass && bottomPass && leftPass;
+  }
+  function triggerHighlight(t, color) {
+    if (isDom(t)) {
+      mountHighlight(t, color);
+    } else {
+      var temp = document.querySelectorAll(t);
+
+      if (temp.length) {
+        Array.from(temp).forEach(function (item) {
+          return mountHighlight(item, color);
+        });
+      }
+    }
+  }
+
+  function mountHighlight(target) {
+    var color = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '#1890ff';
+    target.style.boxShadow = "0 0 0 4px ".concat(color);
+
+    function clickHandle() {
+      target.style.boxShadow = '';
+      document.removeEventListener('click', clickHandle);
+    }
+
+    document.addEventListener('click', clickHandle);
+  }
 
   function promisify(fn, receiver) {
     return function () {
@@ -778,6 +861,7 @@
 
   exports.__GLOBAL__ = __GLOBAL__;
   exports.byte2text = byte2text;
+  exports.checkElementVisible = checkElementVisible;
   exports.createRandString = createRandString;
   exports.datetime = datetime;
   exports.decimalPrecision = decimalPrecision;
@@ -787,18 +871,20 @@
   exports.formatString = formatString;
   exports.getDateCountDown = getDateCountDown;
   exports.getDateStringFirst = getDateStringFirst;
+  exports.getFirstTruthyOrZero = getFirstTruthyOrZero;
   exports.getGlobal = getGlobal;
   exports.getPortalsNode = getPortalsNode;
   exports.getProtoStr = getProtoStr;
   exports.getRandRange = getRandRange;
   exports.getScrollBarWidth = getScrollBarWidth;
+  exports.getStyle = getStyle;
   exports.heightLightMatchString = heightLightMatchString;
   exports.idCardRegexp = idCardRegexp;
   exports.isArray = isArray;
   exports.isBetweenDate = isBetweenDate;
   exports.isBoolean = isBoolean;
   exports.isDate = isDate;
-  exports.isDom = isDom;
+  exports.isDom = isDom$1;
   exports.isEmpty = isEmpty;
   exports.isError = isError;
   exports.isFunction = isFunction;
@@ -813,6 +899,7 @@
   exports.isString = isString;
   exports.isSymbol = isSymbol;
   exports.isTrueEmpty = isTrueEmpty;
+  exports.isTruthyOrZero = isTruthyOrZero$1;
   exports.isUndefined = isUndefined;
   exports.obj2FormData = obj2FormData;
   exports.omit = omit;
@@ -821,6 +908,7 @@
   exports.promisify = promisify;
   exports.replaceHtmlTags = replaceHtmlTags;
   exports.shakeFalsy = shakeFalsy;
+  exports.triggerHighlight = triggerHighlight;
   exports.unFormatString = unFormatString;
   exports.validateFormatString = validateFormatString;
 

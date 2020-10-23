@@ -98,7 +98,7 @@ function isObject(arg) {
  * @returns {boolean}
  * */
 
-function isDom(o) {
+function isDom$1(o) {
   if (!o) {
     return false;
   }
@@ -220,6 +220,9 @@ function isEmpty(obj) {
 }
 function isNumerical(numLike) {
   return !isNaN(Number(numLike));
+}
+function isTruthyOrZero$1(arg) {
+  return !!arg || arg === 0;
 }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -382,6 +385,21 @@ function unFormatString(str, pattern) {
   }, 0);
   return strArr.join('');
 }
+function getFirstTruthyOrZero() {
+  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
+  }
+
+  for (var _i = 0, _args = args; _i < _args.length; _i++) {
+    var arg = _args[_i];
+
+    if (isTruthyOrZero(arg)) {
+      return arg;
+    }
+  }
+
+  return false;
+}
 
 function parseDate(date) {
   var d = date;
@@ -491,7 +509,7 @@ function isBetweenDate(startDate, endDate, currentDate) {
  */
 
 function form2obj(el) {
-  if (!isDom(el)) {
+  if (!isDom$1(el)) {
     console.error('Please pass in the dom element');
     return;
   }
@@ -671,6 +689,71 @@ function getScrollBarWidth(nodeTarget) {
   node.removeChild(scrollDiv);
   return scrollbarWidth;
 }
+function getStyle(dom) {
+  if (!dom) return {};
+  if (!dom.currentStyle && !window.getComputedStyle) return {};
+  return dom.currentStyle ? dom.currentStyle : window.getComputedStyle(dom);
+}
+function checkElementVisible(el) {
+  var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var _option$fullVisible = option.fullVisible,
+      fullVisible = _option$fullVisible === void 0 ? false : _option$fullVisible,
+      wrapEl = option.wrapEl;
+  var yMin = 0;
+  var xMin = 0;
+  var yMax = window.innerHeight;
+  var xMax = window.innerWidth;
+
+  if (wrapEl) {
+    var _wrapEl$getBoundingCl = wrapEl.getBoundingClientRect(),
+        _top = _wrapEl$getBoundingCl.top,
+        _left = _wrapEl$getBoundingCl.left,
+        _bottom = _wrapEl$getBoundingCl.bottom,
+        _right = _wrapEl$getBoundingCl.right;
+
+    yMin += _top;
+    xMin += _left;
+    yMax -= yMax - _bottom;
+    xMax -= xMax - _right; // 减去元素右边到视口右边
+  }
+
+  var _el$getBoundingClient = el.getBoundingClientRect(),
+      top = _el$getBoundingClient.top,
+      left = _el$getBoundingClient.left,
+      bottom = _el$getBoundingClient.bottom,
+      right = _el$getBoundingClient.right;
+
+  var bottomPass = (fullVisible ? bottom : top) < yMax;
+  var topPass = (fullVisible ? top : bottom) > yMin;
+  var leftPass = (fullVisible ? left : right) > xMin;
+  var rightPass = (fullVisible ? right : left) < xMax;
+  return topPass && rightPass && bottomPass && leftPass;
+}
+function triggerHighlight(t, color) {
+  if (isDom(t)) {
+    mountHighlight(t, color);
+  } else {
+    var temp = document.querySelectorAll(t);
+
+    if (temp.length) {
+      Array.from(temp).forEach(function (item) {
+        return mountHighlight(item, color);
+      });
+    }
+  }
+}
+
+function mountHighlight(target) {
+  var color = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '#1890ff';
+  target.style.boxShadow = "0 0 0 4px ".concat(color);
+
+  function clickHandle() {
+    target.style.boxShadow = '';
+    document.removeEventListener('click', clickHandle);
+  }
+
+  document.addEventListener('click', clickHandle);
+}
 
 function promisify(fn, receiver) {
   return function () {
@@ -721,4 +804,4 @@ var __GLOBAL__ = getGlobal();
 
 var idCardRegexp = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
 
-export { __GLOBAL__, byte2text, createRandString, datetime, decimalPrecision, delay, dumpFn, form2obj, formatString, getDateCountDown, getDateStringFirst, getGlobal, getPortalsNode, getProtoStr, getRandRange, getScrollBarWidth, heightLightMatchString, idCardRegexp, isArray, isBetweenDate, isBoolean, isDate, isDom, isEmpty, isError, isFunction, isInt, isNull, isNullOrUndefined, isNumber, isNumerical, isObject, isPrimitive, isRegExp, isString, isSymbol, isTrueEmpty, isUndefined, obj2FormData, omit, padSingleNumber, parseDate, promisify, replaceHtmlTags, shakeFalsy, unFormatString, validateFormatString };
+export { __GLOBAL__, byte2text, checkElementVisible, createRandString, datetime, decimalPrecision, delay, dumpFn, form2obj, formatString, getDateCountDown, getDateStringFirst, getFirstTruthyOrZero, getGlobal, getPortalsNode, getProtoStr, getRandRange, getScrollBarWidth, getStyle, heightLightMatchString, idCardRegexp, isArray, isBetweenDate, isBoolean, isDate, isDom$1 as isDom, isEmpty, isError, isFunction, isInt, isNull, isNullOrUndefined, isNumber, isNumerical, isObject, isPrimitive, isRegExp, isString, isSymbol, isTrueEmpty, isTruthyOrZero$1 as isTruthyOrZero, isUndefined, obj2FormData, omit, padSingleNumber, parseDate, promisify, replaceHtmlTags, shakeFalsy, triggerHighlight, unFormatString, validateFormatString };

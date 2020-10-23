@@ -47,6 +47,9 @@ export function isTrueEmpty(arg: any): boolean;
 
 export function isEmpty(arg: any): boolean;
 
+/** 如果入参为truthy或0则返回true，否则返回false */
+export function isTruthyOrZero(arg: any): boolean;
+
 /**
  * 检测是否是numberLike(字符数字、数字)
  * @param numLike - 待检测的数字
@@ -63,13 +66,51 @@ export function isNumerical(numLike: number): boolean;
  * */
 export function getPortalsNode(namespace?: string): HTMLDivElement;
 
-
 /**
  * 获取滚动条宽度
  * @param nodeTarget - 如果某些元素通过css定制过滚动条，通过页面级的测量是不能正确获取宽度的，可以使用此属性指定待测量元素所在节点
  * @return 滚动条宽度，在移动端一般都是0
  * */
 export function getScrollBarWidth(nodeTarget?: HTMLElement): number;
+
+/**
+ * 获取指定dom元素的样式值
+ * @param dom - 待查询元素
+ * @return - 包含所有可用样式值的对象，为空对象表示不支持
+ *  */
+export function getStyle(dom: HTMLElement): Partial<CSSStyleDeclaration>;
+
+/**
+ * 元素是否在视口可见位置
+ * @param el - 待检测元素
+ * @param option
+ * @param option.fullVisible - 默认完全不可见时才算不可见，设置为true只要元素有部分遮挡即视为不可见
+ * @param option.wrapEl - 默认以视口计算可见性，通过此项指定元素
+ * */
+export function checkElementVisible(
+  el: HTMLElement,
+  option?: { fullVisible?: boolean; wrapEl?: HTMLElement },
+): boolean;
+
+/**
+ * 根据传入的node节点查询其所有父节点中是否存在指定节点
+ * @param node - 待查询的节点
+ * @param matcher - 匹配器，递归接收父节点，返回值决定是否匹配
+ * @param depth - 查询最大深度
+ * */
+export function getCurrentParent(
+  node: Element,
+  matcher: (node: Element) => boolean,
+  depth: number,
+): boolean;
+
+/** 
+ * 根据元素或选择器对选中元素进行高亮显示
+ * 
+ */
+export function triggerHighlight(target: HTMLElement, color?: string): void;
+export function triggerHighlight(selector: string, color?: string): void;
+export function triggerHighlight(t: string | HTMLElement, color?: string): void;
 
 /* ======================== date ======================= */
 
@@ -134,6 +175,9 @@ export function obj2FormData(obj: AnyObject): FormData;
 export function promisify(fn: AnyFunction, receiver?: object): (...arg: any) => Promise<any>;
 
 export function padSingleNumber(number: number): string;
+
+/** 返回入参中第一个truthy值或0, 用于代替 xx || xx2 || xx3 */
+export function getFirstTruthyOrZero(...args: any): any;
 
 /* ======================== number ======================= */
 
@@ -207,7 +251,11 @@ export const byte2text: Byte2Text;
  // 以上使用均输出:
  // => 你<span style="color: #F83D48">好</span>吗，我很<span style="color: #F83D48">好</span>。
  * */
-export function heightLightMatchString(str: string, regExp: string | RegExp, conf?: { color?: string }): string;
+export function heightLightMatchString(
+  str: string,
+  regExp: string | RegExp,
+  conf?: { color?: string },
+): string;
 
 export const validateFormatString: RegExp;
 
@@ -257,7 +305,10 @@ export function promisify(fn: AnyFunction, receiver?: object): (...arg: any) => 
  * @param payload {* | Error} - 作为resolve值的任意值，如果是Error对象，则promise会抛出异常
  * @return - promise
  * */
-export function delay<T = any>(ms: number, payload?: T | undefined): Promise<T extends Error ? void : T>;
+export function delay<T = any>(
+  ms: number,
+  payload?: T | undefined,
+): Promise<T extends Error ? void : T>;
 
 /** 一个便利函数，接收任意参数并返回 */
 export const dumpFn: (...arg: any[]) => any;

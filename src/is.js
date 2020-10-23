@@ -224,3 +224,7 @@ export function isEmpty(obj) {
 export function isNumerical(numLike) {
   return !isNaN(Number(numLike));
 }
+
+export function isTruthyOrZero(arg) {
+  return !!arg || arg === 0;
+}
