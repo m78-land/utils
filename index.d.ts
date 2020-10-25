@@ -3,9 +3,12 @@
 export interface AnyObject {
   [key: string]: any;
 }
+
+
 export interface AnyFunction {
   (...arg: Array<any>): any;
 }
+
 
 /* ======================== is ======================= */
 type Primitive = null | undefined | boolean | number | string | symbol;
@@ -85,12 +88,19 @@ export function getStyle(dom: HTMLElement): Partial<CSSStyleDeclaration>;
  * @param el - 待检测元素
  * @param option
  * @param option.fullVisible - 默认完全不可见时才算不可见，设置为true只要元素有部分遮挡即视为不可见
- * @param option.wrapEl - 默认以视口计算可见性，通过此项指定元素
+ * @param option.wrapEl - 默认以视口计算可见性，通过此项指定元素(指定wrapEl时，依然会对视口进行检测)
+ * @return - 整体的可见信息和指定方向是否未超过可见边界
  * */
 export function checkElementVisible(
   el: HTMLElement,
   option?: { fullVisible?: boolean; wrapEl?: HTMLElement },
-): boolean;
+): {
+  visible: boolean;
+  top: boolean;
+  left: boolean;
+  right: boolean;
+  bottom: boolean;
+};
 
 /**
  * 根据传入的node节点查询其所有父节点中是否存在指定节点
@@ -101,16 +111,18 @@ export function checkElementVisible(
 export function getCurrentParent(
   node: Element,
   matcher: (node: Element) => boolean,
-  depth: number,
+  depth?: number,
 ): boolean;
 
-/** 
+/**
  * 根据元素或选择器对选中元素进行高亮显示
- * 
  */
 export function triggerHighlight(target: HTMLElement, color?: string): void;
 export function triggerHighlight(selector: string, color?: string): void;
 export function triggerHighlight(t: string | HTMLElement, color?: string): void;
+
+/** 获取首个可滚动父节点 */
+export function getFirstScrollParent(ele: HTMLElement): HTMLElement | null;
 
 /* ======================== date ======================= */
 
@@ -126,12 +138,12 @@ export function parseDate(dateLike: any): Date | null;
  * @param format - 'YYYY-MM-DD hh:mm:ss' | 自定义的格式化串
  * @return - 格式化后的日期字符串，如果日期无效，返回空字符串
  * @example
-     datetime(); // => 2020-06-01 18:45:57
-     datetime('2020-06-01 15:30:30', 'hh时mm分 YYYY年MM月'); // => 15时30分 2020年06月
-     datetime(1591008308782, 'YY年MM月DD日'); // => 21年06月01日
-     datetime('1591008308782'); // => ''
-     datetime('hello'); // => ''
-     datetime(new Date()); // => 2020-06-01 18:46:39
+ datetime(); // => 2020-06-01 18:45:57
+ datetime('2020-06-01 15:30:30', 'hh时mm分 YYYY年MM月'); // => 15时30分 2020年06月
+ datetime(1591008308782, 'YY年MM月DD日'); // => 21年06月01日
+ datetime('1591008308782'); // => ''
+ datetime('hello'); // => ''
+ datetime(new Date()); // => 2020-06-01 18:46:39
  */
 export function datetime(dateLike?: any, format?: string): string;
 
@@ -214,19 +226,23 @@ export function replaceHtmlTags(htmlString: string, val?: string): string;
  *  */
 export function createRandString(number?: number): string;
 
+
 interface FormatStringOption {
   delimiter?: string;
   repeat?: boolean;
   lastRepeat?: boolean;
 }
 
+
 interface Byte2Text {
   (byte: number, conf?: { precision: number }): string;
+
   KB: number;
   MB: number;
   GB: number;
   TB: number;
 }
+
 
 /**
  * 将字节转为适合人类阅读的字符串
@@ -278,14 +294,14 @@ export function shakeFalsy(source: object): object;
  * @param props - 待移除的key, 以逗号分隔的字符串
  * @return - 移除后的新对象
  * @example
-     const obj = {
+ const obj = {
       name: 'lxj',
       age: 18,
       sex: 1,
      };
-     const obj2 = omit<typeof obj, 'age' | 'sex'>(obj, 'age,sex');
+ const obj2 = omit<typeof obj, 'age' | 'sex'>(obj, 'age,sex');
 
-     // => { name: 'lxj' }
+ // => { name: 'lxj' }
  * */
 export function omit<O, P extends string>(obj: O, props: string): Omit<O, P>;
 

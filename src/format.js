@@ -2,6 +2,8 @@
  * 将小于10且大于0的数字转为填充0的字符 如 '01' '05', 小于1的数字始终返回'00'
  * @param {number} number
  */
+import { isTruthyOrZero } from './index';
+
 export function padSingleNumber(number) {
   if (number < 1) {
     return '00';
@@ -47,8 +49,7 @@ function getPatterns(str, pattern, options = {}) {
   if (repeat || lastRepeat) {
     // 传入模式能匹配到的最大长度
     const maxLength = patterns.reduce((prevIndex, index) => {
-      const currentIndex = prevIndex + Number(index);
-      return currentIndex;
+      return prevIndex + Number(index);
     }, 0);
 
     // 需要额外填充的模式长度

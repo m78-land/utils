@@ -1,3 +1,5 @@
+import { isDom } from './index';
+
 const portalsID = 'J__PORTALS__NODE__';
 export const getPortalsNode = (namespace) => {
   const id = portalsID + (namespace ? namespace.toLocaleUpperCase() : 'DEFAULT');
@@ -40,10 +42,18 @@ export function checkElementVisible(
   option = {},
 ) {
   const { fullVisible = false, wrapEl } = option;
-  let yMin = 0;
-  let xMin = 0;
-  let yMax = window.innerHeight;
-  let xMax = window.innerWidth;
+
+  /** 基础边界(用于窗口) */
+  let yMinBase = 0;
+  let xMinBase = 0;
+  let yMaxBase = window.innerHeight;
+  let xMaxBase = window.innerWidth;
+
+  /** 元素边界(用于指定元素边界) */
+  let yMin = yMinBase;
+  let xMin = xMinBase;
+  let yMax = yMaxBase;
+  let xMax = xMaxBase;
 
   if (wrapEl) {
     const { top, left, bottom, right } = wrapEl.getBoundingClientRect();
@@ -55,12 +65,36 @@ export function checkElementVisible(
 
   const { top, left, bottom, right } = el.getBoundingClientRect();
 
-  const bottomPass = (fullVisible ? bottom : top) < yMax;
-  const topPass = (fullVisible ? top : bottom) > yMin;
-  const leftPass = (fullVisible ? left : right) > xMin;
-  const rightPass = (fullVisible ? right : left) < xMax;
+  /** fullVisible检测 */
+  const topPos = fullVisible ? top : bottom;
+  const bottomPos = fullVisible ? bottom : top;
+  const leftPos = fullVisible ? left : right;
+  const rightPos = fullVisible ? right : left;
 
-  return topPass && rightPass && bottomPass && leftPass;
+  const elTopVisible = topPos > yMin;
+  const winTopVisible = topPos > yMinBase;
+
+  const elLeftVisible = leftPos > xMin;
+  const winLeftVisible = leftPos > xMinBase;
+
+  const elBottomVisible = bottomPos < yMax;
+  const winBottomVisible = bottomPos < yMaxBase;
+
+  const elRightVisible = rightPos < xMax;
+  const winRightVisible = rightPos < xMaxBase;
+
+  const topVisible = elTopVisible && winTopVisible;
+  const leftVisible = elLeftVisible && winLeftVisible;
+  const bottomVisible = elBottomVisible && winBottomVisible;
+  const rightVisible = elRightVisible && winRightVisible;
+
+  return {
+    visible: topVisible && leftVisible && rightVisible && bottomVisible,
+    top: topVisible,
+    left: leftVisible,
+    right: rightVisible,
+    bottom: bottomVisible,
+  }
 }
 
 export function triggerHighlight(t, color) {
@@ -84,4 +118,73 @@ function mountHighlight(target, color = '#1890ff') {
   }
 
   document.addEventListener('click', clickHandle);
+}
+
+export function getCurrentParent(node, matcher, depth) {
+  let hasMatch = false;
+
+  let cDepth = 0;
+
+  function recur(n) {
+    if (depth) {
+      cDepth++;
+      if (cDepth === depth) return;
+    }
+
+    if (!n) {
+      return;
+    }
+    const pNode = n.parentNode;
+
+    if (pNode) {
+      const res = matcher(pNode);
+      if (res) {
+        hasMatch = true;
+        return;
+      }
+    }
+
+    recur(pNode);
+  }
+
+  recur(node);
+
+  return hasMatch;
+}
+
+export function getFirstScrollParent(ele) {
+  let node = null;
+
+  function handle(el) {
+    const parent = el.parentNode;
+
+    if (parent) {
+      const e = parent;
+      const h = e.clientHeight;
+      const sH = e.scrollHeight;
+
+      if (sH > h) {
+        const { overflow } = getStyle(e);
+
+        /* body和html元素不需要执行下面检测 */
+        if (e === document.documentElement || e === document.body) {
+          node = e;
+          return;
+        }
+
+        if (overflow === 'scroll' || overflow === 'auto') {
+          node = e;
+          return;
+        }
+      }
+
+      handle(e);
+    } else {
+      // 无匹配
+    }
+  }
+
+  handle(ele);
+
+  return node;
 }

@@ -1,13 +1,30 @@
-import React from 'react';
-import { heightLightMatchString } from './index';
+import React, { useRef, useEffect } from 'react';
+import { checkElementVisible } from './index';
 
-console.log(heightLightMatchString('你好吗，我很好。', '好'));
-console.log(heightLightMatchString('你好吗，我很好。', /好/));
+import './test.css'
 
 const Test = () => {
+
+  const ref = useRef();
+  const ref2 = useRef();
+
+  useEffect(() => {
+    const handle = () => {
+      console.log(checkElementVisible(ref2.current, {
+        wrapEl: ref.current,
+        fullVisible: true,
+      }));
+    }
+
+    ref.current.addEventListener('scroll', handle)
+    window.addEventListener('scroll', handle)
+  }, []);
+
   return (
-    <div>
-      Test
+    <div className="box" ref={ref}>
+      <div className="innerBox">
+        <div ref={ref2} className="testBox" style={ { top: 200, left: 500 } }/>
+      </div>
     </div>
   );
 };

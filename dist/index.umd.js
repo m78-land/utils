@@ -5,8 +5,6 @@
 }(this, function (exports) { 'use strict';
 
   function _typeof(obj) {
-    "@babel/helpers - typeof";
-
     if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
       _typeof = function _typeof(obj) {
         return typeof obj;
@@ -116,7 +114,7 @@
    * @returns {boolean}
    * */
 
-  function isDom$1(o) {
+  function isDom(o) {
     if (!o) {
       return false;
     }
@@ -239,7 +237,7 @@
   function isNumerical(numLike) {
     return !isNaN(Number(numLike));
   }
-  function isTruthyOrZero$1(arg) {
+  function isTruthyOrZero(arg) {
     return !!arg || arg === 0;
   }
 
@@ -280,14 +278,25 @@
     return obj;
   }
 
-  function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+  function _objectSpread(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i] != null ? arguments[i] : {};
+      var ownKeys = Object.keys(Object(source));
 
-  function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+      if (typeof Object.getOwnPropertySymbols === 'function') {
+        ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
+          return Object.getOwnPropertyDescriptor(source, sym).enumerable;
+        }));
+      }
 
-  /**
-   * 将小于10且大于0的数字转为填充0的字符 如 '01' '05', 小于1的数字始终返回'00'
-   * @param {number} number
-   */
+      ownKeys.forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      });
+    }
+
+    return target;
+  }
+
   function padSingleNumber(number) {
     if (number < 1) {
       return '00';
@@ -311,7 +320,7 @@
   function getPatterns(str, pattern) {
     var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-    var _defaultConfig$option = _objectSpread({}, defaultConfig, {}, options),
+    var _defaultConfig$option = _objectSpread({}, defaultConfig, options),
         repeat = _defaultConfig$option.repeat,
         lastRepeat = _defaultConfig$option.lastRepeat;
 
@@ -333,8 +342,7 @@
     if (repeat || lastRepeat) {
       // 传入模式能匹配到的最大长度
       var maxLength = patterns.reduce(function (prevIndex, index) {
-        var currentIndex = prevIndex + Number(index);
-        return currentIndex;
+        return prevIndex + Number(index);
       }, 0); // 需要额外填充的模式长度
 
       var fillLength; // 模式组最后一位，用于lastRepeat
@@ -378,7 +386,7 @@
   function formatString(str, pattern) {
     var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-    var _defaultConfig$option2 = _objectSpread({}, defaultConfig, {}, options),
+    var _defaultConfig$option2 = _objectSpread({}, defaultConfig, options),
         delimiter = _defaultConfig$option2.delimiter,
         repeat = _defaultConfig$option2.repeat,
         lastRepeat = _defaultConfig$option2.lastRepeat;
@@ -416,7 +424,7 @@
   function unFormatString(str, pattern) {
     var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-    var _defaultConfig$option3 = _objectSpread({}, defaultConfig, {}, options),
+    var _defaultConfig$option3 = _objectSpread({}, defaultConfig, options),
         delimiter = _defaultConfig$option3.delimiter,
         repeat = _defaultConfig$option3.repeat,
         lastRepeat = _defaultConfig$option3.lastRepeat;
@@ -564,7 +572,7 @@
    */
 
   function form2obj(el) {
-    if (!isDom$1(el)) {
+    if (!isDom(el)) {
       console.error('Please pass in the dom element');
       return;
     }
@@ -646,10 +654,6 @@
     return result;
   }
 
-  function ownKeys$1(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-  function _objectSpread$1(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$1(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$1(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
   function replaceHtmlTags() {
     var str = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
     var val = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
@@ -672,7 +676,7 @@
     precision: 1
   };
   var byte2text = function byte2text(byte, conf) {
-    var cf = _objectSpread$1({}, byte2textDefaultConfig, {}, conf);
+    var cf = _objectSpread({}, byte2textDefaultConfig, conf);
 
     var s = '';
 
@@ -698,7 +702,7 @@
   function heightLightMatchString(str, regExp, conf) {
     if (!str || !regExp) return str || '';
 
-    var cf = _objectSpread$1({}, heightLightMatchStringDefaultConf, {}, conf);
+    var cf = _objectSpread({}, heightLightMatchStringDefaultConf, conf);
 
     var reg = new RegExp(regExp, 'g');
     return str.replace(reg, function (s) {
@@ -754,10 +758,18 @@
     var _option$fullVisible = option.fullVisible,
         fullVisible = _option$fullVisible === void 0 ? false : _option$fullVisible,
         wrapEl = option.wrapEl;
-    var yMin = 0;
-    var xMin = 0;
-    var yMax = window.innerHeight;
-    var xMax = window.innerWidth;
+    /** 基础边界(用于窗口) */
+
+    var yMinBase = 0;
+    var xMinBase = 0;
+    var yMaxBase = window.innerHeight;
+    var xMaxBase = window.innerWidth;
+    /** 元素边界(用于指定元素边界) */
+
+    var yMin = yMinBase;
+    var xMin = xMinBase;
+    var yMax = yMaxBase;
+    var xMax = xMaxBase;
 
     if (wrapEl) {
       var _wrapEl$getBoundingCl = wrapEl.getBoundingClientRect(),
@@ -777,12 +789,32 @@
         left = _el$getBoundingClient.left,
         bottom = _el$getBoundingClient.bottom,
         right = _el$getBoundingClient.right;
+    /** fullVisible检测 */
 
-    var bottomPass = (fullVisible ? bottom : top) < yMax;
-    var topPass = (fullVisible ? top : bottom) > yMin;
-    var leftPass = (fullVisible ? left : right) > xMin;
-    var rightPass = (fullVisible ? right : left) < xMax;
-    return topPass && rightPass && bottomPass && leftPass;
+
+    var topPos = fullVisible ? top : bottom;
+    var bottomPos = fullVisible ? bottom : top;
+    var leftPos = fullVisible ? left : right;
+    var rightPos = fullVisible ? right : left;
+    var elTopVisible = topPos > yMin;
+    var winTopVisible = topPos > yMinBase;
+    var elLeftVisible = leftPos > xMin;
+    var winLeftVisible = leftPos > xMinBase;
+    var elBottomVisible = bottomPos < yMax;
+    var winBottomVisible = bottomPos < yMaxBase;
+    var elRightVisible = rightPos < xMax;
+    var winRightVisible = rightPos < xMaxBase;
+    var topVisible = elTopVisible && winTopVisible;
+    var leftVisible = elLeftVisible && winLeftVisible;
+    var bottomVisible = elBottomVisible && winBottomVisible;
+    var rightVisible = elRightVisible && winRightVisible;
+    return {
+      visible: topVisible && leftVisible && rightVisible && bottomVisible,
+      top: topVisible,
+      left: leftVisible,
+      right: rightVisible,
+      bottom: bottomVisible
+    };
   }
   function triggerHighlight(t, color) {
     if (isDom(t)) {
@@ -808,6 +840,73 @@
     }
 
     document.addEventListener('click', clickHandle);
+  }
+
+  function getCurrentParent(node, matcher, depth) {
+    var hasMatch = false;
+    var cDepth = 0;
+
+    function recur(n) {
+      if (depth) {
+        cDepth++;
+        if (cDepth === depth) return;
+      }
+
+      if (!n) {
+        return;
+      }
+
+      var pNode = n.parentNode;
+
+      if (pNode) {
+        var res = matcher(pNode);
+
+        if (res) {
+          hasMatch = true;
+          return;
+        }
+      }
+
+      recur(pNode);
+    }
+
+    recur(node);
+    return hasMatch;
+  }
+  function getFirstScrollParent(ele) {
+    var node = null;
+
+    function handle(el) {
+      var parent = el.parentNode;
+
+      if (parent) {
+        var e = parent;
+        var h = e.clientHeight;
+        var sH = e.scrollHeight;
+
+        if (sH > h) {
+          var _getStyle = getStyle(e),
+              overflow = _getStyle.overflow;
+          /* body和html元素不需要执行下面检测 */
+
+
+          if (e === document.documentElement || e === document.body) {
+            node = e;
+            return;
+          }
+
+          if (overflow === 'scroll' || overflow === 'auto') {
+            node = e;
+            return;
+          }
+        }
+
+        handle(e);
+      }
+    }
+
+    handle(ele);
+    return node;
   }
 
   function promisify(fn, receiver) {
@@ -869,8 +968,10 @@
   exports.dumpFn = dumpFn;
   exports.form2obj = form2obj;
   exports.formatString = formatString;
+  exports.getCurrentParent = getCurrentParent;
   exports.getDateCountDown = getDateCountDown;
   exports.getDateStringFirst = getDateStringFirst;
+  exports.getFirstScrollParent = getFirstScrollParent;
   exports.getFirstTruthyOrZero = getFirstTruthyOrZero;
   exports.getGlobal = getGlobal;
   exports.getPortalsNode = getPortalsNode;
@@ -884,7 +985,7 @@
   exports.isBetweenDate = isBetweenDate;
   exports.isBoolean = isBoolean;
   exports.isDate = isDate;
-  exports.isDom = isDom$1;
+  exports.isDom = isDom;
   exports.isEmpty = isEmpty;
   exports.isError = isError;
   exports.isFunction = isFunction;
@@ -899,7 +1000,7 @@
   exports.isString = isString;
   exports.isSymbol = isSymbol;
   exports.isTrueEmpty = isTrueEmpty;
-  exports.isTruthyOrZero = isTruthyOrZero$1;
+  exports.isTruthyOrZero = isTruthyOrZero;
   exports.isUndefined = isUndefined;
   exports.obj2FormData = obj2FormData;
   exports.omit = omit;
