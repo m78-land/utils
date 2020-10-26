@@ -749,7 +749,7 @@ function getStyle(dom) {
   if (!dom.currentStyle && !window.getComputedStyle) return {};
   return dom.currentStyle ? dom.currentStyle : window.getComputedStyle(dom);
 }
-function checkElementVisible(el) {
+function checkElementVisible(target) {
   var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   var _option$fullVisible = option.fullVisible,
       fullVisible = _option$fullVisible === void 0 ? false : _option$fullVisible,
@@ -780,11 +780,11 @@ function checkElementVisible(el) {
     xMax -= xMax - _right; // 减去元素右边到视口右边
   }
 
-  var _el$getBoundingClient = el.getBoundingClientRect(),
-      top = _el$getBoundingClient.top,
-      left = _el$getBoundingClient.left,
-      bottom = _el$getBoundingClient.bottom,
-      right = _el$getBoundingClient.right;
+  var _ref = isDom(target) ? target.getBoundingClientRect() : target,
+      top = _ref.top,
+      left = _ref.left,
+      bottom = _ref.bottom,
+      right = _ref.right;
   /** fullVisible检测 */
 
 

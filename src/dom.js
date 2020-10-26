@@ -38,16 +38,16 @@ export function getStyle(dom) {
 }
 
 export function checkElementVisible(
-  el,
+  target,
   option = {},
 ) {
   const { fullVisible = false, wrapEl } = option;
 
   /** 基础边界(用于窗口) */
-  let yMinBase = 0;
-  let xMinBase = 0;
-  let yMaxBase = window.innerHeight;
-  let xMaxBase = window.innerWidth;
+  const yMinBase = 0;
+  const xMinBase = 0;
+  const yMaxBase = window.innerHeight;
+  const xMaxBase = window.innerWidth;
 
   /** 元素边界(用于指定元素边界) */
   let yMin = yMinBase;
@@ -63,7 +63,7 @@ export function checkElementVisible(
     xMax -= xMax - right; // 减去元素右边到视口右边
   }
 
-  const { top, left, bottom, right } = el.getBoundingClientRect();
+  const { top, left, bottom, right } = isDom(target) ? target.getBoundingClientRect() : target;
 
   /** fullVisible检测 */
   const topPos = fullVisible ? top : bottom;
@@ -94,7 +94,7 @@ export function checkElementVisible(
     left: leftVisible,
     right: rightVisible,
     bottom: bottomVisible,
-  }
+  };
 }
 
 export function triggerHighlight(t, color) {

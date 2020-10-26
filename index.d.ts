@@ -85,14 +85,19 @@ export function getStyle(dom: HTMLElement): Partial<CSSStyleDeclaration>;
 
 /**
  * 元素是否在视口可见位置
- * @param el - 待检测元素
+ * @param el - 待检测元素 或表示位置信息的对象
  * @param option
  * @param option.fullVisible - 默认完全不可见时才算不可见，设置为true只要元素有部分遮挡即视为不可见
  * @param option.wrapEl - 默认以视口计算可见性，通过此项指定元素(指定wrapEl时，依然会对视口进行检测)
  * @return - 整体的可见信息和指定方向是否未超过可见边界
  * */
 export function checkElementVisible(
-  el: HTMLElement,
+  el: HTMLElement | {
+    right: number;
+    bottom: number;
+    left: number;
+    top: number;
+  },
   option?: { fullVisible?: boolean; wrapEl?: HTMLElement },
 ): {
   visible: boolean;
