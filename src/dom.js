@@ -1,4 +1,4 @@
-import { isDom } from './index';
+import { isDom, isNumber } from './index';
 
 const portalsID = 'J__PORTALS__NODE__';
 export const getPortalsNode = (namespace) => {
@@ -41,7 +41,9 @@ export function checkElementVisible(
   target,
   option = {},
 ) {
-  const { fullVisible = false, wrapEl } = option;
+  const { fullVisible = false, wrapEl, offset = 0 } = option;
+
+  const ofs = getOffsetObj(offset);
 
   /** 基础边界(用于窗口) */
   const yMinBase = 0;
@@ -63,7 +65,9 @@ export function checkElementVisible(
     xMax -= xMax - right; // 减去元素右边到视口右边
   }
 
-  const { top, left, bottom, right } = isDom(target) ? target.getBoundingClientRect() : target;
+  const bound = isDom(target) ? target.getBoundingClientRect() : target;
+
+  const { top, left, bottom, right } = offsetCalc(bound, ofs);
 
   /** fullVisible检测 */
   const topPos = fullVisible ? top : bottom;
@@ -94,6 +98,36 @@ export function checkElementVisible(
     left: leftVisible,
     right: rightVisible,
     bottom: bottomVisible,
+    bound,
+  };
+}
+
+/** 用于checkElementVisible获取offset四个方向的值 */
+function getOffsetObj(offset) {
+  const ofs = { left: 0, top: 0, right: 0, bottom: 0 };
+
+  if (!offset) return ofs;
+
+  if (isNumber(offset)) {
+    return { left: offset, top: offset, right: offset, bottom: offset };
+  }
+
+  Object.keys(ofs).forEach(key => {
+    if (isNumber(offset[key])) {
+      ofs[key] = offset[key];
+    }
+  });
+
+  return ofs;
+}
+
+/** 用于checkElement，计算offset对象和当前位置对象的最终值 */
+function offsetCalc(bound, offset) {
+  return {
+    top: bound.top - offset.top,
+    left: bound.left - offset.left,
+    right: bound.right + offset.right,
+    bottom: bound.bottom + offset.bottom,
   };
 }
 
@@ -109,7 +143,7 @@ export function triggerHighlight(t, color) {
 }
 
 function mountHighlight(target, color = '#1890ff') {
-  target.style.boxShadow = `0 0 0 4px ${color}`;
+  target.style.boxShadow = `0 0 0 4px ${ color }`;
 
   function clickHandle() {
     target.style.boxShadow = '';

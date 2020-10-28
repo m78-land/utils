@@ -1,6 +1,6 @@
 {
   "name": "@lxjx/utils",
-  "version": "1.7.4",
+  "version": "1.8.0",
   "description": "a useful util functions kit",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",

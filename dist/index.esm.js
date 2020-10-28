@@ -685,7 +685,10 @@ function checkElementVisible(target) {
   var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   var _option$fullVisible = option.fullVisible,
       fullVisible = _option$fullVisible === void 0 ? false : _option$fullVisible,
-      wrapEl = option.wrapEl;
+      wrapEl = option.wrapEl,
+      _option$offset = option.offset,
+      offset = _option$offset === void 0 ? 0 : _option$offset;
+  var ofs = getOffsetObj(offset);
   /** 基础边界(用于窗口) */
 
   var yMinBase = 0;
@@ -712,11 +715,13 @@ function checkElementVisible(target) {
     xMax -= xMax - _right; // 减去元素右边到视口右边
   }
 
-  var _ref = isDom(target) ? target.getBoundingClientRect() : target,
-      top = _ref.top,
-      left = _ref.left,
-      bottom = _ref.bottom,
-      right = _ref.right;
+  var bound = isDom(target) ? target.getBoundingClientRect() : target;
+
+  var _offsetCalc = offsetCalc(bound, ofs),
+      top = _offsetCalc.top,
+      left = _offsetCalc.left,
+      bottom = _offsetCalc.bottom,
+      right = _offsetCalc.right;
   /** fullVisible检测 */
 
 
@@ -741,9 +746,49 @@ function checkElementVisible(target) {
     top: topVisible,
     left: leftVisible,
     right: rightVisible,
-    bottom: bottomVisible
+    bottom: bottomVisible,
+    bound: bound
   };
 }
+/** 用于checkElementVisible获取offset四个方向的值 */
+
+function getOffsetObj(offset) {
+  var ofs = {
+    left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0
+  };
+  if (!offset) return ofs;
+
+  if (isNumber(offset)) {
+    return {
+      left: offset,
+      top: offset,
+      right: offset,
+      bottom: offset
+    };
+  }
+
+  Object.keys(ofs).forEach(function (key) {
+    if (isNumber(offset[key])) {
+      ofs[key] = offset[key];
+    }
+  });
+  return ofs;
+}
+/** 用于checkElement，计算offset对象和当前位置对象的最终值 */
+
+
+function offsetCalc(bound, offset) {
+  return {
+    top: bound.top - offset.top,
+    left: bound.left - offset.left,
+    right: bound.right + offset.right,
+    bottom: bound.bottom + offset.bottom
+  };
+}
+
 function triggerHighlight(t, color) {
   if (isDom(t)) {
     mountHighlight(t, color);
