@@ -1,30 +1,31 @@
-import React, { useRef, useEffect } from 'react';
-import { checkElementVisible } from './index';
+import React from 'react';
+import { compose } from './index';
 
 import './test.css'
 
+
+function a(num) {
+  console.log(1);
+  return `${num + 1}`;
+}
+
+function b(sNum) {
+  console.log(2);
+  return sNum;
+}
+
+function log(str) {
+  console.log(3);
+ console.log(str)
+}
+
+compose(log, b, a)(10)
+
 const Test = () => {
 
-  const ref = useRef();
-  const ref2 = useRef();
-
-  useEffect(() => {
-    const handle = () => {
-      console.log(checkElementVisible(ref2.current, {
-        wrapEl: ref.current,
-        fullVisible: true,
-      }));
-    }
-
-    ref.current.addEventListener('scroll', handle)
-    window.addEventListener('scroll', handle)
-  }, []);
-
   return (
-    <div className="box" ref={ref}>
-      <div className="innerBox">
-        <div ref={ref2} className="testBox" style={ { top: 200, left: 500 } }/>
-      </div>
+    <div>
+      21321321
     </div>
   );
 };
