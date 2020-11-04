@@ -1,1 +1,3 @@
-import { byte2text } from '../';
+import { compose } from '../';
+
+

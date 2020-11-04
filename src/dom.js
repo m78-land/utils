@@ -222,3 +222,14 @@ export function getFirstScrollParent(ele) {
 
   return node;
 }
+
+
+export function getDocScrollOffset() {
+  const doc = document.documentElement;
+  const body = document.body;
+
+  return {
+    x: doc.scrollLeft + body.scrollLeft,
+    y: doc.scrollTop + body.scrollTop,
+  };
+}

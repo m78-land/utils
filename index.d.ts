@@ -131,6 +131,13 @@ export function triggerHighlight(t: string | HTMLElement, color?: string): void;
 /** 获取首个可滚动父节点 */
 export function getFirstScrollParent(ele: HTMLElement): HTMLElement | null;
 
+
+/** 窗口滚动偏移, 用于解决不同版本浏览器获取方式不一致的问题 */
+export function getDocScrollOffset(): {
+  x: number;
+  y: number;
+}
+
 /* ======================== date ======================= */
 
 /**
@@ -335,6 +342,7 @@ export function delay<T = any>(
 
 /** 一个便利函数，接收任意参数并返回 */
 export const dumpFn: (...arg: any[]) => any;
+
 
 /* ======================== regexp ======================= */
 /** 身份证号正则, */
