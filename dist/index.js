@@ -31,35 +31,20 @@ function _defineProperty(obj, key, value) {
   return obj;
 }
 
-function ownKeys(object, enumerableOnly) {
-  var keys = Object.keys(object);
-
-  if (Object.getOwnPropertySymbols) {
-    var symbols = Object.getOwnPropertySymbols(object);
-    if (enumerableOnly) symbols = symbols.filter(function (sym) {
-      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-    });
-    keys.push.apply(keys, symbols);
-  }
-
-  return keys;
-}
-
-function _objectSpread2(target) {
+function _objectSpread(target) {
   for (var i = 1; i < arguments.length; i++) {
     var source = arguments[i] != null ? arguments[i] : {};
+    var ownKeys = Object.keys(source);
 
-    if (i % 2) {
-      ownKeys(source, true).forEach(function (key) {
-        _defineProperty(target, key, source[key]);
-      });
-    } else if (Object.getOwnPropertyDescriptors) {
-      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-    } else {
-      ownKeys(source).forEach(function (key) {
-        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-      });
+    if (typeof Object.getOwnPropertySymbols === 'function') {
+      ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
+        return Object.getOwnPropertyDescriptor(source, sym).enumerable;
+      }));
     }
+
+    ownKeys.forEach(function (key) {
+      _defineProperty(target, key, source[key]);
+    });
   }
 
   return target;
@@ -331,7 +316,7 @@ var defaultConfig = {
 function getPatterns(str, pattern) {
   var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-  var _defaultConfig$option = _objectSpread2({}, defaultConfig, {}, options),
+  var _defaultConfig$option = _objectSpread({}, defaultConfig, options),
       repeat = _defaultConfig$option.repeat,
       lastRepeat = _defaultConfig$option.lastRepeat;
 
@@ -397,7 +382,7 @@ function getPatterns(str, pattern) {
 function formatString(str, pattern) {
   var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-  var _defaultConfig$option2 = _objectSpread2({}, defaultConfig, {}, options),
+  var _defaultConfig$option2 = _objectSpread({}, defaultConfig, options),
       delimiter = _defaultConfig$option2.delimiter,
       repeat = _defaultConfig$option2.repeat,
       lastRepeat = _defaultConfig$option2.lastRepeat;
@@ -435,7 +420,7 @@ function formatString(str, pattern) {
 function unFormatString(str, pattern) {
   var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-  var _defaultConfig$option3 = _objectSpread2({}, defaultConfig, {}, options),
+  var _defaultConfig$option3 = _objectSpread({}, defaultConfig, options),
       delimiter = _defaultConfig$option3.delimiter,
       repeat = _defaultConfig$option3.repeat,
       lastRepeat = _defaultConfig$option3.lastRepeat;
@@ -687,7 +672,7 @@ var byte2textDefaultConfig = {
   precision: 1
 };
 var byte2text = function byte2text(byte, conf) {
-  var cf = _objectSpread2({}, byte2textDefaultConfig, {}, conf);
+  var cf = _objectSpread({}, byte2textDefaultConfig, conf);
 
   var s = '';
 
@@ -713,7 +698,7 @@ var heightLightMatchStringDefaultConf = {
 function heightLightMatchString(str, regExp, conf) {
   if (!str || !regExp) return str || '';
 
-  var cf = _objectSpread2({}, heightLightMatchStringDefaultConf, {}, conf);
+  var cf = _objectSpread({}, heightLightMatchStringDefaultConf, conf);
 
   var reg = new RegExp(regExp, 'g');
   return str.replace(reg, function (s) {

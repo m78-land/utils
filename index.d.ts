@@ -99,7 +99,7 @@ export function checkElementVisible(
     left: number;
     top: number;
   },
-  option?: { fullVisible?: boolean; wrapEl?: HTMLElement; offset: number | { left?: number; top?: number; right?: number; bottom?: number; } },
+  option?: { fullVisible?: boolean; wrapEl?: HTMLElement; offset?: number | { left?: number; top?: number; right?: number; bottom?: number; } },
 ): {
   visible: boolean;
   top: boolean;
