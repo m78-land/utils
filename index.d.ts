@@ -346,7 +346,7 @@ export function delay<T = any>(
 export const dumpFn: (...arg: any[]) => any;
 
 /** 延迟执行一个函数 */
-export function defer(fn: fun, ...args?: any[]): any;
+export function defer(fn: AnyFunction, ...args?: any[]): any;
 
 
 /* ======================== regexp ======================= */
