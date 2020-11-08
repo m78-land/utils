@@ -19,6 +19,11 @@ export function isArray(arg) {
   return getProtoStr(arg) === '[object Array]';
 }
 
+export function isTruthyArray(arg) {
+  if (!isArray(arg)) return false;
+  return arg.length !== 0;
+}
+
 /**
  * 检测是否为数字
  * @param {*} arg - 需待查询的对象

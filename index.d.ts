@@ -15,6 +15,8 @@ type Primitive = null | undefined | boolean | number | string | symbol;
 
 export function isArray(arg: any): arg is any[];
 
+export function isTruthyArray<T = any>(arg: any): arg is T[];
+
 export function isNumber(arg: any): arg is number;
 
 export function isString(arg: any): arg is string;
@@ -342,6 +344,9 @@ export function delay<T = any>(
 
 /** 一个便利函数，接收任意参数并返回 */
 export const dumpFn: (...arg: any[]) => any;
+
+/** 延迟执行一个函数 */
+export function defer(fn: fun, ...args?: any[]): any;
 
 
 /* ======================== regexp ======================= */

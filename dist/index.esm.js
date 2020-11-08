@@ -1,6 +1,6 @@
 import _typeof from '@babel/runtime/helpers/esm/typeof';
 import _toConsumableArray from '@babel/runtime/helpers/esm/toConsumableArray';
-import _defineProperty from '@babel/runtime/helpers/esm/defineProperty';
+import _objectSpread from '@babel/runtime/helpers/esm/objectSpread';
 
 /**
  * 获取表示对象原始类型的字符串
@@ -22,6 +22,10 @@ function isArray(arg) {
   }
 
   return getProtoStr(arg) === '[object Array]';
+}
+function isTruthyArray(arg) {
+  if (!isArray(arg)) return false;
+  return arg.length !== 0;
 }
 /**
  * 检测是否为数字
@@ -225,9 +229,6 @@ function isTruthyOrZero(arg) {
   return !!arg || arg === 0;
 }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 function padSingleNumber(number) {
   if (number < 1) {
     return '00';
@@ -251,7 +252,7 @@ var defaultConfig = {
 function getPatterns(str, pattern) {
   var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-  var _defaultConfig$option = _objectSpread({}, defaultConfig, {}, options),
+  var _defaultConfig$option = _objectSpread({}, defaultConfig, options),
       repeat = _defaultConfig$option.repeat,
       lastRepeat = _defaultConfig$option.lastRepeat;
 
@@ -317,7 +318,7 @@ function getPatterns(str, pattern) {
 function formatString(str, pattern) {
   var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-  var _defaultConfig$option2 = _objectSpread({}, defaultConfig, {}, options),
+  var _defaultConfig$option2 = _objectSpread({}, defaultConfig, options),
       delimiter = _defaultConfig$option2.delimiter,
       repeat = _defaultConfig$option2.repeat,
       lastRepeat = _defaultConfig$option2.lastRepeat;
@@ -355,7 +356,7 @@ function formatString(str, pattern) {
 function unFormatString(str, pattern) {
   var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-  var _defaultConfig$option3 = _objectSpread({}, defaultConfig, {}, options),
+  var _defaultConfig$option3 = _objectSpread({}, defaultConfig, options),
       delimiter = _defaultConfig$option3.delimiter,
       repeat = _defaultConfig$option3.repeat,
       lastRepeat = _defaultConfig$option3.lastRepeat;
@@ -585,10 +586,6 @@ function omit(obj, props) {
   return result;
 }
 
-function ownKeys$1(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread$1(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$1(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$1(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
 function replaceHtmlTags() {
   var str = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
   var val = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
@@ -611,7 +608,7 @@ var byte2textDefaultConfig = {
   precision: 1
 };
 var byte2text = function byte2text(byte, conf) {
-  var cf = _objectSpread$1({}, byte2textDefaultConfig, {}, conf);
+  var cf = _objectSpread({}, byte2textDefaultConfig, conf);
 
   var s = '';
 
@@ -637,7 +634,7 @@ var heightLightMatchStringDefaultConf = {
 function heightLightMatchString(str, regExp, conf) {
   if (!str || !regExp) return str || '';
 
-  var cf = _objectSpread$1({}, heightLightMatchStringDefaultConf, {}, conf);
+  var cf = _objectSpread({}, heightLightMatchStringDefaultConf, conf);
 
   var reg = new RegExp(regExp, 'g');
   return str.replace(reg, function (s) {
@@ -924,6 +921,13 @@ var dumpFn = function dumpFn() {
 
   return arg;
 };
+function defer(fn) {
+  for (var _len3 = arguments.length, args = new Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+    args[_key3 - 1] = arguments[_key3];
+  }
+
+  return setTimeout.apply(void 0, [fn, 1].concat(args));
+}
 
 function getGlobal() {
   // eslint-disable-next-line no-restricted-globals
@@ -946,4 +950,4 @@ var __GLOBAL__ = getGlobal();
 
 var idCardRegexp = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
 
-export { __GLOBAL__, byte2text, checkElementVisible, createRandString, datetime, decimalPrecision, delay, dumpFn, form2obj, formatString, getCurrentParent, getDateCountDown, getDateStringFirst, getDocScrollOffset, getFirstScrollParent, getFirstTruthyOrZero, getGlobal, getPortalsNode, getProtoStr, getRandRange, getScrollBarWidth, getStyle, heightLightMatchString, idCardRegexp, isArray, isBetweenDate, isBoolean, isDate, isDom, isEmpty, isError, isFunction, isInt, isNull, isNullOrUndefined, isNumber, isNumerical, isObject, isPrimitive, isRegExp, isString, isSymbol, isTrueEmpty, isTruthyOrZero, isUndefined, obj2FormData, omit, padSingleNumber, parseDate, promisify, replaceHtmlTags, shakeFalsy, triggerHighlight, unFormatString, validateFormatString };
+export { __GLOBAL__, byte2text, checkElementVisible, createRandString, datetime, decimalPrecision, defer, delay, dumpFn, form2obj, formatString, getCurrentParent, getDateCountDown, getDateStringFirst, getDocScrollOffset, getFirstScrollParent, getFirstTruthyOrZero, getGlobal, getPortalsNode, getProtoStr, getRandRange, getScrollBarWidth, getStyle, heightLightMatchString, idCardRegexp, isArray, isBetweenDate, isBoolean, isDate, isDom, isEmpty, isError, isFunction, isInt, isNull, isNullOrUndefined, isNumber, isNumerical, isObject, isPrimitive, isRegExp, isString, isSymbol, isTrueEmpty, isTruthyArray, isTruthyOrZero, isUndefined, obj2FormData, omit, padSingleNumber, parseDate, promisify, replaceHtmlTags, shakeFalsy, triggerHighlight, unFormatString, validateFormatString };

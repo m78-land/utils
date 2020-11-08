@@ -19,3 +19,7 @@ export function delay(ms, payload) {
 }
 
 export const dumpFn = (...arg) => arg;
+
+export function defer(fn, ...args) {
+  return setTimeout(fn, 1, ...args)
+}
