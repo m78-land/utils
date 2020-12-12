@@ -21,8 +21,10 @@ export function isNumber(arg: any): arg is number;
 
 export function isString(arg: any): arg is string;
 
-/* 仅匹配是否为数字 */
 export function isInt(arg: any): arg is number;
+
+/** 检测是否为弱数字(可转为数字的字符数字或数字) */
+export function isWeakNumber(arg: any): boolean;
 
 export function isSymbol(arg: any): arg is symbol;
 
@@ -123,22 +125,43 @@ export function getCurrentParent(
   depth?: number,
 ): boolean;
 
+interface TriggerHighlightConf {
+  /** #1890ff | 指定颜色 */
+  color: string,
+  /** true | 是否使用outline, 为false时使用box-shadow */
+  useOutline: boolean,
+}
+
 /**
  * 根据元素或选择器对选中元素进行高亮显示
  */
-export function triggerHighlight(target: HTMLElement, color?: string): void;
-export function triggerHighlight(selector: string, color?: string): void;
-export function triggerHighlight(t: string | HTMLElement, color?: string): void;
+export function triggerHighlight(target: HTMLElement, TriggerHighlightConf?: TriggerHighlightConf): void;
+export function triggerHighlight(selector: string, TriggerHighlightConf?: TriggerHighlightConf): void;
+export function triggerHighlight(t: string | HTMLElement, TriggerHighlightConf?: TriggerHighlightConf): void;
 
-/** 获取首个可滚动父节点 */
-export function getFirstScrollParent(ele: HTMLElement): HTMLElement | null;
+/**
+ * 获取滚动父节点, 传getAll时获取全部
+ * 🌡: 在document.documentElement和document.body上设置或获取scrollTop/scrollLeft时，不同浏览器表现会不一致，所以滚动元素为document.documentElement或document.body时，统一返回document.documentElement方便识别
+ * */
+export function getScrollParent(ele: HTMLElement, getAll: true): HTMLElement[];
+export function getScrollParent(ele: HTMLElement, getAll?: false): HTMLElement | null;
+export function getScrollParent(ele: HTMLElement, getAll?: boolean): HTMLElement | HTMLElement[] | null;
 
 
-/** 窗口滚动偏移, 用于解决不同版本浏览器获取方式不一致的问题 */
+/** 获取文件滚动偏移, 用于解决不同版本浏览器获取方式不一致的问题 */
 export function getDocScrollOffset(): {
   x: number;
   y: number;
 }
+
+/** 设置文件滚动偏移 */
+export function setDocScrollOffset(conf: { x?: number; y?: number }): void;
+
+/** 检测dom节点是否可滚动 */
+export function hasScroll(el: HTMLElement): { x: boolean, y: boolean };
+
+/** 判断元素是否可滚动 */
+
 
 /* ======================== date ======================= */
 
@@ -204,6 +227,9 @@ export function promisify(fn: AnyFunction, receiver?: object): (...arg: any) => 
 
 export function padSingleNumber(number: number): string;
 
+/** 当左边的值不为truthy或0时，返回feedback */
+export function vie(arg: any, feedback?: string): any;
+
 /** 返回入参中第一个truthy值或0, 用于代替 xx || xx2 || xx3 */
 export function getFirstTruthyOrZero(...args: any): any;
 
@@ -224,6 +250,15 @@ export function getRandRange(min: number, max: number): number;
  * @return - 四舍五入到指定进度的小数
  * */
 export function decimalPrecision(num: number, precision?: number): number;
+
+/** 将一组数字或类数字相加、非数字视为0 */
+export function sum(...nums: any[]): number;
+
+/** 将一组数字或类数字相减 */
+export function subtract(...nums: any[]): number;
+
+/** 将弱数字转为数字，数字会原样返回 */
+export function weakNumber(arg: any): number | null;
 
 /* ======================== string ======================= */
 
@@ -359,3 +394,14 @@ export const idCardRegexp: RegExp;
 export function getGlobal(): Window | NodeJS.Global;
 
 export const __GLOBAL__: Window | NodeJS.Global;
+
+/* ======================== bom ======================= */
+/** localStorage api的快捷方式，包含自动JSON.stringify和一个拼接的唯一前缀 */
+export function setStorage(key: string, val: any): void
+
+/** localStorage api的快捷方式，自动JSON.parse, 只能取通过setStorage设置的值 */
+export function getStorage<T = any>(key: string): T | null;
+
+/* ======================== array ======================= */
+/** 交换数组两个项的位置, 返回原数组，如果开始索引和结束索引的任意一个超过数组索引范围则不操作原样返回数组 */
+export function swap<T = any>(arr: T, sourceInd: number, targetInd: number): T;

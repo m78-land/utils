@@ -19,3 +19,7 @@ export * from './function';
 export * from './lang';
 
 export * from './regexp';
+
+export * from './bom';
+
+export * from './array';

@@ -50,7 +50,10 @@
    * */
 
   function isNumber(arg) {
-    return typeof arg === 'number';
+    return typeof arg === 'number' && !isNaN(arg);
+  }
+  function isWeakNumber(arg) {
+    return isNumber(Number(arg));
   }
   /**
    * 检测是否为字符串
@@ -467,6 +470,10 @@
 
     return false;
   }
+  function vie(arg) {
+    var feedback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '-';
+    return isTruthyOrZero(arg) ? arg : feedback;
+  }
 
   function parseDate(date) {
     var d = date;
@@ -726,6 +733,29 @@
     }).join(''));
     return Math.round(num * mid) / mid;
   }
+  function sum() {
+    for (var _len = arguments.length, nums = new Array(_len), _key = 0; _key < _len; _key++) {
+      nums[_key] = arguments[_key];
+    }
+
+    return nums.reduce(function (p, i) {
+      return p + (isWeakNumber(i) ? Number(i) : 0);
+    }, 0);
+  }
+  function subtract() {
+    for (var _len2 = arguments.length, nums = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      nums[_key2] = arguments[_key2];
+    }
+
+    return nums.reduce(function (p, i) {
+      if (p === null) return i;
+      if (!isWeakNumber(i)) return p;
+      return p - i;
+    }, null);
+  }
+  function weakNumber(arg) {
+    return isWeakNumber(arg) ? Number(arg) : null;
+  }
 
   var portalsID = 'J__PORTALS__NODE__';
   var getPortalsNode = function getPortalsNode(namespace) {
@@ -865,26 +895,42 @@
     };
   }
 
-  function triggerHighlight(t, color) {
+  function triggerHighlight(t, conf) {
     if (isDom(t)) {
-      mountHighlight(t, color);
+      mountHighlight(t, conf);
     } else {
       var temp = document.querySelectorAll(t);
 
       if (temp.length) {
         Array.from(temp).forEach(function (item) {
-          return mountHighlight(item, color);
+          return mountHighlight(item, conf);
         });
       }
     }
   }
+  var mountHighlightDefaultConf = {
+    color: '#1890ff',
+    useOutline: true
+  };
 
   function mountHighlight(target) {
-    var color = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '#1890ff';
-    target.style.boxShadow = "0 0 0 4px ".concat(color);
+    var conf = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+    var cf = _objectSpread({}, mountHighlightDefaultConf, conf);
+
+    if (cf.useOutline) {
+      target.style.outline = "1px auto ".concat(cf.color);
+    } else {
+      target.style.boxShadow = "0 0 0 4px ".concat(cf.color);
+    }
 
     function clickHandle() {
-      target.style.boxShadow = '';
+      if (cf.useOutline) {
+        target.style.outline = '';
+      } else {
+        target.style.boxShadow = '';
+      }
+
       document.removeEventListener('click', clickHandle);
     }
 
@@ -922,8 +968,8 @@
     recur(node);
     return hasMatch;
   }
-  function getFirstScrollParent(ele) {
-    var node = null;
+  function getScrollParent(ele, getAll) {
+    var node = getAll ? [] : null;
 
     function handle(el) {
       var parent = el.parentNode;
@@ -934,19 +980,24 @@
         var sH = e.scrollHeight;
 
         if (sH > h) {
-          var _getStyle = getStyle(e),
-              overflow = _getStyle.overflow;
-          /* body和html元素不需要执行下面检测 */
+          var isRoot = e === document.documentElement || e === document.body;
+          var scrollStatus = hasScroll(e); // 为body或doc时，统一取documentElement方便识别，部分浏览器支持body设置document.scrollXxx部分浏览器支持documentElement设置
+
+          var _el = isRoot ? document.documentElement : e;
+          /* body和html元素不需要检测滚动属性 */
 
 
-          if (e === document.documentElement || e === document.body) {
-            node = e;
-            return;
-          }
-
-          if (overflow === 'scroll' || overflow === 'auto') {
-            node = e;
-            return;
+          if (isRoot || scrollStatus.x || scrollStatus.y) {
+            if (getAll) {
+              if (isRoot) {
+                node.indexOf(document.documentElement) === -1 && node.push(_el);
+              } else {
+                node.push(_el);
+              }
+            } else {
+              node = _el;
+              return;
+            }
           }
         }
 
@@ -961,8 +1012,43 @@
     var doc = document.documentElement;
     var body = document.body;
     return {
-      x: doc.scrollLeft + body.scrollLeft,
-      y: doc.scrollTop + body.scrollTop
+      // Math.ceil用于解决高分屏缩放时的滚动位置小数问题
+      x: Math.ceil(doc.scrollLeft + body.scrollLeft),
+      y: Math.ceil(doc.scrollTop + body.scrollTop)
+    };
+  }
+  function setDocScrollOffset() {
+    var conf = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    if (isNumber(conf.x)) {
+      document.body.scrollLeft = document.documentElement.scrollLeft = conf.x;
+    }
+
+    if (isNumber(conf.y)) {
+      document.body.scrollTop = document.documentElement.scrollTop = conf.y;
+    }
+  }
+  function hasScroll(el) {
+    var x = Math.max(0, el.scrollWidth - el.clientWidth) > 0;
+    var y = Math.max(0, el.scrollHeight - el.clientHeight) > 0;
+
+    if (el === document.documentElement || el === document.body) ; else {
+      var _getStyle = getStyle(el),
+          overflowX = _getStyle.overflowX,
+          overflowY = _getStyle.overflowY;
+
+      if (overflowX !== 'scroll' && overflowX !== 'auto') {
+        x = false;
+      }
+
+      if (overflowY !== 'scroll' && overflowY !== 'auto') {
+        y = false;
+      }
+    }
+
+    return {
+      x: x,
+      y: y
     };
   }
 
@@ -1022,6 +1108,23 @@
 
   var idCardRegexp = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
 
+  var storagePrefix = 'THIS_IS_A_UNIQUE_PREFIX_';
+  function setStorage(key, val) {
+    localStorage.setItem("".concat(storagePrefix).concat(key).toUpperCase(), JSON.stringify(val));
+  }
+  function getStorage(key) {
+    var s = localStorage.getItem("".concat(storagePrefix).concat(key).toUpperCase());
+    if (!s) return null;
+    return JSON.parse(s);
+  }
+
+  function swap(arr, sourceInd, targetInd) {
+    if (sourceInd < 0 || targetInd < 0) return arr;
+    if (sourceInd > arr.length - 1 || targetInd > arr.length - 1) return arr;
+    arr.splice(targetInd, 1, arr.splice(sourceInd, 1, arr[targetInd])[0]);
+    return arr;
+  }
+
   exports.__GLOBAL__ = __GLOBAL__;
   exports.byte2text = byte2text;
   exports.checkElementVisible = checkElementVisible;
@@ -1037,14 +1140,16 @@
   exports.getDateCountDown = getDateCountDown;
   exports.getDateStringFirst = getDateStringFirst;
   exports.getDocScrollOffset = getDocScrollOffset;
-  exports.getFirstScrollParent = getFirstScrollParent;
   exports.getFirstTruthyOrZero = getFirstTruthyOrZero;
   exports.getGlobal = getGlobal;
   exports.getPortalsNode = getPortalsNode;
   exports.getProtoStr = getProtoStr;
   exports.getRandRange = getRandRange;
   exports.getScrollBarWidth = getScrollBarWidth;
+  exports.getScrollParent = getScrollParent;
+  exports.getStorage = getStorage;
   exports.getStyle = getStyle;
+  exports.hasScroll = hasScroll;
   exports.heightLightMatchString = heightLightMatchString;
   exports.idCardRegexp = idCardRegexp;
   exports.isArray = isArray;
@@ -1069,16 +1174,24 @@
   exports.isTruthyArray = isTruthyArray;
   exports.isTruthyOrZero = isTruthyOrZero;
   exports.isUndefined = isUndefined;
+  exports.isWeakNumber = isWeakNumber;
   exports.obj2FormData = obj2FormData;
   exports.omit = omit;
   exports.padSingleNumber = padSingleNumber;
   exports.parseDate = parseDate;
   exports.promisify = promisify;
   exports.replaceHtmlTags = replaceHtmlTags;
+  exports.setDocScrollOffset = setDocScrollOffset;
+  exports.setStorage = setStorage;
   exports.shakeFalsy = shakeFalsy;
+  exports.subtract = subtract;
+  exports.sum = sum;
+  exports.swap = swap;
   exports.triggerHighlight = triggerHighlight;
   exports.unFormatString = unFormatString;
   exports.validateFormatString = validateFormatString;
+  exports.vie = vie;
+  exports.weakNumber = weakNumber;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 

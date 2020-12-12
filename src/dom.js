@@ -131,22 +131,40 @@ function offsetCalc(bound, offset) {
   };
 }
 
-export function triggerHighlight(t, color) {
+export function triggerHighlight(t, conf) {
   if (isDom(t)) {
-    mountHighlight(t, color);
+    mountHighlight(t, conf);
   } else {
     const temp = document.querySelectorAll(t);
     if (temp.length) {
-      Array.from(temp).forEach(item => mountHighlight(item, color));
+      Array.from(temp).forEach(item => mountHighlight(item, conf));
     }
   }
 }
 
-function mountHighlight(target, color = '#1890ff') {
-  target.style.boxShadow = `0 0 0 4px ${ color }`;
+const mountHighlightDefaultConf = {
+  color: '#1890ff',
+  useOutline: true,
+}
+
+function mountHighlight(target, conf = {}) {
+  const cf = {
+    ...mountHighlightDefaultConf,
+    ...conf,
+  }
+
+  if (cf.useOutline) {
+    target.style.outline = `1px auto ${cf.color}`;
+  } else {
+    target.style.boxShadow = `0 0 0 4px ${cf.color}`;
+  }
 
   function clickHandle() {
-    target.style.boxShadow = '';
+    if (cf.useOutline) {
+      target.style.outline = '';
+    } else {
+      target.style.boxShadow = '';
+    }
 
     document.removeEventListener('click', clickHandle);
   }
@@ -186,8 +204,8 @@ export function getCurrentParent(node, matcher, depth) {
   return hasMatch;
 }
 
-export function getFirstScrollParent(ele) {
-  let node = null;
+export function getScrollParent(ele, getAll) {
+  let node = getAll ? [] : null;
 
   function handle(el) {
     const parent = el.parentNode;
@@ -198,17 +216,24 @@ export function getFirstScrollParent(ele) {
       const sH = e.scrollHeight;
 
       if (sH > h) {
-        const { overflow } = getStyle(e);
+        const isRoot = e === document.documentElement || e === document.body;
+        const scrollStatus = hasScroll(e);
 
-        /* body和html元素不需要执行下面检测 */
-        if (e === document.documentElement || e === document.body) {
-          node = e;
-          return;
-        }
+        // 为body或doc时，统一取documentElement方便识别，部分浏览器支持body设置document.scrollXxx部分浏览器支持documentElement设置
+        const el = isRoot ? document.documentElement : e;
 
-        if (overflow === 'scroll' || overflow === 'auto') {
-          node = e;
-          return;
+        /* body和html元素不需要检测滚动属性 */
+        if (isRoot || scrollStatus.x || scrollStatus.y) {
+          if (getAll) {
+            if (isRoot) {
+              node.indexOf(document.documentElement) === -1 && node.push(el);
+            } else {
+              node.push(el);
+            }
+          } else {
+            node = el;
+            return;
+          }
         }
       }
 
@@ -223,13 +248,46 @@ export function getFirstScrollParent(ele) {
   return node;
 }
 
-
 export function getDocScrollOffset() {
   const doc = document.documentElement;
   const body = document.body;
 
   return {
-    x: doc.scrollLeft + body.scrollLeft,
-    y: doc.scrollTop + body.scrollTop,
+    // Math.ceil用于解决高分屏缩放时的滚动位置小数问题
+    x: Math.ceil(doc.scrollLeft + body.scrollLeft),
+    y: Math.ceil(doc.scrollTop + body.scrollTop),
   };
+}
+
+export function setDocScrollOffset(conf = {}) {
+  if (isNumber(conf.x)) {
+    document.body.scrollLeft = document.documentElement.scrollLeft = conf.x;
+  }
+
+  if (isNumber(conf.y)) {
+    document.body.scrollTop = document.documentElement.scrollTop = conf.y;
+  }
+}
+
+
+export function hasScroll(el) {
+  let x = Math.max(0, el.scrollWidth - el.clientWidth) > 0;
+  let y = Math.max(0, el.scrollHeight - el.clientHeight) > 0;
+
+  if (el === document.documentElement || el === document.body) {
+
+  } else {
+    const { overflowX, overflowY } = getStyle(el);
+    if (overflowX !== 'scroll' && overflowX !== 'auto') {
+      x = false;
+    }
+    if (overflowY !== 'scroll' && overflowY !== 'auto') {
+      y = false;
+    }
+  }
+
+  return {
+    x,
+    y,
+  }
 }

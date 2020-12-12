@@ -153,3 +153,7 @@ export function getFirstTruthyOrZero(...args) {
   }
   return false;
 }
+
+export function vie(arg, feedback = '-') {
+  return isTruthyOrZero(arg) ? arg : feedback;
+}

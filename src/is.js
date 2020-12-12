@@ -30,8 +30,13 @@ export function isTruthyArray(arg) {
  * @returns {boolean}
  * */
 export function isNumber(arg) {
-  return typeof arg === 'number';
+  return typeof arg === 'number' && !isNaN(arg);
 }
+
+export function isWeakNumber(arg) {
+  return isNumber(Number(arg));
+}
+
 
 /**
  * 检测是否为字符串
@@ -233,3 +238,4 @@ export function isNumerical(numLike) {
 export function isTruthyOrZero(arg) {
   return !!arg || arg === 0;
 }
+
