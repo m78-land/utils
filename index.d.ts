@@ -10,6 +10,182 @@ export interface AnyFunction {
 }
 
 
+/* ======================== array ======================= */
+/**
+ * swap index of two items in array and return the original array
+ * if the index is exceeded, no action is performed */
+export function swap<T = any>(arr: T, sourceInd: number, targetInd: number): T;
+
+
+
+
+
+/* ======================== bom ======================= */
+/** shortcut to the localStorage api, including automatic JSON.stringify and a spliced ​​unique prefix */
+export function setStorage(key: string, val: any): void;
+
+/** shortcut of localStorage api, automatic JSON.parse, can only take the value set by setStorage */
+export function getStorage<T = any>(key: string): T | null;
+
+
+
+
+
+/* ======================== date ======================= */
+
+/**
+ * Receive a date string, timestamp (ms), date object, and return it after converting it into a date object, or return null if the conversion fails
+ *  */
+export function parseDate(dateLike: any): Date | null;
+
+/**
+ * format the date into readable date string
+ * @param dateLike - new Date() | any time that can be parsed by parseDate(), default current time
+ * @param format - 'YYYY-MM-DD hh:mm:ss' | custom format
+ * @return - formatted date string, if date is invalid, return an empty string
+ * @example
+ datetime(); // => 2020-06-01 18:45:57
+ datetime('2020-06-01 15:30:30', 'hh时mm分 YYYY年MM月'); // => 15时30分 2020年06月
+ datetime(1591008308782, 'YY年MM月DD日'); // => 21年06月01日
+ datetime('1591008308782'); // => ''
+ datetime('hello'); // => ''
+ datetime(new Date()); // => 2020-06-01 18:46:39
+ */
+export function datetime(dateLike?: any, format?: string): string;
+
+/**
+ * get d day, h hour, m minute, s second, ms millisecond between the current time and the specified time. If the current time exceeds the incoming time, all return to '00' and timeOut is true
+ * @param dateLike - any time that can be parsed by parseDate()
+ * @return count data
+ */
+export function getDateCountDown(
+  dateLike: any,
+): {
+  ms: string;
+  s: string;
+  m: string;
+  h: string;
+  d: string;
+  /** is timeout */
+  timeOut: boolean;
+};
+
+/** convert YYYY-MM-DD hh:mm:ss to YYYY-MM-DD */
+export function getDateStringFirst(dataString: string): string;
+
+/**
+ * Whether the current time or the specified time is within a certain period of time
+ * @param startDate - start time
+ * @param endDate - end time
+ * @param currentDate - mid time, default is now
+ * @return - whether within a time period
+ * */
+export function isBetweenDate(startDate: any, endDate: any, currentDate?: any): boolean;
+
+
+
+
+
+/* ======================== dom ======================= */
+
+/**
+ * get a dom, multiple calls will return the same dom
+ * @param namespace - create a uniq node by namespace
+ * @return - dom
+ * */
+export function getPortalsNode(namespace?: string): HTMLDivElement;
+
+/**
+ * get scrollbar width
+ * @param nodeTarget - if some elements have customized the scroll bar through css, the width cannot be obtained correctly by page-level measurement. You can use this attribute to specify the node where the element to be measured is located
+ * @return scroll bar width, generally 0 on mobile
+ * */
+export function getScrollBarWidth(nodeTarget?: HTMLElement): number;
+
+/**
+ * get style value of dom element
+ * @param dom - target dom
+ * @return - an object containing all available style values, an null means not supported
+ *  */
+export function getStyle(dom: HTMLElement): Partial<CSSStyleDeclaration>;
+
+/**
+ * Whether element is visible in viewport
+ * @param el - an element to be detected or an object that represents location information
+ * @param option
+ * @param option.fullVisible - false | default is to be completely invisible, and set to true to be invisible if element is partially occluded
+ * @param option.wrapEl - By default, the viewport computes visibility through this specified element (viewport is still detected)
+ * @param option.offset - Offset of visibility, specifying all directions for numbers, and specific directions for object
+ * @return - Whether the overall visibility information and the specified direction does not exceed the visible boundary
+ * */
+export function checkElementVisible(
+  el: HTMLElement | {
+    right: number;
+    bottom: number;
+    left: number;
+    top: number;
+  },
+  option?: { fullVisible?: boolean; wrapEl?: HTMLElement; offset?: number | { left?: number; top?: number; right?: number; bottom?: number; } },
+): {
+  visible: boolean;
+  top: boolean;
+  left: boolean;
+  right: boolean;
+  bottom: boolean;
+  bound: DOMRect;
+};
+
+/**
+ * Query the incoming Node for the presence of a specified node in all of its parent nodes
+ * @param node - node to be queried
+ * @param matcher - matcher, recursively receives the parent node and returns whether it matches
+ * @param depth - maximum query depth
+ * */
+export function getCurrentParent(
+  node: Element,
+  matcher: (node: Element) => boolean,
+  depth?: number,
+): boolean;
+
+interface TriggerHighlightConf {
+  /** #1890ff | line color */
+  color: string,
+  /** true | use outline, if false use box-shadow */
+  useOutline: boolean,
+}
+
+/**
+ * highlight selected elements according to elements or selectors
+ */
+export function triggerHighlight(target: HTMLElement, TriggerHighlightConf?: TriggerHighlightConf): void;
+export function triggerHighlight(selector: string, TriggerHighlightConf?: TriggerHighlightConf): void;
+export function triggerHighlight(t: string | HTMLElement, TriggerHighlightConf?: TriggerHighlightConf): void;
+
+/**
+ * get scrolling parent node, get all when pass getAll
+ * When setting or getting scrollTop/scrollLeft on document.documentElement and document.body, the performance of different browsers will be inconsistent, so when the scroll element is document.documentElement or document.body, document.documentElement is returned uniformly for easy identification
+ * */
+export function getScrollParent(ele: HTMLElement, getAll: true): HTMLElement[];
+export function getScrollParent(ele: HTMLElement, getAll?: false): HTMLElement | null;
+export function getScrollParent(ele: HTMLElement, getAll?: boolean): HTMLElement | HTMLElement[] | null;
+
+
+/** get doc scroll offset, used to solve the problem of different versions of the browser to get inconsistent */
+export function getDocScrollOffset(): {
+  x: number;
+  y: number;
+}
+
+/** set doc scroll offset */
+export function setDocScrollOffset(conf: { x?: number; y?: number }): void;
+
+/** check whether the dom node is scrollable */
+export function hasScroll(el: HTMLElement): { x: boolean, y: boolean };
+
+
+
+
+
 /* ======================== is ======================= */
 type Primitive = null | undefined | boolean | number | string | symbol;
 
@@ -63,157 +239,6 @@ export function isTruthyOrZero(arg: any): boolean;
  * */
 export function isNumerical(numLike: number): boolean;
 
-/* ======================== dom ======================= */
-
-/**
- * 获取一个用于挂载Portals或其他内容的dom节点, 确保节点存且在多次调用时会获取到相同的节点
- * * 常用于某些需要挂载到额外节点的组件上，如弹窗
- * @param namespace - 影响生产节点的id
- * @return - 用于挂在的dom节点
- * */
-export function getPortalsNode(namespace?: string): HTMLDivElement;
-
-/**
- * 获取滚动条宽度
- * @param nodeTarget - 如果某些元素通过css定制过滚动条，通过页面级的测量是不能正确获取宽度的，可以使用此属性指定待测量元素所在节点
- * @return 滚动条宽度，在移动端一般都是0
- * */
-export function getScrollBarWidth(nodeTarget?: HTMLElement): number;
-
-/**
- * 获取指定dom元素的样式值
- * @param dom - 待查询元素
- * @return - 包含所有可用样式值的对象，为空对象表示不支持
- *  */
-export function getStyle(dom: HTMLElement): Partial<CSSStyleDeclaration>;
-
-/**
- * 元素是否在视口可见位置
- * @param el - 待检测元素 或表示位置信息的对象
- * @param option
- * @param option.fullVisible - false | 默认完全不可见时才算不可见，设置为true只要元素有部分遮挡即视为不可见
- * @param option.wrapEl - 默认以视口计算可见性，通过此项指定元素(指定wrapEl时，依然会对视口进行检测)
- * @param option.offset - 可见性的偏移，为数字时指定所有方向，为对象时可以为特定方向指定
- * @return - 整体的可见信息和指定方向是否未超过可见边界
- * */
-export function checkElementVisible(
-  el: HTMLElement | {
-    right: number;
-    bottom: number;
-    left: number;
-    top: number;
-  },
-  option?: { fullVisible?: boolean; wrapEl?: HTMLElement; offset?: number | { left?: number; top?: number; right?: number; bottom?: number; } },
-): {
-  visible: boolean;
-  top: boolean;
-  left: boolean;
-  right: boolean;
-  bottom: boolean;
-  bound: DOMRect;
-};
-
-/**
- * 根据传入的node节点查询其所有父节点中是否存在指定节点
- * @param node - 待查询的节点
- * @param matcher - 匹配器，递归接收父节点，返回值决定是否匹配
- * @param depth - 查询最大深度
- * */
-export function getCurrentParent(
-  node: Element,
-  matcher: (node: Element) => boolean,
-  depth?: number,
-): boolean;
-
-interface TriggerHighlightConf {
-  /** #1890ff | 指定颜色 */
-  color: string,
-  /** true | 是否使用outline, 为false时使用box-shadow */
-  useOutline: boolean,
-}
-
-/**
- * 根据元素或选择器对选中元素进行高亮显示
- */
-export function triggerHighlight(target: HTMLElement, TriggerHighlightConf?: TriggerHighlightConf): void;
-export function triggerHighlight(selector: string, TriggerHighlightConf?: TriggerHighlightConf): void;
-export function triggerHighlight(t: string | HTMLElement, TriggerHighlightConf?: TriggerHighlightConf): void;
-
-/**
- * 获取滚动父节点, 传getAll时获取全部
- * 🌡: 在document.documentElement和document.body上设置或获取scrollTop/scrollLeft时，不同浏览器表现会不一致，所以滚动元素为document.documentElement或document.body时，统一返回document.documentElement方便识别
- * */
-export function getScrollParent(ele: HTMLElement, getAll: true): HTMLElement[];
-export function getScrollParent(ele: HTMLElement, getAll?: false): HTMLElement | null;
-export function getScrollParent(ele: HTMLElement, getAll?: boolean): HTMLElement | HTMLElement[] | null;
-
-
-/** 获取文件滚动偏移, 用于解决不同版本浏览器获取方式不一致的问题 */
-export function getDocScrollOffset(): {
-  x: number;
-  y: number;
-}
-
-/** 设置文件滚动偏移 */
-export function setDocScrollOffset(conf: { x?: number; y?: number }): void;
-
-/** 检测dom节点是否可滚动 */
-export function hasScroll(el: HTMLElement): { x: boolean, y: boolean };
-
-/** 判断元素是否可滚动 */
-
-
-/* ======================== date ======================= */
-
-/**
- * 接收一个日期字符串、时间戳(ms)、日期对象，将其转换为日期对象后返回，不能成功转换时返回null
- * - 日期串中的`-`会自动转为`/`以兼容safari
- *  */
-export function parseDate(dateLike: any): Date | null;
-
-/**
- * 格式化日期为可读日期字符
- * @param dateLike - new Date() | 任意能通过new Date()解析的时间，日期串中的`-`会自动转为`/`以兼容safari, 默认当前时间
- * @param format - 'YYYY-MM-DD hh:mm:ss' | 自定义的格式化串
- * @return - 格式化后的日期字符串，如果日期无效，返回空字符串
- * @example
- datetime(); // => 2020-06-01 18:45:57
- datetime('2020-06-01 15:30:30', 'hh时mm分 YYYY年MM月'); // => 15时30分 2020年06月
- datetime(1591008308782, 'YY年MM月DD日'); // => 21年06月01日
- datetime('1591008308782'); // => ''
- datetime('hello'); // => ''
- datetime(new Date()); // => 2020-06-01 18:46:39
- */
-export function datetime(dateLike?: any, format?: string): string;
-
-/**
- * 获取当前时间到指定时间相隔的d 日,h 时,m 分,s 秒,ms 毫秒, 当前时间超过传入时间的话全部返回为'00'且timeOut为true
- * @param dateLike - 任意能通过new Date()解析的时间，日期串中的`-`会自动转为`/`以兼容safari
- * @return 倒计时相关的数据
- */
-export function getDateCountDown(
-  dateLike: any,
-): {
-  ms: string;
-  s: string;
-  m: string;
-  h: string;
-  d: string;
-  /** 是否已超时 */
-  timeOut: boolean;
-};
-
-/** 转换YYYY-MM-DD hh:mm:ss为YYYY-MM-DD */
-export function getDateStringFirst(dataString: string): string;
-
-/**
- * 当前时间或指定时间是否在某个时间段内
- * @param startDate - 起始时间
- * @param endDate - 结束时间
- * @param currentDate - 指定作为参照的时间，默认为当前时间
- * @return - 是否在时间段内
- * */
-export function isBetweenDate(startDate: any, endDate: any, currentDate?: any): boolean;
 
 /* ======================== form ======================= */
 
@@ -394,14 +419,3 @@ export const idCardRegexp: RegExp;
 export function getGlobal(): Window | NodeJS.Global;
 
 export const __GLOBAL__: Window | NodeJS.Global;
-
-/* ======================== bom ======================= */
-/** localStorage api的快捷方式，包含自动JSON.stringify和一个拼接的唯一前缀 */
-export function setStorage(key: string, val: any): void
-
-/** localStorage api的快捷方式，自动JSON.parse, 只能取通过setStorage设置的值 */
-export function getStorage<T = any>(key: string): T | null;
-
-/* ======================== array ======================= */
-/** 交换数组两个项的位置, 返回原数组，如果开始索引和结束索引的任意一个超过数组索引范围则不操作原样返回数组 */
-export function swap<T = any>(arr: T, sourceInd: number, targetInd: number): T;

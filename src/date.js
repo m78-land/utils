@@ -1,4 +1,3 @@
-import { isString } from './is';
 import { padSingleNumber } from './format';
 
 export function parseDate(date) {
