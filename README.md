@@ -1,7 +1,7 @@
 # utils
 
 ## introduce
-常用工具函数
+useful javascript util kit
 
 <br>
 
@@ -18,6 +18,7 @@ yarn add @lxjx/utils
 
 <br>
 
+
 ## Usage
 ```js
 import { isEmpty } from '@lxjx/utils';
@@ -31,3 +32,10 @@ import * as utils from '@lxjx/utils';
 utils.isEmpty({})   // => true
 utils.isEmpty([])   // => true
 ```
+
+<br>
+
+
+## API
+
+### Array
