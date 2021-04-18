@@ -14,21 +14,23 @@ export const getPortalsNode = (namespace) => {
   return portalsEl;
 };
 
-export function getScrollBarWidth(nodeTarget) {
-  const node = nodeTarget || document.body;
+export function getScrollBarWidth(className) {
 
   // Create the measurement node
-  const scrollDiv = document.createElement('div');
-  scrollDiv.style.overflow = 'scroll';
-  node.appendChild(scrollDiv);
+  const scrollEl = document.createElement('div');
+  if (className) scrollEl.className = className;
+  scrollEl.style.overflow = 'scroll';
+  scrollEl.style.height = '200px';
+  scrollEl.style.width = '200px';
+
+  document.body.appendChild(scrollEl);
+
+  const size = scrollEl.offsetWidth - scrollEl.clientWidth;
+
+  document.body.removeChild(scrollEl);
 
   // Get the scrollbar width
-  const scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
-
-  // Delete the DIV
-  node.removeChild(scrollDiv);
-
-  return scrollbarWidth;
+  return size;
 }
 
 export function getStyle(dom) {

@@ -8,3 +8,28 @@
   font-size: 26px;
   color: red;
 }
+
+
+/* 滚动条尺寸大于10时启用 */
+.m78-scrollbar::-webkit-scrollbar {
+   width: 6px;
+   height: 6px;
+   background: transparent;
+ }
+
+.m78-scrollbar::-webkit-scrollbar-thumb {
+   border-radius: 6px;
+   background: red;
+   min-height: 70px;
+   min-width: 70px;
+ }
+
+.m78-scrollbar::-webkit-scrollbar-thumb:hover {
+   background: red;
+ }
+
+.m78-scrollbar::-webkit-scrollbar-thumb:active {
+   background: red;
+ }
+
+

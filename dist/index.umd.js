@@ -5,6 +5,8 @@
 }(this, function (exports) { 'use strict';
 
   function _typeof(obj) {
+    "@babel/helpers - typeof";
+
     if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
       _typeof = function _typeof(obj) {
         return typeof obj;
@@ -248,26 +250,39 @@
     return !!arg || arg === 0;
   }
 
-  function _arrayWithoutHoles(arr) {
-    if (Array.isArray(arr)) {
-      for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) {
-        arr2[i] = arr[i];
-      }
+  function _arrayLikeToArray(arr, len) {
+    if (len == null || len > arr.length) len = arr.length;
 
-      return arr2;
+    for (var i = 0, arr2 = new Array(len); i < len; i++) {
+      arr2[i] = arr[i];
     }
+
+    return arr2;
+  }
+
+  function _arrayWithoutHoles(arr) {
+    if (Array.isArray(arr)) return _arrayLikeToArray(arr);
   }
 
   function _iterableToArray(iter) {
-    if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
+    if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+  }
+
+  function _unsupportedIterableToArray(o, minLen) {
+    if (!o) return;
+    if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+    var n = Object.prototype.toString.call(o).slice(8, -1);
+    if (n === "Object" && o.constructor) n = o.constructor.name;
+    if (n === "Map" || n === "Set") return Array.from(o);
+    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
   }
 
   function _nonIterableSpread() {
-    throw new TypeError("Invalid attempt to spread non-iterable instance");
+    throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
   }
 
   function _toConsumableArray(arr) {
-    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
   }
 
   function _defineProperty(obj, key, value) {
@@ -285,25 +300,9 @@
     return obj;
   }
 
-  function _objectSpread(target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i] != null ? arguments[i] : {};
-      var ownKeys = Object.keys(Object(source));
+  function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-      if (typeof Object.getOwnPropertySymbols === 'function') {
-        ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
-          return Object.getOwnPropertyDescriptor(source, sym).enumerable;
-        }));
-      }
-
-      ownKeys.forEach(function (key) {
-        _defineProperty(target, key, source[key]);
-      });
-    }
-
-    return target;
-  }
-
+  function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
   function padSingleNumber(number) {
     if (number < 1) {
       return '00';
@@ -327,7 +326,7 @@
   function getPatterns(str, pattern) {
     var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-    var _defaultConfig$option = _objectSpread({}, defaultConfig, options),
+    var _defaultConfig$option = _objectSpread(_objectSpread({}, defaultConfig), options),
         repeat = _defaultConfig$option.repeat,
         lastRepeat = _defaultConfig$option.lastRepeat;
 
@@ -393,7 +392,7 @@
   function formatString(str, pattern) {
     var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-    var _defaultConfig$option2 = _objectSpread({}, defaultConfig, options),
+    var _defaultConfig$option2 = _objectSpread(_objectSpread({}, defaultConfig), options),
         delimiter = _defaultConfig$option2.delimiter,
         repeat = _defaultConfig$option2.repeat,
         lastRepeat = _defaultConfig$option2.lastRepeat;
@@ -431,7 +430,7 @@
   function unFormatString(str, pattern) {
     var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-    var _defaultConfig$option3 = _objectSpread({}, defaultConfig, options),
+    var _defaultConfig$option3 = _objectSpread(_objectSpread({}, defaultConfig), options),
         delimiter = _defaultConfig$option3.delimiter,
         repeat = _defaultConfig$option3.repeat,
         lastRepeat = _defaultConfig$option3.lastRepeat;
@@ -665,6 +664,10 @@
     return result;
   }
 
+  function ownKeys$1(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+  function _objectSpread$1(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$1(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$1(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
   function replaceHtmlTags() {
     var str = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
     var val = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
@@ -687,7 +690,7 @@
     precision: 1
   };
   var byte2text = function byte2text(byte, conf) {
-    var cf = _objectSpread({}, byte2textDefaultConfig, conf);
+    var cf = _objectSpread$1(_objectSpread$1({}, byte2textDefaultConfig), conf);
 
     var s = '';
 
@@ -713,7 +716,7 @@
   function heightLightMatchString(str, regExp, conf) {
     if (!str || !regExp) return str || '';
 
-    var cf = _objectSpread({}, heightLightMatchStringDefaultConf, conf);
+    var cf = _objectSpread$1(_objectSpread$1({}, heightLightMatchStringDefaultConf), conf);
 
     var reg = new RegExp(regExp, 'g');
     return str.replace(reg, function (s) {
@@ -757,6 +760,9 @@
     return isWeakNumber(arg) ? Number(arg) : null;
   }
 
+  function ownKeys$2(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+  function _objectSpread$2(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$2(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$2(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
   var portalsID = 'J__PORTALS__NODE__';
   var getPortalsNode = function getPortalsNode(namespace) {
     var id = portalsID + (namespace ? namespace.toLocaleUpperCase() : 'DEFAULT');
@@ -770,17 +776,18 @@
 
     return portalsEl;
   };
-  function getScrollBarWidth(nodeTarget) {
-    var node = nodeTarget || document.body; // Create the measurement node
+  function getScrollBarWidth(className) {
+    // Create the measurement node
+    var scrollEl = document.createElement('div');
+    if (className) scrollEl.className = className;
+    scrollEl.style.overflow = 'scroll';
+    scrollEl.style.height = '200px';
+    scrollEl.style.width = '200px';
+    document.body.appendChild(scrollEl);
+    var size = scrollEl.offsetWidth - scrollEl.clientWidth;
+    document.body.removeChild(scrollEl); // Get the scrollbar width
 
-    var scrollDiv = document.createElement('div');
-    scrollDiv.style.overflow = 'scroll';
-    node.appendChild(scrollDiv); // Get the scrollbar width
-
-    var scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth; // Delete the DIV
-
-    node.removeChild(scrollDiv);
-    return scrollbarWidth;
+    return size;
   }
   function getStyle(dom) {
     if (!dom) return {};
@@ -916,7 +923,7 @@
   function mountHighlight(target) {
     var conf = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-    var cf = _objectSpread({}, mountHighlightDefaultConf, conf);
+    var cf = _objectSpread$2(_objectSpread$2({}, mountHighlightDefaultConf), conf);
 
     if (cf.useOutline) {
       target.style.outline = "1px auto ".concat(cf.color);

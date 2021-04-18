@@ -97,10 +97,10 @@ export function getPortalsNode(namespace?: string): HTMLDivElement;
 
 /**
  * get scrollbar width
- * @param nodeTarget - if some elements have customized the scroll bar through css, the width cannot be obtained correctly by page-level measurement. You can use this attribute to specify the node where the element to be measured is located
+ * @param className - If the element customizes the scroll bar through css, pass in the class name for customization
  * @return scroll bar width, generally 0 on mobile
  * */
-export function getScrollBarWidth(nodeTarget?: HTMLElement): number;
+export function getScrollBarWidth(className?: string): number;
 
 /**
  * get style value of dom element

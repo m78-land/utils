@@ -1,6 +1,6 @@
 import _typeof from '@babel/runtime/helpers/esm/typeof';
 import _toConsumableArray from '@babel/runtime/helpers/esm/toConsumableArray';
-import _objectSpread from '@babel/runtime/helpers/esm/objectSpread';
+import _defineProperty from '@babel/runtime/helpers/esm/defineProperty';
 
 /**
  * 获取表示对象原始类型的字符串
@@ -232,6 +232,9 @@ function isTruthyOrZero(arg) {
   return !!arg || arg === 0;
 }
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 function padSingleNumber(number) {
   if (number < 1) {
     return '00';
@@ -255,7 +258,7 @@ var defaultConfig = {
 function getPatterns(str, pattern) {
   var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-  var _defaultConfig$option = _objectSpread({}, defaultConfig, options),
+  var _defaultConfig$option = _objectSpread(_objectSpread({}, defaultConfig), options),
       repeat = _defaultConfig$option.repeat,
       lastRepeat = _defaultConfig$option.lastRepeat;
 
@@ -321,7 +324,7 @@ function getPatterns(str, pattern) {
 function formatString(str, pattern) {
   var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-  var _defaultConfig$option2 = _objectSpread({}, defaultConfig, options),
+  var _defaultConfig$option2 = _objectSpread(_objectSpread({}, defaultConfig), options),
       delimiter = _defaultConfig$option2.delimiter,
       repeat = _defaultConfig$option2.repeat,
       lastRepeat = _defaultConfig$option2.lastRepeat;
@@ -359,7 +362,7 @@ function formatString(str, pattern) {
 function unFormatString(str, pattern) {
   var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-  var _defaultConfig$option3 = _objectSpread({}, defaultConfig, options),
+  var _defaultConfig$option3 = _objectSpread(_objectSpread({}, defaultConfig), options),
       delimiter = _defaultConfig$option3.delimiter,
       repeat = _defaultConfig$option3.repeat,
       lastRepeat = _defaultConfig$option3.lastRepeat;
@@ -593,6 +596,10 @@ function omit(obj, props) {
   return result;
 }
 
+function ownKeys$1(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread$1(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$1(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$1(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
 function replaceHtmlTags() {
   var str = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
   var val = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
@@ -615,7 +622,7 @@ var byte2textDefaultConfig = {
   precision: 1
 };
 var byte2text = function byte2text(byte, conf) {
-  var cf = _objectSpread({}, byte2textDefaultConfig, conf);
+  var cf = _objectSpread$1(_objectSpread$1({}, byte2textDefaultConfig), conf);
 
   var s = '';
 
@@ -641,7 +648,7 @@ var heightLightMatchStringDefaultConf = {
 function heightLightMatchString(str, regExp, conf) {
   if (!str || !regExp) return str || '';
 
-  var cf = _objectSpread({}, heightLightMatchStringDefaultConf, conf);
+  var cf = _objectSpread$1(_objectSpread$1({}, heightLightMatchStringDefaultConf), conf);
 
   var reg = new RegExp(regExp, 'g');
   return str.replace(reg, function (s) {
@@ -685,6 +692,9 @@ function weakNumber(arg) {
   return isWeakNumber(arg) ? Number(arg) : null;
 }
 
+function ownKeys$2(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread$2(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$2(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$2(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 var portalsID = 'J__PORTALS__NODE__';
 var getPortalsNode = function getPortalsNode(namespace) {
   var id = portalsID + (namespace ? namespace.toLocaleUpperCase() : 'DEFAULT');
@@ -698,17 +708,18 @@ var getPortalsNode = function getPortalsNode(namespace) {
 
   return portalsEl;
 };
-function getScrollBarWidth(nodeTarget) {
-  var node = nodeTarget || document.body; // Create the measurement node
+function getScrollBarWidth(className) {
+  // Create the measurement node
+  var scrollEl = document.createElement('div');
+  if (className) scrollEl.className = className;
+  scrollEl.style.overflow = 'scroll';
+  scrollEl.style.height = '200px';
+  scrollEl.style.width = '200px';
+  document.body.appendChild(scrollEl);
+  var size = scrollEl.offsetWidth - scrollEl.clientWidth;
+  document.body.removeChild(scrollEl); // Get the scrollbar width
 
-  var scrollDiv = document.createElement('div');
-  scrollDiv.style.overflow = 'scroll';
-  node.appendChild(scrollDiv); // Get the scrollbar width
-
-  var scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth; // Delete the DIV
-
-  node.removeChild(scrollDiv);
-  return scrollbarWidth;
+  return size;
 }
 function getStyle(dom) {
   if (!dom) return {};
@@ -844,7 +855,7 @@ var mountHighlightDefaultConf = {
 function mountHighlight(target) {
   var conf = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-  var cf = _objectSpread({}, mountHighlightDefaultConf, conf);
+  var cf = _objectSpread$2(_objectSpread$2({}, mountHighlightDefaultConf), conf);
 
   if (cf.useOutline) {
     target.style.outline = "1px auto ".concat(cf.color);
