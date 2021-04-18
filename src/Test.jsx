@@ -11,7 +11,7 @@ const Test = () => {
   const ref = useRef();
 
   React.useEffect(() => {
-    console.log(getScrollBarWidth('m78-scrollbar'));
+    console.log(getScrollBarWidth());
   }, [])
 
   return (

@@ -4,18 +4,31 @@ export interface AnyObject {
   [key: string]: any;
 }
 
-
 export interface AnyFunction {
   (...arg: Array<any>): any;
 }
 
+export type TupleNumber = [number, number];
+
+export interface Bound {
+  left: number;
+  top: number;
+  bottom: number;
+  right: number;
+}
+
+export interface BoundWithSize {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+}
 
 /* ======================== array ======================= */
 /**
  * swap index of two items in array and return the original array
  * if the index is exceeded, no action is performed */
 export function swap<T = any>(arr: T, sourceInd: number, targetInd: number): T;
-
 
 
 
@@ -98,9 +111,9 @@ export function getPortalsNode(namespace?: string): HTMLDivElement;
 /**
  * get scrollbar width
  * @param className - If the element customizes the scroll bar through css, pass in the class name for customization
- * @return scroll bar width, generally 0 on mobile
+ * @return scroll - bar [x, y] width, generally 0 on mobile, unless you customize the scroll bar
  * */
-export function getScrollBarWidth(className?: string): number;
+export function getScrollBarWidth(className?: string): TupleNumber;
 
 /**
  * get style value of dom element

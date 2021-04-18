@@ -715,11 +715,24 @@ function getScrollBarWidth(className) {
   scrollEl.style.overflow = 'scroll';
   scrollEl.style.height = '200px';
   scrollEl.style.width = '200px';
+  scrollEl.style.border = '2px solid red';
   document.body.appendChild(scrollEl);
-  var size = scrollEl.offsetWidth - scrollEl.clientWidth;
+  var wSize = scrollEl.offsetWidth - scrollEl.clientWidth;
+  var hSize = scrollEl.offsetWidth - scrollEl.clientWidth;
+  var sty = getStyle(scrollEl);
+
+  if (sty) {
+    var trimPXStr = function trimPXStr(s) {
+      return s.replace(/px/, '');
+    };
+
+    wSize = wSize - trimPXStr(sty.borderLeftWidth) - trimPXStr(sty.borderRightWidth);
+    hSize = hSize - trimPXStr(sty.borderTopWidth) - trimPXStr(sty.borderBottomWidth);
+  }
+
   document.body.removeChild(scrollEl); // Get the scrollbar width
 
-  return size;
+  return [wSize, hSize];
 }
 function getStyle(dom) {
   if (!dom) return {};

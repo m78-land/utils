@@ -22,15 +22,25 @@ export function getScrollBarWidth(className) {
   scrollEl.style.overflow = 'scroll';
   scrollEl.style.height = '200px';
   scrollEl.style.width = '200px';
+  scrollEl.style.border = '2px solid red'
 
   document.body.appendChild(scrollEl);
 
-  const size = scrollEl.offsetWidth - scrollEl.clientWidth;
+  let wSize = scrollEl.offsetWidth - scrollEl.clientWidth;
+  let hSize = scrollEl.offsetWidth - scrollEl.clientWidth;
+
+  const sty = getStyle(scrollEl);
+
+  if (sty) {
+    const trimPXStr = s => s.replace(/px/, '');
+    wSize = wSize - trimPXStr(sty.borderLeftWidth) - trimPXStr(sty.borderRightWidth);
+    hSize = hSize - trimPXStr(sty.borderTopWidth) - trimPXStr(sty.borderBottomWidth);
+  }
 
   document.body.removeChild(scrollEl);
 
   // Get the scrollbar width
-  return size;
+  return [wSize, hSize];
 }
 
 export function getStyle(dom) {
