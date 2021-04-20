@@ -1,6 +1,6 @@
 {
   "name": "@lxjx/utils",
-  "version": "1.12.1",
+  "version": "1.13.0",
   "description": "useful javascript util kit",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -16,12 +16,12 @@
   },
   "peerDependencies": {},
   "devDependencies": {
+    "lodash": "^4.17.21",
     "umi-library": "^1.1.1"
   },
   "license": "MIT",
   "dependencies": {
     "@babel/runtime": "^7.7.6",
-    "@types/node": "^13.11.0",
-    "uuid": "^7.0.2"
+    "@types/node": "^13.11.0"
   }
 }
