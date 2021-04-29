@@ -123,7 +123,7 @@ export function getScrollBarWidth(className?: string): TupleNumber;
 export function getStyle(dom: HTMLElement): Partial<CSSStyleDeclaration>;
 
 /**
- * Whether element is visible in viewport
+ * check if element is visible
  * @param el - an element to be detected or an object that represents location information
  * @param option
  * @param option.fullVisible - false | default is to be completely invisible, and set to true to be invisible if element is partially occluded
@@ -132,13 +132,8 @@ export function getStyle(dom: HTMLElement): Partial<CSSStyleDeclaration>;
  * @return - Whether the overall visibility information and the specified direction does not exceed the visible boundary
  * */
 export function checkElementVisible(
-  el: HTMLElement | {
-    right: number;
-    bottom: number;
-    left: number;
-    top: number;
-  },
-  option?: { fullVisible?: boolean; wrapEl?: HTMLElement; offset?: number | { left?: number; top?: number; right?: number; bottom?: number; } },
+  el: HTMLElement | Partial<Bound>,
+  option?: { fullVisible?: boolean; wrapEl?: HTMLElement; offset?: number | Partial<Bound> },
 ): {
   visible: boolean;
   top: boolean;
@@ -194,9 +189,6 @@ export function setDocScrollOffset(conf: { x?: number; y?: number }): void;
 
 /** check whether the dom node is scrollable */
 export function hasScroll(el: HTMLElement): { x: boolean, y: boolean };
-
-
-
 
 
 /* ======================== is ======================= */

@@ -691,6 +691,11 @@ function subtract() {
 function weakNumber(arg) {
   return isWeakNumber(arg) ? Number(arg) : null;
 }
+function clamp(val, min, max) {
+  if (isNumber(min) && val < min) return min;
+  if (isNumber(max) && val > max) return max;
+  return val;
+}
 
 function ownKeys$2(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -746,19 +751,20 @@ function checkElementVisible(target) {
       wrapEl = option.wrapEl,
       _option$offset = option.offset,
       offset = _option$offset === void 0 ? 0 : _option$offset;
-  var ofs = getOffsetObj(offset);
+  var ofs = getOffsetObj(offset); // 核心是判定视口的可用区域所在的框，再检测元素是否在这个框坐标内
+
   /** 基础边界(用于窗口) */
 
   var yMinBase = 0;
   var xMinBase = 0;
   var yMaxBase = window.innerHeight;
   var xMaxBase = window.innerWidth;
-  /** 元素边界(用于指定元素边界) */
+  /** 有效边界 */
 
-  var yMin = yMinBase;
-  var xMin = xMinBase;
-  var yMax = yMaxBase;
-  var xMax = xMaxBase;
+  var aYMin = yMinBase;
+  var aXMin = xMinBase;
+  var aYMax = yMaxBase;
+  var aXMax = xMaxBase; // 需要同时检测是否超出窗口、所在容器
 
   if (wrapEl) {
     var _wrapEl$getBoundingCl = wrapEl.getBoundingClientRect(),
@@ -767,10 +773,17 @@ function checkElementVisible(target) {
         _bottom = _wrapEl$getBoundingCl.bottom,
         _right = _wrapEl$getBoundingCl.right;
 
-    yMin += _top;
-    xMin += _left;
-    yMax -= yMax - _bottom;
-    xMax -= xMax - _right; // 减去元素右边到视口右边
+    var yMin = yMinBase + _top;
+    var xMin = xMinBase + _left;
+    var yMax = _bottom;
+    var xMax = _right; // 减去元素右边到视口右边
+    // 有效区域左上取最小值，最小不小于0
+    // 有效区域右下取最大值，最大不大于窗口对应方向尺寸
+
+    aXMin = clamp(Math.max(xMinBase, xMin), xMinBase, xMaxBase);
+    aYMin = clamp(Math.max(yMinBase, yMin), yMinBase, yMaxBase);
+    aXMax = clamp(Math.min(xMaxBase, xMax), xMinBase, xMaxBase);
+    aYMax = clamp(Math.min(yMaxBase, yMax), yMinBase, yMaxBase);
   }
 
   var bound = isDom(target) ? target.getBoundingClientRect() : target;
@@ -786,19 +799,15 @@ function checkElementVisible(target) {
   var topPos = fullVisible ? top : bottom;
   var bottomPos = fullVisible ? bottom : top;
   var leftPos = fullVisible ? left : right;
-  var rightPos = fullVisible ? right : left;
-  var elTopVisible = topPos > yMin;
-  var winTopVisible = topPos > yMinBase;
-  var elLeftVisible = leftPos > xMin;
-  var winLeftVisible = leftPos > xMinBase;
-  var elBottomVisible = bottomPos < yMax;
-  var winBottomVisible = bottomPos < yMaxBase;
-  var elRightVisible = rightPos < xMax;
-  var winRightVisible = rightPos < xMaxBase;
-  var topVisible = elTopVisible && winTopVisible;
-  var leftVisible = elLeftVisible && winLeftVisible;
-  var bottomVisible = elBottomVisible && winBottomVisible;
-  var rightVisible = elRightVisible && winRightVisible;
+  var rightPos = fullVisible ? right : left; // 指定方向是否包含有效尺寸
+
+  var xFalse = aXMax === aXMin;
+  var yFalse = aYMax === aYMin; // const topVisible = elTopVisible && winTopVisible;
+
+  var topVisible = yFalse ? false : topPos > aYMin;
+  var leftVisible = xFalse ? false : leftPos > aXMin;
+  var bottomVisible = yFalse ? false : bottomPos < aYMax;
+  var rightVisible = xFalse ? false : rightPos < aXMax;
   return {
     visible: topVisible && leftVisible && rightVisible && bottomVisible,
     top: topVisible,
@@ -1077,4 +1086,4 @@ function swap(arr, sourceInd, targetInd) {
   return arr;
 }
 
-export { __GLOBAL__, byte2text, checkElementVisible, createRandString, datetime, decimalPrecision, defer, delay, dumpFn, form2obj, formatString, getCurrentParent, getDateCountDown, getDateStringFirst, getDocScrollOffset, getFirstTruthyOrZero, getGlobal, getPortalsNode, getProtoStr, getRandRange, getScrollBarWidth, getScrollParent, getStorage, getStyle, hasScroll, heightLightMatchString, idCardRegexp, isArray, isBetweenDate, isBoolean, isDate, isDom, isEmpty, isError, isFunction, isInt, isNull, isNullOrUndefined, isNumber, isNumerical, isObject, isPrimitive, isRegExp, isString, isSymbol, isTrueEmpty, isTruthyArray, isTruthyOrZero, isUndefined, isWeakNumber, obj2FormData, omit, padSingleNumber, parseDate, promisify, replaceHtmlTags, setDocScrollOffset, setStorage, shakeFalsy, subtract, sum, swap, triggerHighlight, unFormatString, validateFormatString, vie, weakNumber };
+export { __GLOBAL__, byte2text, checkElementVisible, clamp, createRandString, datetime, decimalPrecision, defer, delay, dumpFn, form2obj, formatString, getCurrentParent, getDateCountDown, getDateStringFirst, getDocScrollOffset, getFirstTruthyOrZero, getGlobal, getPortalsNode, getProtoStr, getRandRange, getScrollBarWidth, getScrollParent, getStorage, getStyle, hasScroll, heightLightMatchString, idCardRegexp, isArray, isBetweenDate, isBoolean, isDate, isDom, isEmpty, isError, isFunction, isInt, isNull, isNullOrUndefined, isNumber, isNumerical, isObject, isPrimitive, isRegExp, isString, isSymbol, isTrueEmpty, isTruthyArray, isTruthyOrZero, isUndefined, isWeakNumber, obj2FormData, omit, padSingleNumber, parseDate, promisify, replaceHtmlTags, setDocScrollOffset, setStorage, shakeFalsy, subtract, sum, swap, triggerHighlight, unFormatString, validateFormatString, vie, weakNumber };

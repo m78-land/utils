@@ -4,24 +4,38 @@ import './test.css'
 import { isWeakNumber } from './is';
 import { subtract } from './number';
 import { getScrollParent, getStyle, hasScroll, swap } from './index';
-import { getScrollBarWidth } from './index';
-
+import { checkElementVisible } from './index';
+import debounce from 'lodash/debounce';
 
 const Test = () => {
   const ref = useRef();
+  const ref2 = useRef();
 
   React.useEffect(() => {
-    console.log(getScrollBarWidth());
+    const dS = debounce(e => {
+      console.log(checkElementVisible(ref2.current, {
+        wrapEl: ref.current,
+        // offset: 40,
+        // fullVisible: true,
+      }));
+    }, 100);
+
+    ref.current.addEventListener('scroll', dS)
+    window.onscroll = dS;
   }, [])
 
   return (
-    <div className="m78-scrollbar" style={{ padding: 16 }} ref={ref}>
-      <div  id="el3"style={{ padding: 16, height: 300, overflow: 'auto' }}>
-        <div id="el2" style={{ padding: 16, height: 900 }}>
-          <button id="el">az</button>
+    <div>
+      <div style={{ height: 1000 }}></div>
+
+      <div ref={ref} className="box">
+        <div className="innerBox">
+          <div ref={ref2} className="blueBox" />
         </div>
       </div>
-      <div style={{ height: 2000 }}></div>
+
+      <div style={{ height: 1000 }}></div>
+
     </div>
   );
 };

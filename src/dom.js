@@ -1,4 +1,5 @@
-import { isDom, isNumber } from './index';
+import { isDom, isNumber } from './is';
+import { clamp } from './number';
 
 const portalsID = 'J__PORTALS__NODE__';
 export const getPortalsNode = (namespace) => {
@@ -57,24 +58,35 @@ export function checkElementVisible(
 
   const ofs = getOffsetObj(offset);
 
+  // 核心是判定视口的可用区域所在的框，再检测元素是否在这个框坐标内
+
   /** 基础边界(用于窗口) */
   const yMinBase = 0;
   const xMinBase = 0;
   const yMaxBase = window.innerHeight;
   const xMaxBase = window.innerWidth;
 
-  /** 元素边界(用于指定元素边界) */
-  let yMin = yMinBase;
-  let xMin = xMinBase;
-  let yMax = yMaxBase;
-  let xMax = xMaxBase;
+  /** 有效边界 */
+  let aYMin = yMinBase;
+  let aXMin = xMinBase;
+  let aYMax = yMaxBase;
+  let aXMax = xMaxBase;
 
+  // 需要同时检测是否超出窗口、所在容器
   if (wrapEl) {
     const { top, left, bottom, right } = wrapEl.getBoundingClientRect();
-    yMin += top;
-    xMin += left;
-    yMax -= yMax - bottom;
-    xMax -= xMax - right; // 减去元素右边到视口右边
+
+    const yMin = yMinBase + top;
+    const xMin = xMinBase + left;
+    const yMax = bottom;
+    const xMax = right; // 减去元素右边到视口右边
+
+    // 有效区域左上取最小值，最小不小于0
+    // 有效区域右下取最大值，最大不大于窗口对应方向尺寸
+    aXMin = clamp(Math.max(xMinBase, xMin), xMinBase, xMaxBase);
+    aYMin = clamp(Math.max(yMinBase, yMin), yMinBase, yMaxBase);
+    aXMax = clamp(Math.min(xMaxBase, xMax), xMinBase, xMaxBase);
+    aYMax = clamp(Math.min(yMaxBase, yMax), yMinBase, yMaxBase);
   }
 
   const bound = isDom(target) ? target.getBoundingClientRect() : target;
@@ -87,22 +99,15 @@ export function checkElementVisible(
   const leftPos = fullVisible ? left : right;
   const rightPos = fullVisible ? right : left;
 
-  const elTopVisible = topPos > yMin;
-  const winTopVisible = topPos > yMinBase;
+  // 指定方向是否包含有效尺寸
+  const xFalse = aXMax === aXMin;
+  const yFalse = aYMax === aYMin;
 
-  const elLeftVisible = leftPos > xMin;
-  const winLeftVisible = leftPos > xMinBase;
-
-  const elBottomVisible = bottomPos < yMax;
-  const winBottomVisible = bottomPos < yMaxBase;
-
-  const elRightVisible = rightPos < xMax;
-  const winRightVisible = rightPos < xMaxBase;
-
-  const topVisible = elTopVisible && winTopVisible;
-  const leftVisible = elLeftVisible && winLeftVisible;
-  const bottomVisible = elBottomVisible && winBottomVisible;
-  const rightVisible = elRightVisible && winRightVisible;
+  // const topVisible = elTopVisible && winTopVisible;
+  const topVisible = yFalse ? false : topPos > aYMin;
+  const leftVisible = xFalse ? false : leftPos > aXMin;
+  const bottomVisible = yFalse ? false : bottomPos < aYMax;
+  const rightVisible = xFalse ? false : rightPos < aXMax;
 
   return {
     visible: topVisible && leftVisible && rightVisible && bottomVisible,

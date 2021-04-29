@@ -1,4 +1,4 @@
-import { isNumber, isWeakNumber } from './index';
+import { isNumber, isWeakNumber } from './is';
 
 export function getRandRange(min, max) {
   return Math.round((max - min) * Math.random() + min);
@@ -28,4 +28,10 @@ export function subtract(...nums) {
 
 export function weakNumber(arg) {
   return isWeakNumber(arg) ? Number(arg) : null;
+}
+
+export function clamp(val, min, max) {
+  if (isNumber(min) && val < min) return min;
+  if (isNumber(max) && val > max) return max;
+  return val;
 }

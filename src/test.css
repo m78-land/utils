@@ -1,35 +1,29 @@
-.ddd {
-  height: 1em;
-  display: inline-block;
+* {
+  box-sizing: border-box;
 }
 
-.ddd::after {
-  content: 'heheda';
-  font-size: 26px;
-  color: red;
+body {
+  padding-left: 1000px;
 }
 
+.box {
+  width: 300px;
+  height: 300px;
+  border: 1px solid red;
+  overflow: auto;
+}
 
-/* 滚动条尺寸大于10时启用 */
-.m78-scrollbar::-webkit-scrollbar {
-   width: 6px;
-   height: 6px;
-   background: transparent;
- }
+.innerBox {
+  position: relative;
+  height: 900px;
+  width: 900px;
+}
 
-.m78-scrollbar::-webkit-scrollbar-thumb {
-   border-radius: 6px;
-   background: red;
-   min-height: 70px;
-   min-width: 70px;
- }
-
-.m78-scrollbar::-webkit-scrollbar-thumb:hover {
-   background: red;
- }
-
-.m78-scrollbar::-webkit-scrollbar-thumb:active {
-   background: red;
- }
-
-
+.blueBox {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 450px;
+  left: 450px;
+  border: 1px solid blue;
+}
