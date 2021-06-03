@@ -2,7 +2,7 @@
  * 将小于10且大于0的数字转为填充0的字符 如 '01' '05', 小于1的数字始终返回'00'
  * @param {number} number
  */
-import { isTruthyOrZero } from './index';
+import { isTruthyOrZero } from './is';
 
 export function padSingleNumber(number) {
   if (number < 1) {

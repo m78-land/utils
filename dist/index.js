@@ -2,6 +2,44 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
+function ownKeys(object, enumerableOnly) {
+  var keys = Object.keys(object);
+
+  if (Object.getOwnPropertySymbols) {
+    var symbols = Object.getOwnPropertySymbols(object);
+
+    if (enumerableOnly) {
+      symbols = symbols.filter(function (sym) {
+        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+      });
+    }
+
+    keys.push.apply(keys, symbols);
+  }
+
+  return keys;
+}
+
+function _objectSpread2(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i] != null ? arguments[i] : {};
+
+    if (i % 2) {
+      ownKeys(Object(source), true).forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      });
+    } else if (Object.getOwnPropertyDescriptors) {
+      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+    } else {
+      ownKeys(Object(source)).forEach(function (key) {
+        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+      });
+    }
+  }
+
+  return target;
+}
+
 function _typeof(obj) {
   "@babel/helpers - typeof";
 
@@ -33,40 +71,6 @@ function _defineProperty(obj, key, value) {
   return obj;
 }
 
-function ownKeys(object, enumerableOnly) {
-  var keys = Object.keys(object);
-
-  if (Object.getOwnPropertySymbols) {
-    var symbols = Object.getOwnPropertySymbols(object);
-    if (enumerableOnly) symbols = symbols.filter(function (sym) {
-      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-    });
-    keys.push.apply(keys, symbols);
-  }
-
-  return keys;
-}
-
-function _objectSpread2(target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i] != null ? arguments[i] : {};
-
-    if (i % 2) {
-      ownKeys(Object(source), true).forEach(function (key) {
-        _defineProperty(target, key, source[key]);
-      });
-    } else if (Object.getOwnPropertyDescriptors) {
-      Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-    } else {
-      ownKeys(Object(source)).forEach(function (key) {
-        Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-      });
-    }
-  }
-
-  return target;
-}
-
 function _toConsumableArray(arr) {
   return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
 }
@@ -76,7 +80,7 @@ function _arrayWithoutHoles(arr) {
 }
 
 function _iterableToArray(iter) {
-  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
 }
 
 function _unsupportedIterableToArray(o, minLen) {
@@ -1128,12 +1132,58 @@ var dumpFn = function dumpFn() {
 
   return arg;
 };
-function defer(fn) {
+var defer = function defer(fn) {
   for (var _len3 = arguments.length, args = new Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
     args[_key3 - 1] = arguments[_key3];
   }
 
   return setTimeout.apply(void 0, [fn, 1].concat(args));
+};
+var defaultConfig$1 = {
+  rate: 0.2
+};
+function retry(handle, delay, config) {
+  var _defaultConfig$config = _objectSpread2(_objectSpread2({}, defaultConfig$1), config),
+      maxDelay = _defaultConfig$config.maxDelay,
+      rate = _defaultConfig$config.rate,
+      fixed = _defaultConfig$config.fixed,
+      maxRetry = _defaultConfig$config.maxRetry;
+
+  var t;
+
+  var clear = function clear() {
+    return t && clearTimeout(t);
+  };
+
+  var res = handle();
+  if (!res) return clear;
+  var d = delay;
+  var count = 1;
+
+  var trigger = function trigger() {
+    t = setTimeout(function () {
+      if (handle()) {
+        if (maxRetry && maxRetry === count) return;
+
+        if (!fixed) {
+          var nextD = count * rate * delay + d;
+          d = maxDelay ? Math.min(nextD, maxDelay) : nextD;
+        }
+
+        count++;
+        trigger();
+      }
+    }, d);
+  };
+
+  trigger();
+  return clear;
+}
+function throwError(msg, prefix) {
+  throw new Error("".concat(prefix ? "".concat(prefix, "::") : '', "ERROR: ").concat(msg));
+}
+function throwWarning(msg, prefix) {
+  console.warn("".concat(prefix ? "".concat(prefix, "::") : '', "Warning: ").concat(msg));
 }
 
 function getGlobal() {
@@ -1231,12 +1281,15 @@ exports.padSingleNumber = padSingleNumber;
 exports.parseDate = parseDate;
 exports.promisify = promisify;
 exports.replaceHtmlTags = replaceHtmlTags;
+exports.retry = retry;
 exports.setDocScrollOffset = setDocScrollOffset;
 exports.setStorage = setStorage;
 exports.shakeFalsy = shakeFalsy;
 exports.subtract = subtract;
 exports.sum = sum;
 exports.swap = swap;
+exports.throwError = throwError;
+exports.throwWarning = throwWarning;
 exports.triggerHighlight = triggerHighlight;
 exports.unFormatString = unFormatString;
 exports.validateFormatString = validateFormatString;

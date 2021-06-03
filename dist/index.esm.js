@@ -232,7 +232,7 @@ function isTruthyOrZero(arg) {
   return !!arg || arg === 0;
 }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 function padSingleNumber(number) {
@@ -596,7 +596,7 @@ function omit(obj, props) {
   return result;
 }
 
-function ownKeys$1(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$1(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread$1(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$1(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$1(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
@@ -697,7 +697,7 @@ function clamp(val, min, max) {
   return val;
 }
 
-function ownKeys$2(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys$2(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread$2(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$2(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$2(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 var portalsID = 'J__PORTALS__NODE__';
@@ -1013,6 +1013,10 @@ function hasScroll(el) {
   };
 }
 
+function ownKeys$3(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread$3(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$3(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$3(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
 function promisify(fn, receiver) {
   return function () {
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
@@ -1040,12 +1044,58 @@ var dumpFn = function dumpFn() {
 
   return arg;
 };
-function defer(fn) {
+var defer = function defer(fn) {
   for (var _len3 = arguments.length, args = new Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
     args[_key3 - 1] = arguments[_key3];
   }
 
   return setTimeout.apply(void 0, [fn, 1].concat(args));
+};
+var defaultConfig$1 = {
+  rate: 0.2
+};
+function retry(handle, delay, config) {
+  var _defaultConfig$config = _objectSpread$3(_objectSpread$3({}, defaultConfig$1), config),
+      maxDelay = _defaultConfig$config.maxDelay,
+      rate = _defaultConfig$config.rate,
+      fixed = _defaultConfig$config.fixed,
+      maxRetry = _defaultConfig$config.maxRetry;
+
+  var t;
+
+  var clear = function clear() {
+    return t && clearTimeout(t);
+  };
+
+  var res = handle();
+  if (!res) return clear;
+  var d = delay;
+  var count = 1;
+
+  var trigger = function trigger() {
+    t = setTimeout(function () {
+      if (handle()) {
+        if (maxRetry && maxRetry === count) return;
+
+        if (!fixed) {
+          var nextD = count * rate * delay + d;
+          d = maxDelay ? Math.min(nextD, maxDelay) : nextD;
+        }
+
+        count++;
+        trigger();
+      }
+    }, d);
+  };
+
+  trigger();
+  return clear;
+}
+function throwError(msg, prefix) {
+  throw new Error("".concat(prefix ? "".concat(prefix, "::") : '', "ERROR: ").concat(msg));
+}
+function throwWarning(msg, prefix) {
+  console.warn("".concat(prefix ? "".concat(prefix, "::") : '', "Warning: ").concat(msg));
 }
 
 function getGlobal() {
@@ -1086,4 +1136,4 @@ function swap(arr, sourceInd, targetInd) {
   return arr;
 }
 
-export { __GLOBAL__, byte2text, checkElementVisible, clamp, createRandString, datetime, decimalPrecision, defer, delay, dumpFn, form2obj, formatString, getCurrentParent, getDateCountDown, getDateStringFirst, getDocScrollOffset, getFirstTruthyOrZero, getGlobal, getPortalsNode, getProtoStr, getRandRange, getScrollBarWidth, getScrollParent, getStorage, getStyle, hasScroll, heightLightMatchString, idCardRegexp, isArray, isBetweenDate, isBoolean, isDate, isDom, isEmpty, isError, isFunction, isInt, isNull, isNullOrUndefined, isNumber, isNumerical, isObject, isPrimitive, isRegExp, isString, isSymbol, isTrueEmpty, isTruthyArray, isTruthyOrZero, isUndefined, isWeakNumber, obj2FormData, omit, padSingleNumber, parseDate, promisify, replaceHtmlTags, setDocScrollOffset, setStorage, shakeFalsy, subtract, sum, swap, triggerHighlight, unFormatString, validateFormatString, vie, weakNumber };
+export { __GLOBAL__, byte2text, checkElementVisible, clamp, createRandString, datetime, decimalPrecision, defer, delay, dumpFn, form2obj, formatString, getCurrentParent, getDateCountDown, getDateStringFirst, getDocScrollOffset, getFirstTruthyOrZero, getGlobal, getPortalsNode, getProtoStr, getRandRange, getScrollBarWidth, getScrollParent, getStorage, getStyle, hasScroll, heightLightMatchString, idCardRegexp, isArray, isBetweenDate, isBoolean, isDate, isDom, isEmpty, isError, isFunction, isInt, isNull, isNullOrUndefined, isNumber, isNumerical, isObject, isPrimitive, isRegExp, isString, isSymbol, isTrueEmpty, isTruthyArray, isTruthyOrZero, isUndefined, isWeakNumber, obj2FormData, omit, padSingleNumber, parseDate, promisify, replaceHtmlTags, retry, setDocScrollOffset, setStorage, shakeFalsy, subtract, sum, swap, throwError, throwWarning, triggerHighlight, unFormatString, validateFormatString, vie, weakNumber };

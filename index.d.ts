@@ -1,36 +1,12 @@
 /// <reference types="node" />
-
-export interface AnyObject {
-  [key: string]: any;
-}
-
-export interface AnyFunction {
-  (...arg: Array<any>): any;
-}
-
-export type TupleNumber = [number, number];
-
-export interface Bound {
-  left: number;
-  top: number;
-  bottom: number;
-  right: number;
-}
-
-export interface BoundWithSize {
-  left: number;
-  top: number;
-  width: number;
-  height: number;
-}
+import { AnyFunction, AnyObject, Bound, TupleNumber } from './common';
 
 /* ======================== array ======================= */
+
 /**
  * swap index of two items in array and return the original array
  * if the index is exceeded, no action is performed */
 export function swap<T = any>(arr: T, sourceInd: number, targetInd: number): T;
-
-
 
 
 /* ======================== bom ======================= */
@@ -39,9 +15,6 @@ export function setStorage(key: string, val: any): void;
 
 /** shortcut of localStorage api, automatic JSON.parse, can only take the value set by setStorage */
 export function getStorage<T = any>(key: string): T | null;
-
-
-
 
 
 /* ======================== date ======================= */
@@ -94,9 +67,6 @@ export function getDateStringFirst(dataString: string): string;
  * @return - whether within a time period
  * */
 export function isBetweenDate(startDate: any, endDate: any, currentDate?: any): boolean;
-
-
-
 
 
 /* ======================== dom ======================= */
@@ -253,8 +223,6 @@ export function obj2FormData(obj: AnyObject): FormData;
 
 /* ======================== format ======================= */
 
-export function promisify(fn: AnyFunction, receiver?: object): (...arg: any) => Promise<any>;
-
 export function padSingleNumber(number: number): string;
 
 /** 当左边的值不为truthy或0时，返回feedback */
@@ -388,31 +356,6 @@ export function omit<O, P extends string>(obj: O, props: string): Omit<O, P>;
 
 /* ======================== function ======================= */
 
-/**
- * 将一个优先错误且回调位于最后一个参数的node风格的callback函数转为return Promise的函数
- * @param {function} fn - 要包装的函数
- * @param {object} receiver - 要绑定作用域的对象
- * @return {function(...[*]): Promise<*>}
- */
-export function promisify(fn: AnyFunction, receiver?: object): (...arg: any) => Promise<any>;
-
-/**
- * 返回一个延迟指定时间的Promise, payload为Promise的resolve值，如果其为 Error 对象，则promise在指定延迟后reject
- * @param ms - 延迟时间
- * @param payload {* | Error} - 作为resolve值的任意值，如果是Error对象，则promise会抛出异常
- * @return - promise
- * */
-export function delay<T = any>(
-  ms: number,
-  payload?: T | undefined,
-): Promise<T extends Error ? void : T>;
-
-/** 一个便利函数，接收任意参数并返回 */
-export const dumpFn: (...arg: any[]) => any;
-
-/** 延迟执行一个函数 */
-export function defer(fn: AnyFunction, ...args: any[]): any;
-
 
 /* ======================== regexp ======================= */
 /** 身份证号正则, */
@@ -424,3 +367,7 @@ export const idCardRegexp: RegExp;
 export function getGlobal(): Window | NodeJS.Global;
 
 export const __GLOBAL__: Window | NodeJS.Global;
+
+export * from './common';
+
+export * from './function';
