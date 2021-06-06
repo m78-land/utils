@@ -44,7 +44,7 @@ export interface FunctionReTryConfig {
  * @param config.maxRetry - 最大重复次数
  * @return clear() - 用于停止重试并清理内部计时器
  * */
-export function retry(handle: () => any, delay: number, config?: FunctionReTryConfig): () => EmptyFunction;
+export function retry(handle: () => any, delay: number, config?: FunctionReTryConfig): EmptyFunction;
 
 // TODO: 增加异步版本 AsyncRetry
 
