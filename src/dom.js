@@ -1,8 +1,8 @@
-import { isDom, isNumber } from './is';
-import { clamp } from './number';
+import { isDom, isNumber } from '@lxjx/utils';
+import { clamp } from '@lxjx/utils';
 
 const portalsID = 'J__PORTALS__NODE__';
-export const getPortalsNode = (namespace) => {
+export const getPortalsNode = namespace => {
   const id = portalsID + (namespace ? namespace.toLocaleUpperCase() : 'DEFAULT');
 
   let portalsEl = document.getElementById(id);
@@ -16,14 +16,13 @@ export const getPortalsNode = (namespace) => {
 };
 
 export function getScrollBarWidth(className) {
-
   // Create the measurement node
   const scrollEl = document.createElement('div');
   if (className) scrollEl.className = className;
   scrollEl.style.overflow = 'scroll';
   scrollEl.style.height = '200px';
   scrollEl.style.width = '200px';
-  scrollEl.style.border = '2px solid red'
+  scrollEl.style.border = '2px solid red';
 
   document.body.appendChild(scrollEl);
 
@@ -50,10 +49,7 @@ export function getStyle(dom) {
   return dom.currentStyle ? dom.currentStyle : window.getComputedStyle(dom);
 }
 
-export function checkElementVisible(
-  target,
-  option = {},
-) {
+export function checkElementVisible(target, option = {}) {
   const { fullVisible = false, wrapEl, offset = 0 } = option;
 
   const ofs = getOffsetObj(offset);
@@ -103,11 +99,10 @@ export function checkElementVisible(
   const xFalse = aXMax === aXMin;
   const yFalse = aYMax === aYMin;
 
-  // const topVisible = elTopVisible && winTopVisible;
-  const topVisible = yFalse ? false : topPos > aYMin;
-  const leftVisible = xFalse ? false : leftPos > aXMin;
-  const bottomVisible = yFalse ? false : bottomPos < aYMax;
-  const rightVisible = xFalse ? false : rightPos < aXMax;
+  const topVisible = yFalse ? false : topPos >= aYMin;
+  const leftVisible = xFalse ? false : leftPos >= aXMin;
+  const bottomVisible = yFalse ? false : bottomPos <= aYMax;
+  const rightVisible = xFalse ? false : rightPos <= aXMax;
 
   return {
     visible: topVisible && leftVisible && rightVisible && bottomVisible,
@@ -162,13 +157,13 @@ export function triggerHighlight(t, conf) {
 const mountHighlightDefaultConf = {
   color: '#1890ff',
   useOutline: true,
-}
+};
 
 function mountHighlight(target, conf = {}) {
   const cf = {
     ...mountHighlightDefaultConf,
     ...conf,
-  }
+  };
 
   if (cf.useOutline) {
     target.style.outline = `1px auto ${cf.color}`;
@@ -286,13 +281,11 @@ export function setDocScrollOffset(conf = {}) {
   }
 }
 
-
 export function hasScroll(el) {
   let x = Math.max(0, el.scrollWidth - el.clientWidth) > 0;
   let y = Math.max(0, el.scrollHeight - el.clientHeight) > 0;
 
   if (el === document.documentElement || el === document.body) {
-
   } else {
     const { overflowX, overflowY } = getStyle(el);
     if (overflowX !== 'scroll' && overflowX !== 'auto') {
@@ -306,5 +299,5 @@ export function hasScroll(el) {
   return {
     x,
     y,
-  }
+  };
 }

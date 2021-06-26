@@ -25,7 +25,7 @@ export function isTruthyArray(arg) {
 }
 
 /**
- * 检测是否为数字
+ * 检测是否为数字且非NAN
  * @param {*} arg - 需待查询的对象
  * @returns {boolean}
  * */
@@ -36,7 +36,6 @@ export function isNumber(arg) {
 export function isWeakNumber(arg) {
   return isNumber(Number(arg));
 }
-
 
 /**
  * 检测是否为字符串
@@ -124,12 +123,7 @@ export function isDom(o) {
   if (typeof HTMLElement === 'object') {
     return o instanceof HTMLElement;
   } else {
-    return (
-      o &&
-      typeof o === 'object' &&
-      o.nodeType === 1 &&
-      typeof o.nodeName === 'string'
-    );
+    return o && typeof o === 'object' && o.nodeType === 1 && typeof o.nodeName === 'string';
   }
 }
 
@@ -238,4 +232,3 @@ export function isNumerical(numLike) {
 export function isTruthyOrZero(arg) {
   return !!arg || arg === 0;
 }
-

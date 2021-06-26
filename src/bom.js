@@ -1,4 +1,3 @@
-
 const storagePrefix = 'THIS_IS_A_UNIQUE_PREFIX_';
 
 export function setStorage(key, val) {

@@ -1,3 +1,0 @@
-import { compose } from '../';
-
-
