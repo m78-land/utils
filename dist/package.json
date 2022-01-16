@@ -1,11 +1,11 @@
 {
   "name": "@lxjx/utils",
-  "version": "1.15.0",
-  "description": "useful javascript util kit",
+  "version": "1.16.0",
+  "description": "utils for lixianjie",
   "keywords": [
     "javascript utils"
   ],
-  "main": "index.js",
+  "main": "index.umd.js",
   "module": "index.js",
   "typings": "./",
   "repository": "https://github.com/Iixianjie/utils",
