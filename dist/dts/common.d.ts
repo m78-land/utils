@@ -46,12 +46,6 @@ export interface BoundSize {
 }
 
 /** Component common props */
-export interface ComponentBasePropsWithAny extends ComponentBaseProps {
-  /** 透传到包裹元素上的属性 */
-  [key: string]: any;
-}
-
-/** Component common props */
 export interface ComponentBaseProps {
   /** 包裹元素的类名 */
   className?: string;
@@ -59,12 +53,18 @@ export interface ComponentBaseProps {
   style?: CSSProperties;
 }
 
-/** A object containing id field */
+/** Component common props */
+export interface ComponentBasePropsWithAny extends ComponentBaseProps {
+  /** 透传到包裹元素上的属性 */
+  [key: string]: any;
+}
+
+/** An object containing id field */
 export interface IdProps {
   id: number;
 }
 
-/** A object containing data field */
+/** An object containing data field */
 export interface DataProps {
   data: number;
 }

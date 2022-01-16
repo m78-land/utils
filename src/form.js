@@ -18,7 +18,7 @@ export function form2obj(el) {
     console.error('The passed in element does not support the querySelectorAll API');
     return;
   }
-  let tempObj = {};
+  const tempObj = {};
   let inputs = el.querySelectorAll('input[name],select[name],textarea[name]');
   inputs = Array.prototype.slice.call(inputs);
   inputs.forEach(v => {
@@ -48,8 +48,8 @@ export function form2obj(el) {
  * @returns {FormData}
  */
 export function obj2FormData(obj) {
-  let keys = Object.keys(obj);
-  let form = new FormData();
+  const keys = Object.keys(obj);
+  const form = new FormData();
 
   keys.forEach(key => {
     if (Array.isArray(obj[key])) {

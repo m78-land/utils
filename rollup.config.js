@@ -1,6 +1,6 @@
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import typescript from '@rollup/plugin-typescript';
+// import typescript from '@rollup/plugin-typescript';
 import postcss from 'rollup-plugin-postcss';
 import del from 'rollup-plugin-delete';
 import path from 'path';
@@ -49,23 +49,23 @@ export default [
       format: 'es',
     },
   },
-  // {
-  //   ...common,
-  //   // umd的外部化包手动添加，通常组会排除主要依赖，如react，react-dom等
-  //   external: [
-  //     'react',
-  //     'react-dom'
-  //   ],
-  //   plugins: pluginsCommon,
-  //   output: {
-  //     ...outputCommon,
-  //     format: 'umd',
-  //     entryFileNames: '[name].[format].js',
-  //     name: 'RollupPlay',
-  //     globals: {
-  //       React: 'React',
-  //       ReactDom: 'ReactDom',
-  //     },
-  //   },
-  // },
+  {
+    ...common,
+    // umd的外部化包手动添加，通常组会排除主要依赖，如react，react-dom等
+    external: [
+      'react',
+      'react-dom'
+    ],
+    plugins: pluginsCommon,
+    output: {
+      ...outputCommon,
+      format: 'umd',
+      entryFileNames: '[name].[format].js',
+      name: 'RollupPlay',
+      globals: {
+        React: 'React',
+        ReactDom: 'ReactDom',
+      },
+    },
+  },
 ];

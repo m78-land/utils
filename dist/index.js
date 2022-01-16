@@ -1,4 +1,4 @@
-import { padSingleNumber as padSingleNumber$1, isTruthyOrZero as isTruthyOrZero$1, isDom as isDom$1, isString as isString$1, isWeakNumber as isWeakNumber$1, isNumber as isNumber$1, clamp as clamp$1 } from '@lxjx/utils';
+import { padSingleNumber as padSingleNumber$1, isTruthyOrZero as isTruthyOrZero$1, isDom as isDom$1, isString as isString$1, isArray as isArray$1, isNumber as isNumber$1, isNumerical as isNumerical$1, isObject as isObject$1, isWeakNumber as isWeakNumber$1, clamp as clamp$1 } from '@lxjx/utils';
 
 /**
  * 获取表示对象原始类型的字符串
@@ -516,7 +516,7 @@ function form2obj(el) {
     console.error('The passed in element does not support the querySelectorAll API');
     return;
   }
-  let tempObj = {};
+  const tempObj = {};
   let inputs = el.querySelectorAll('input[name],select[name],textarea[name]');
   inputs = Array.prototype.slice.call(inputs);
   inputs.forEach(v => {
@@ -546,8 +546,8 @@ function form2obj(el) {
  * @returns {FormData}
  */
 function obj2FormData(obj) {
-  let keys = Object.keys(obj);
-  let form = new FormData();
+  const keys = Object.keys(obj);
+  const form = new FormData();
 
   keys.forEach(key => {
     if (Array.isArray(obj[key])) {
@@ -573,18 +573,95 @@ const shakeFalsy = source => {
   return source;
 };
 
-function omit(obj, props) {
+function pickOrOmit(obj, props, isPick) {
   if (isString$1(props)) {
     props = props.split(',').map(key => key.trim());
   }
   const keys = Object.keys(obj);
   const result = {};
   keys.forEach(item => {
-    if (props.indexOf(item) === -1) {
+    const cond = isPick ? props.indexOf(item) !== -1 : props.indexOf(item) === -1;
+    if (cond) {
       result[item] = obj[item];
     }
   });
   return result;
+}
+
+function omit(obj, props) {
+  return pickOrOmit(obj, props);
+}
+
+function pick(obj, props) {
+  return pickOrOmit(obj, props, true);
+}
+
+/** 根据NamePath在对象中获取值` */
+function getNamePathValue(obj, name) {
+  if (isString$1(name)) {
+    return obj?.[name];
+  }
+
+  if (isArray$1(name) && name.length) {
+    return name.reduce((p, i) => {
+      return p?.[i];
+    }, obj);
+  }
+}
+
+/** 将 ['user', 'name'], ['list', '0', 'title'] 格式的字段数组转换为字符串  */
+function stringifyNamePath(name) {
+  if (isString$1(name)) return name;
+
+  return name.reduce((p, i) => {
+    if (isNumber$1(Number(i))) {
+      return `${p}[${i}]`;
+    }
+
+    if (isString$1(i)) {
+      return p.length ? `${p}.${i}` : i;
+    }
+
+    return p;
+  }, '');
+}
+
+/** 在通过name在obj上设置值 */
+function setNamePathValue(obj, name, val) {
+  if (isString$1(name)) {
+    obj[name] = val;
+  }
+
+  if (isArray$1(name) && name.length) {
+    let lastObj = obj;
+
+    for (let i = 0; i < name.length; i++) {
+      const n = name[i]; // 当前name
+      const nextN = name[i + 1]; // 下一个name
+      const hasNextN = nextN !== undefined; // 是否有下个
+
+      if (!hasNextN) {
+        if (isNumerical$1(n)) {
+          lastObj.push(val);
+        } else {
+          lastObj[n] = val;
+        }
+        return;
+      }
+
+      // 确保要操作的对象存在
+      if (isNumerical$1(nextN)) {
+        if (!isArray$1(lastObj[n])) {
+          lastObj[n] = [];
+        }
+        // 不是数字的话则为对象
+      } else if (!isObject$1(lastObj[n])) {
+        lastObj[n] = {};
+      }
+
+      lastObj = lastObj[n];
+    }
+  }
 }
 
 function replaceHtmlTags(str = '', val = '') {
@@ -1067,6 +1144,29 @@ function getGlobal() {
 
 const __GLOBAL__ = getGlobal();
 
+function createEvent() {
+  const listeners = [];
+
+  function on(listener) {
+    listeners.push(listener);
+  }
+
+  function off(listener) {
+    const ind = listeners.indexOf(listener);
+    if (ind !== -1) listeners.splice(ind, 1);
+  }
+
+  function emit(...args) {
+    listeners.forEach(listener => listener(...args));
+  }
+
+  return {
+    on,
+    off,
+    emit,
+  };
+}
+
 const idCardRegexp = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
 
 const storagePrefix = 'THIS_IS_A_UNIQUE_PREFIX_';
@@ -1090,4 +1190,45 @@ function swap(arr, sourceInd, targetInd) {
   return arr;
 }
 
-export { __GLOBAL__, byte2text, checkElementVisible, clamp, createRandString, datetime, decimalPrecision, defer, delay, dumpFn, form2obj, formatString, getCurrentParent, getDateCountDown, getDateStringFirst, getDocScrollOffset, getFirstTruthyOrZero, getGlobal, getPortalsNode, getProtoStr, getRandRange, getScrollBarWidth, getScrollParent, getStorage, getStyle, hasScroll, heightLightMatchString, idCardRegexp, isArray, isBetweenDate, isBoolean, isDate, isDom, isEmpty, isError, isFunction, isInt, isNull, isNullOrUndefined, isNumber, isNumerical, isObject, isPrimitive, isRegExp, isString, isSymbol, isTrueEmpty, isTruthyArray, isTruthyOrZero, isUndefined, isWeakNumber, obj2FormData, omit, padSingleNumber, parseDate, promisify, replaceHtmlTags, retry, setDocScrollOffset, setStorage, shakeFalsy, subtract, sum, swap, throwError, throwWarning, triggerHighlight, unFormatString, validateFormatString, vie, weakNumber };
+function move(array, form, to) {
+  if (form < 0 || to < 0) return array;
+  if (form > array.length - 1 || to > array.length - 1) return array;
+  array.splice(to, 0, ...array.splice(form, 1));
+  return array;
+}
+
+const ensureArray = val => (isArray$1(val) ? val : [val]);
+
+function uniq(array) {
+  const arr = [];
+
+  array.forEach(it => {
+    if (arr.indexOf(it) === -1) {
+      arr.push(it);
+    }
+  });
+
+  return arr;
+}
+
+function uniqWith(array, comparator) {
+  const arr = [];
+
+  array.forEach(it => {
+    let flag = false;
+    for (const item of arr) {
+      if (comparator(item, it)) {
+        flag = true;
+        break;
+      }
+    }
+
+    if (!flag) {
+      arr.push(it);
+    }
+  });
+
+  return arr;
+}
+
+export { __GLOBAL__, byte2text, checkElementVisible, clamp, createEvent, createRandString, datetime, decimalPrecision, defer, delay, dumpFn, ensureArray, form2obj, formatString, getCurrentParent, getDateCountDown, getDateStringFirst, getDocScrollOffset, getFirstTruthyOrZero, getGlobal, getNamePathValue, getPortalsNode, getProtoStr, getRandRange, getScrollBarWidth, getScrollParent, getStorage, getStyle, hasScroll, heightLightMatchString, idCardRegexp, isArray, isBetweenDate, isBoolean, isDate, isDom, isEmpty, isError, isFunction, isInt, isNull, isNullOrUndefined, isNumber, isNumerical, isObject, isPrimitive, isRegExp, isString, isSymbol, isTrueEmpty, isTruthyArray, isTruthyOrZero, isUndefined, isWeakNumber, move, obj2FormData, omit, padSingleNumber, parseDate, pick, promisify, replaceHtmlTags, retry, setDocScrollOffset, setNamePathValue, setStorage, shakeFalsy, stringifyNamePath, subtract, sum, swap, throwError, throwWarning, triggerHighlight, unFormatString, uniq, uniqWith, validateFormatString, vie, weakNumber };

@@ -1,5 +1,4 @@
-import { isDom, isNumber } from '@lxjx/utils';
-import { clamp } from '@lxjx/utils';
+import { isDom, isNumber, clamp } from '@lxjx/utils';
 
 const portalsID = 'J__PORTALS__NODE__';
 export const getPortalsNode = namespace => {

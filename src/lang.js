@@ -14,3 +14,26 @@ export function getGlobal() {
 }
 
 export const __GLOBAL__ = getGlobal();
+
+export function createEvent() {
+  const listeners = [];
+
+  function on(listener) {
+    listeners.push(listener);
+  }
+
+  function off(listener) {
+    const ind = listeners.indexOf(listener);
+    if (ind !== -1) listeners.splice(ind, 1);
+  }
+
+  function emit(...args) {
+    listeners.forEach(listener => listener(...args));
+  }
+
+  return {
+    on,
+    off,
+    emit,
+  };
+}

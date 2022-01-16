@@ -2,8 +2,18 @@ import React, { useRef } from 'react';
 import ReactDOM from 'react-dom';
 import './style.css';
 
-import { checkElementVisible } from '@lxjx/utils';
+import { checkElementVisible, uniqWith, omit, pick } from '@lxjx/utils';
 import debounce from 'lodash/debounce';
+
+const obj = {
+  a: 1,
+  b: 2,
+  c: 3,
+  d: 4,
+};
+
+console.log(omit(obj, ['a', 'b']));
+console.log(pick(obj, ['a', 'b']));
 
 const Play = () => {
   const ref = useRef();

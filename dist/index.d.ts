@@ -1,21 +1,12 @@
 /// <reference types="node" />
 import { AnyFunction, AnyObject, Bound, TupleNumber } from './dts/common';
 
-/* ======================== array ======================= */
-
-/**
- * swap index of two items in array and return the original array
- * if the index is exceeded, no action is performed */
-export function swap<T = any>(arr: T, sourceInd: number, targetInd: number): T;
-
-
 /* ======================== bom ======================= */
 /** shortcut to the localStorage api, including automatic JSON.stringify and a spliced ​​unique prefix */
 export function setStorage(key: string, val: any): void;
 
 /** shortcut of localStorage api, automatic JSON.parse, can only take the value set by setStorage */
 export function getStorage<T = any>(key: string): T | null;
-
 
 /* ======================== date ======================= */
 
@@ -67,7 +58,6 @@ export function getDateStringFirst(dataString: string): string;
  * @return - whether within a time period
  * */
 export function isBetweenDate(startDate: any, endDate: any, currentDate?: any): boolean;
-
 
 /* ======================== dom ======================= */
 
@@ -127,17 +117,26 @@ export function getCurrentParent(
 
 interface TriggerHighlightConf {
   /** #1890ff | line color */
-  color: string,
+  color: string;
   /** true | use outline, if false use box-shadow */
-  useOutline: boolean,
+  useOutline: boolean;
 }
 
 /**
  * highlight selected elements according to elements or selectors
  */
-export function triggerHighlight(target: HTMLElement, TriggerHighlightConf?: TriggerHighlightConf): void;
-export function triggerHighlight(selector: string, TriggerHighlightConf?: TriggerHighlightConf): void;
-export function triggerHighlight(t: string | HTMLElement, TriggerHighlightConf?: TriggerHighlightConf): void;
+export function triggerHighlight(
+  target: HTMLElement,
+  TriggerHighlightConf?: TriggerHighlightConf,
+): void;
+export function triggerHighlight(
+  selector: string,
+  TriggerHighlightConf?: TriggerHighlightConf,
+): void;
+export function triggerHighlight(
+  t: string | HTMLElement,
+  TriggerHighlightConf?: TriggerHighlightConf,
+): void;
 
 /**
  * get scrolling parent node, get all when pass getAll
@@ -145,21 +144,22 @@ export function triggerHighlight(t: string | HTMLElement, TriggerHighlightConf?:
  * */
 export function getScrollParent(ele: HTMLElement, getAll: true): HTMLElement[];
 export function getScrollParent(ele: HTMLElement, getAll?: false): HTMLElement | null;
-export function getScrollParent(ele: HTMLElement, getAll?: boolean): HTMLElement | HTMLElement[] | null;
-
+export function getScrollParent(
+  ele: HTMLElement,
+  getAll?: boolean,
+): HTMLElement | HTMLElement[] | null;
 
 /** get doc scroll offset, used to solve the problem of different versions of the browser to get inconsistent */
 export function getDocScrollOffset(): {
   x: number;
   y: number;
-}
+};
 
 /** set doc scroll offset */
 export function setDocScrollOffset(conf: { x?: number; y?: number }): void;
 
 /** check whether the dom node is scrollable */
-export function hasScroll(el: HTMLElement): { x: boolean, y: boolean };
-
+export function hasScroll(el: HTMLElement): { x: boolean; y: boolean };
 
 /* ======================== is ======================= */
 type Primitive = null | undefined | boolean | number | string | symbol;
@@ -213,7 +213,6 @@ export function isTruthyOrZero(arg: any): boolean;
  * @param numLike - 待检测的数字
  * */
 export function isNumerical(numLike: number): boolean;
-
 
 /* ======================== form ======================= */
 
@@ -275,13 +274,11 @@ export function replaceHtmlTags(htmlString: string, val?: string): string;
  *  */
 export function createRandString(number?: number): string;
 
-
 interface FormatStringOption {
   delimiter?: string;
   repeat?: boolean;
   lastRepeat?: boolean;
 }
-
 
 interface Byte2Text {
   (byte: number, conf?: { precision: number }): string;
@@ -291,7 +288,6 @@ interface Byte2Text {
   GB: number;
   TB: number;
 }
-
 
 /**
  * 将字节转为适合人类阅读的字符串
@@ -328,34 +324,7 @@ export function formatString(str: string, pattern: string, options?: FormatStrin
 
 export function unFormatString(str: string, pattern: string, options?: FormatStringOption): string;
 
-/* ======================== object ======================= */
-
-/**
- * 删除掉对象所有falsy值(除了0)
- * @param source - 目标对象
- * @return - 删除调falsy值后的source对象
- */
-export function shakeFalsy(source: object): object;
-
-/**
- * 从目标对象删除指定键值
- * @param obj - 目标对象
- * @param props - 待移除的key, 以逗号分隔的字符串
- * @return - 移除后的新对象
- * @example
- const obj = {
-      name: 'lxj',
-      age: 18,
-      sex: 1,
-     };
- const obj2 = omit<typeof obj, 'age' | 'sex'>(obj, 'age,sex');
-
- // => { name: 'lxj' }
- * */
-export function omit<O, P extends string>(obj: O, props: string): Omit<O, P>;
-
 /* ======================== function ======================= */
-
 
 /* ======================== regexp ======================= */
 /** 身份证号正则, */
@@ -363,11 +332,12 @@ export const idCardRegexp: RegExp;
 
 /* ======================== lang ======================= */
 
-/** 根据不同的js运行环境返回`Global`对象 */
-export function getGlobal(): Window | NodeJS.Global;
-
-export const __GLOBAL__: Window | NodeJS.Global;
-
 export * from './dts/common';
 
 export * from './dts/function';
+
+export * from './dts/array';
+
+export * from './dts/object';
+
+export * from './dts/lang';
