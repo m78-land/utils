@@ -275,9 +275,14 @@ export function replaceHtmlTags(htmlString: string, val?: string): string;
 export function createRandString(number?: number): string;
 
 interface FormatStringOption {
+  /** ' ' | 分隔符 */
   delimiter?: string;
+  /** false | 当字符长度超过pattern可匹配到的长度时，重复以当前pattern对剩余字符进行格式化 */
   repeat?: boolean;
+  /** false | 当字符长度超过pattern可匹配到的长度时，重复以当前pattern的最后一位对剩余字符进行格式化 */
   lastRepeat?: boolean;
+  /** false | 反转字符串后再进行操作 */
+  reverse?: boolean;
 }
 
 interface Byte2Text {
@@ -320,8 +325,20 @@ export function heightLightMatchString(
 
 export const validateFormatString: RegExp;
 
+/**
+ * 根据传入的模式对字符进行格式化
+ * @param str {string} - 需要进行格式化的字符
+ * @param pattern {string} - 格式为 `1,2,3,4` 规则的模式字符，数字两端可包含空格
+ * @param options - 配置对象
+ */
 export function formatString(str: string, pattern: string, options?: FormatStringOption): string;
 
+/**
+ * 对被`format()`过的字符进行反格式化, 除了str, 其他参数必须与执行`format()`时传入的一致
+ * @param str {string} - 需要进行反格式化的字符
+ * @param pattern {string} - 格式为 `1,2,3,4` 规则的模式字符，数字两端可包含空格
+ * @param options - 配置对象
+ */
 export function unFormatString(str: string, pattern: string, options?: FormatStringOption): string;
 
 /* ======================== function ======================= */

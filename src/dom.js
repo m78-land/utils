@@ -178,9 +178,11 @@ function mountHighlight(target, conf = {}) {
     }
 
     document.removeEventListener('click', clickHandle);
+    document.removeEventListener('keydown', clickHandle);
   }
 
   document.addEventListener('click', clickHandle);
+  document.addEventListener('keydown', clickHandle);
 }
 
 export function getCurrentParent(node, matcher, depth) {
@@ -231,18 +233,18 @@ export function getScrollParent(ele, getAll) {
         const scrollStatus = hasScroll(e);
 
         // 为body或doc时，统一取documentElement方便识别，部分浏览器支持body设置document.scrollXxx部分浏览器支持documentElement设置
-        const el = isRoot ? document.documentElement : e;
+        const element = isRoot ? document.documentElement : e;
 
         /* body和html元素不需要检测滚动属性 */
         if (isRoot || scrollStatus.x || scrollStatus.y) {
           if (getAll) {
             if (isRoot) {
-              node.indexOf(document.documentElement) === -1 && node.push(el);
+              node.indexOf(document.documentElement) === -1 && node.push(element);
             } else {
-              node.push(el);
+              node.push(element);
             }
           } else {
-            node = el;
+            node = element;
             return;
           }
         }
@@ -272,10 +274,12 @@ export function getDocScrollOffset() {
 
 export function setDocScrollOffset(conf = {}) {
   if (isNumber(conf.x)) {
+    // eslint-disable-next-line no-multi-assign
     document.body.scrollLeft = document.documentElement.scrollLeft = conf.x;
   }
 
   if (isNumber(conf.y)) {
+    // eslint-disable-next-line no-multi-assign
     document.body.scrollTop = document.documentElement.scrollTop = conf.y;
   }
 }
@@ -285,6 +289,7 @@ export function hasScroll(el) {
   let y = Math.max(0, el.scrollHeight - el.clientHeight) > 0;
 
   if (el === document.documentElement || el === document.body) {
+    // ...
   } else {
     const { overflowX, overflowY } = getStyle(el);
     if (overflowX !== 'scroll' && overflowX !== 'auto') {

@@ -78,11 +78,7 @@ export function setNamePathValue(obj, name, val) {
       const hasNextN = nextN !== undefined; // 是否有下个
 
       if (!hasNextN) {
-        if (isNumerical(n)) {
-          lastObj.push(val);
-        } else {
-          lastObj[n] = val;
-        }
+        lastObj[n] = val;
         return;
       }
 

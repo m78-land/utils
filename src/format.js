@@ -24,10 +24,11 @@ const defaultConfig = {
   delimiter: ' ',
   repeat: false,
   lastRepeat: false,
+  reverse: false,
 };
 
 function getPatterns(str, pattern, options = {}) {
-  const { repeat, lastRepeat } = { ...defaultConfig, ...options };
+  const { repeat, lastRepeat, reverse } = { ...defaultConfig, ...options };
 
   if (!validateFormatString.test(pattern)) {
     console.warn(`invalid pattern: ${pattern}, must match the /^[\\s?\\d\\s?,?]+$/ rule`);
@@ -43,7 +44,7 @@ function getPatterns(str, pattern, options = {}) {
   if (!patterns.length) return;
 
   // 字符转为数组方便操作
-  const strArr = str.split('');
+  const strArr = reverse ? str.split('').reverse() : str.split('');
 
   // repeat处理
   if (repeat || lastRepeat) {
@@ -81,17 +82,8 @@ function getPatterns(str, pattern, options = {}) {
   };
 }
 
-/**
- * 根据传入的模式对字符进行格式化
- * @param str {string} - 需要进行格式化的字符
- * @param pattern {string} - 格式为 `1,2,3,4` 规则的模式字符，数字两端可包含空格
- * @param options
- * @param options.delimiter {string} - ' ' | 指定分割符
- * @param options.repeat {boolean} -  false | 当字符长度超过pattern可匹配到的长度时，重复以当前pattern对剩余字符进行格式化
- * @param options.lastRepeat {boolean} - false | 当字符长度超过pattern可匹配到的长度时，重复以当前pattern的最后一位对剩余字符进行格式化
- */
 export function formatString(str, pattern, options = {}) {
-  const { delimiter, repeat, lastRepeat } = { ...defaultConfig, ...options };
+  const { delimiter, repeat, lastRepeat, reverse } = { ...defaultConfig, ...options };
   const patternMeta = getPatterns(str, pattern, { repeat, lastRepeat });
 
   if (!patternMeta) return;
@@ -111,28 +103,19 @@ export function formatString(str, pattern, options = {}) {
     return currentIndex;
   }, 0);
 
-  return strArr.join('');
+  return reverse ? strArr.reverse().join('') : strArr.join('');
 }
 
-/**
- * 对被`format()`过的字符进行反格式化, 除了str, 其他参数必须与执行`format()`时传入的一致
- * @param str {string} - 需要进行反格式化的字符
- * @param pattern {string} - 格式为 `1,2,3,4` 规则的模式字符，数字两端可包含空格
- * @param options
- * @param options.delimiter {string} - ' ' | 指定分割符
- * @param options.repeat {boolean} -  当字符长度超过pattern可匹配到的长度时，重复以当前pattern对剩余字符进行格式化
- * @param options.lastRepeat {boolean} - 当字符长度超过pattern可匹配到的长度时，重复以当前pattern的最后一位对剩余字符进行格式化
- */
 export function unFormatString(str, pattern, options = {}) {
-  const { delimiter, repeat, lastRepeat } = { ...defaultConfig, ...options };
+  const { delimiter, repeat, lastRepeat, reverse } = { ...defaultConfig, ...options };
   const patternMeta = getPatterns(str, pattern, { repeat, lastRepeat });
 
   if (!patternMeta) return;
 
   const { patterns, strArr } = patternMeta;
 
-  patterns.reduce((prev, pattern) => {
-    const index = Number(pattern) + prev;
+  patterns.reduce((prev, pt) => {
+    const index = Number(pt) + prev;
 
     /* 只在字符首位匹配时才执行替换, 在某些场景会有用（fr的input处理双向绑定时） */
     if (strArr[index] === delimiter[0]) {
@@ -142,7 +125,7 @@ export function unFormatString(str, pattern, options = {}) {
     return index;
   }, 0);
 
-  return strArr.join('');
+  return reverse ? strArr.reverse().join('') : strArr.join('');
 }
 
 export function getFirstTruthyOrZero(...args) {

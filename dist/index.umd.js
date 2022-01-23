@@ -368,10 +368,11 @@
     delimiter: ' ',
     repeat: false,
     lastRepeat: false,
+    reverse: false,
   };
 
   function getPatterns(str, pattern, options = {}) {
-    const { repeat, lastRepeat } = { ...defaultConfig$1, ...options };
+    const { repeat, lastRepeat, reverse } = { ...defaultConfig$1, ...options };
 
     if (!validateFormatString.test(pattern)) {
       console.warn(`invalid pattern: ${pattern}, must match the /^[\\s?\\d\\s?,?]+$/ rule`);
@@ -387,7 +388,7 @@
     if (!patterns.length) return;
 
     // 字符转为数组方便操作
-    const strArr = str.split('');
+    const strArr = reverse ? str.split('').reverse() : str.split('');
 
     // repeat处理
     if (repeat || lastRepeat) {
@@ -425,17 +426,8 @@
     };
   }
 
-  /**
-   * 根据传入的模式对字符进行格式化
-   * @param str {string} - 需要进行格式化的字符
-   * @param pattern {string} - 格式为 `1,2,3,4` 规则的模式字符，数字两端可包含空格
-   * @param options
-   * @param options.delimiter {string} - ' ' | 指定分割符
-   * @param options.repeat {boolean} -  false | 当字符长度超过pattern可匹配到的长度时，重复以当前pattern对剩余字符进行格式化
-   * @param options.lastRepeat {boolean} - false | 当字符长度超过pattern可匹配到的长度时，重复以当前pattern的最后一位对剩余字符进行格式化
-   */
   function formatString(str, pattern, options = {}) {
-    const { delimiter, repeat, lastRepeat } = { ...defaultConfig$1, ...options };
+    const { delimiter, repeat, lastRepeat, reverse } = { ...defaultConfig$1, ...options };
     const patternMeta = getPatterns(str, pattern, { repeat, lastRepeat });
 
     if (!patternMeta) return;
@@ -455,28 +447,19 @@
       return currentIndex;
     }, 0);
 
-    return strArr.join('');
+    return reverse ? strArr.reverse().join('') : strArr.join('');
   }
 
-  /**
-   * 对被`format()`过的字符进行反格式化, 除了str, 其他参数必须与执行`format()`时传入的一致
-   * @param str {string} - 需要进行反格式化的字符
-   * @param pattern {string} - 格式为 `1,2,3,4` 规则的模式字符，数字两端可包含空格
-   * @param options
-   * @param options.delimiter {string} - ' ' | 指定分割符
-   * @param options.repeat {boolean} -  当字符长度超过pattern可匹配到的长度时，重复以当前pattern对剩余字符进行格式化
-   * @param options.lastRepeat {boolean} - 当字符长度超过pattern可匹配到的长度时，重复以当前pattern的最后一位对剩余字符进行格式化
-   */
   function unFormatString(str, pattern, options = {}) {
-    const { delimiter, repeat, lastRepeat } = { ...defaultConfig$1, ...options };
+    const { delimiter, repeat, lastRepeat, reverse } = { ...defaultConfig$1, ...options };
     const patternMeta = getPatterns(str, pattern, { repeat, lastRepeat });
 
     if (!patternMeta) return;
 
     const { patterns, strArr } = patternMeta;
 
-    patterns.reduce((prev, pattern) => {
-      const index = Number(pattern) + prev;
+    patterns.reduce((prev, pt) => {
+      const index = Number(pt) + prev;
 
       /* 只在字符首位匹配时才执行替换, 在某些场景会有用（fr的input处理双向绑定时） */
       if (strArr[index] === delimiter[0]) {
@@ -486,7 +469,7 @@
       return index;
     }, 0);
 
-    return strArr.join('');
+    return reverse ? strArr.reverse().join('') : strArr.join('');
   }
 
   function getFirstTruthyOrZero(...args) {
@@ -645,11 +628,7 @@
         const hasNextN = nextN !== undefined; // 是否有下个
 
         if (!hasNextN) {
-          if (utils.isNumerical(n)) {
-            lastObj.push(val);
-          } else {
-            lastObj[n] = val;
-          }
+          lastObj[n] = val;
           return;
         }
 
@@ -945,9 +924,11 @@
       }
 
       document.removeEventListener('click', clickHandle);
+      document.removeEventListener('keydown', clickHandle);
     }
 
     document.addEventListener('click', clickHandle);
+    document.addEventListener('keydown', clickHandle);
   }
 
   function getCurrentParent(node, matcher, depth) {
@@ -998,18 +979,18 @@
           const scrollStatus = hasScroll(e);
 
           // 为body或doc时，统一取documentElement方便识别，部分浏览器支持body设置document.scrollXxx部分浏览器支持documentElement设置
-          const el = isRoot ? document.documentElement : e;
+          const element = isRoot ? document.documentElement : e;
 
           /* body和html元素不需要检测滚动属性 */
           if (isRoot || scrollStatus.x || scrollStatus.y) {
             if (getAll) {
               if (isRoot) {
-                node.indexOf(document.documentElement) === -1 && node.push(el);
+                node.indexOf(document.documentElement) === -1 && node.push(element);
               } else {
-                node.push(el);
+                node.push(element);
               }
             } else {
-              node = el;
+              node = element;
               return;
             }
           }
@@ -1037,10 +1018,12 @@
 
   function setDocScrollOffset(conf = {}) {
     if (utils.isNumber(conf.x)) {
+      // eslint-disable-next-line no-multi-assign
       document.body.scrollLeft = document.documentElement.scrollLeft = conf.x;
     }
 
     if (utils.isNumber(conf.y)) {
+      // eslint-disable-next-line no-multi-assign
       document.body.scrollTop = document.documentElement.scrollTop = conf.y;
     }
   }
