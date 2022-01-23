@@ -83,8 +83,8 @@ function getPatterns(str, pattern, options = {}) {
 }
 
 export function formatString(str, pattern, options = {}) {
-  const { delimiter, repeat, lastRepeat, reverse } = { ...defaultConfig, ...options };
-  const patternMeta = getPatterns(str, pattern, { repeat, lastRepeat });
+  const opt = { ...defaultConfig, ...options };
+  const patternMeta = getPatterns(str, pattern, opt);
 
   if (!patternMeta) return;
 
@@ -97,18 +97,19 @@ export function formatString(str, pattern, options = {}) {
     const replaceIndex = currentIndex + ind;
 
     if (replaceIndex < strArr.length) {
-      strArr.splice(replaceIndex, 0, delimiter);
+      strArr.splice(replaceIndex, 0, opt.delimiter);
     }
 
     return currentIndex;
   }, 0);
 
-  return reverse ? strArr.reverse().join('') : strArr.join('');
+  return opt.reverse ? strArr.reverse().join('') : strArr.join('');
 }
 
 export function unFormatString(str, pattern, options = {}) {
-  const { delimiter, repeat, lastRepeat, reverse } = { ...defaultConfig, ...options };
-  const patternMeta = getPatterns(str, pattern, { repeat, lastRepeat });
+  const opt = { ...defaultConfig, ...options };
+  const { delimiter } = opt;
+  const patternMeta = getPatterns(str, pattern, opt);
 
   if (!patternMeta) return;
 
@@ -125,7 +126,7 @@ export function unFormatString(str, pattern, options = {}) {
     return index;
   }, 0);
 
-  return reverse ? strArr.reverse().join('') : strArr.join('');
+  return opt.reverse ? strArr.reverse().join('') : strArr.join('');
 }
 
 export function getFirstTruthyOrZero(...args) {

@@ -1,38 +1,25 @@
 import React, { useRef } from 'react';
 import ReactDOM from 'react-dom';
 import './style.css';
+import { formatString } from '../format';
 
-import { checkElementVisible, uniqWith, omit, pick } from '@lxjx/utils';
-import debounce from 'lodash/debounce';
-
-const obj = {
-  a: 1,
-  b: 2,
-  c: 3,
-  d: 4,
-};
-
-console.log(omit(obj, ['a', 'b']));
-console.log(pick(obj, ['a', 'b']));
+console.log(
+  formatString('1234567890', '3', {
+    repeat: true,
+  }),
+);
+console.log(
+  formatString('1234567890', '3', {
+    repeat: true,
+    reverse: true,
+  }),
+);
 
 const Play = () => {
   const ref = useRef();
   const ref2 = useRef();
 
-  React.useEffect(() => {
-    const dS = debounce(e => {
-      console.log(
-        checkElementVisible(ref2.current, {
-          wrapEl: ref.current,
-          // offset: 40,
-          fullVisible: true,
-        }),
-      );
-    }, 100);
-
-    ref.current.addEventListener('scroll', dS);
-    window.onscroll = dS;
-  }, []);
+  React.useEffect(() => {}, []);
 
   return (
     <div>

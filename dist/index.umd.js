@@ -427,8 +427,8 @@
   }
 
   function formatString(str, pattern, options = {}) {
-    const { delimiter, repeat, lastRepeat, reverse } = { ...defaultConfig$1, ...options };
-    const patternMeta = getPatterns(str, pattern, { repeat, lastRepeat });
+    const opt = { ...defaultConfig$1, ...options };
+    const patternMeta = getPatterns(str, pattern, opt);
 
     if (!patternMeta) return;
 
@@ -441,18 +441,19 @@
       const replaceIndex = currentIndex + ind;
 
       if (replaceIndex < strArr.length) {
-        strArr.splice(replaceIndex, 0, delimiter);
+        strArr.splice(replaceIndex, 0, opt.delimiter);
       }
 
       return currentIndex;
     }, 0);
 
-    return reverse ? strArr.reverse().join('') : strArr.join('');
+    return opt.reverse ? strArr.reverse().join('') : strArr.join('');
   }
 
   function unFormatString(str, pattern, options = {}) {
-    const { delimiter, repeat, lastRepeat, reverse } = { ...defaultConfig$1, ...options };
-    const patternMeta = getPatterns(str, pattern, { repeat, lastRepeat });
+    const opt = { ...defaultConfig$1, ...options };
+    const { delimiter } = opt;
+    const patternMeta = getPatterns(str, pattern, opt);
 
     if (!patternMeta) return;
 
@@ -469,7 +470,7 @@
       return index;
     }, 0);
 
-    return reverse ? strArr.reverse().join('') : strArr.join('');
+    return opt.reverse ? strArr.reverse().join('') : strArr.join('');
   }
 
   function getFirstTruthyOrZero(...args) {
