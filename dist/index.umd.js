@@ -1,8 +1,8 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@lxjx/utils')) :
-  typeof define === 'function' && define.amd ? define(['exports', '@lxjx/utils'], factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.RollupPlay = {}, global.utils));
-}(this, (function (exports, utils) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+  typeof define === 'function' && define.amd ? define(['exports'], factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.utils = {}));
+}(this, (function (exports) { 'use strict';
 
   /**
    * 获取表示对象原始类型的字符串
@@ -239,110 +239,6 @@
     return !!arg || arg === 0;
   }
 
-  function parseDate(date) {
-    let d = date;
-    if (typeof date === 'string') {
-      d = date.replace(/-/g, '/'); // Safari无法解析 2020-01-01 格式的日期
-    }
-    d = new Date(d);
-
-    // 处理Invalid Date
-    if (d instanceof Date && isNaN(d.getTime())) {
-      return null;
-    }
-
-    return d;
-  }
-
-  function datetime(date = new Date(), format = 'YYYY-MM-DD hh:mm:ss') {
-    const d = parseDate(date);
-
-    if (!d) {
-      return '';
-    }
-
-    const fn = d => {
-      return ('0' + d).slice(-2);
-    };
-
-    const formats = {
-      YY: String(d.getFullYear() + 1).slice(2),
-      YYYY: d.getFullYear(),
-      MM: fn(d.getMonth() + 1),
-      DD: fn(d.getDate()),
-      hh: fn(d.getHours()),
-      mm: fn(d.getMinutes()),
-      ss: fn(d.getSeconds()),
-    };
-
-    return format.replace(/([a-z])\1+/gi, a => {
-      return formats[a] || a;
-    });
-  }
-
-  const oneMS = 100;
-  const oneS = oneMS * 10;
-  const oneM = 60 * oneS;
-  const oneH = 60 * oneM;
-  const oneD = 24 * oneH;
-  function getDateCountDown(date) {
-    const dt = parseDate(date);
-
-    if (!dt) {
-      return {
-        ms: '00',
-        s: '00',
-        m: '00',
-        h: '00',
-        d: '00',
-        timeOut: true,
-      };
-    }
-
-    const start = Date.now();
-    const end = dt.getTime();
-
-    const diff = end - start;
-
-    if (diff < 0) {
-      return getDateCountDown();
-    }
-
-    const fr = Math.floor;
-
-    // h、m、s 用单位总数取余就是该单位对应的ms，除单位总数获得单位
-    let d = fr(diff / oneD);
-    let h = fr((diff % oneD) / oneH);
-    let m = fr((diff % oneH) / oneM);
-    let s = fr((diff % oneM) / oneS);
-    let ms = fr(diff % oneMS);
-
-    return {
-      d: utils.padSingleNumber(d),
-      h: utils.padSingleNumber(h),
-      m: utils.padSingleNumber(m),
-      s: utils.padSingleNumber(s),
-      ms: utils.padSingleNumber(ms),
-      timeOut: false,
-    };
-  }
-
-  function getDateStringFirst(dataString = '') {
-    if (!dataString) return '';
-    return dataString.split(' ')[0];
-  }
-
-  function isBetweenDate(startDate, endDate, currentDate) {
-    const s = parseDate(startDate);
-    const e = parseDate(endDate);
-
-    if (!s || !e) return false;
-
-    const c = currentDate ? parseDate(currentDate) : new Date();
-
-    return c <= e && c >= s;
-  }
-
   /**
    * 将小于10且大于0的数字转为填充0的字符 如 '01' '05', 小于1的数字始终返回'00'
    * @param {number} number
@@ -475,7 +371,7 @@
 
   function getFirstTruthyOrZero(...args) {
     for (const arg of args) {
-      if (utils.isTruthyOrZero(arg)) {
+      if (isTruthyOrZero(arg)) {
         return arg;
       }
     }
@@ -483,7 +379,111 @@
   }
 
   function vie(arg, feedback = '-') {
-    return utils.isTruthyOrZero(arg) ? arg : feedback;
+    return isTruthyOrZero(arg) ? arg : feedback;
+  }
+
+  function parseDate(date) {
+    let d = date;
+    if (typeof date === 'string') {
+      d = date.replace(/-/g, '/'); // Safari无法解析 2020-01-01 格式的日期
+    }
+    d = new Date(d);
+
+    // 处理Invalid Date
+    if (d instanceof Date && isNaN(d.getTime())) {
+      return null;
+    }
+
+    return d;
+  }
+
+  function datetime(date = new Date(), format = 'YYYY-MM-DD hh:mm:ss') {
+    const d = parseDate(date);
+
+    if (!d) {
+      return '';
+    }
+
+    const fn = d => {
+      return ('0' + d).slice(-2);
+    };
+
+    const formats = {
+      YY: String(d.getFullYear() + 1).slice(2),
+      YYYY: d.getFullYear(),
+      MM: fn(d.getMonth() + 1),
+      DD: fn(d.getDate()),
+      hh: fn(d.getHours()),
+      mm: fn(d.getMinutes()),
+      ss: fn(d.getSeconds()),
+    };
+
+    return format.replace(/([a-z])\1+/gi, a => {
+      return formats[a] || a;
+    });
+  }
+
+  const oneMS = 100;
+  const oneS = oneMS * 10;
+  const oneM = 60 * oneS;
+  const oneH = 60 * oneM;
+  const oneD = 24 * oneH;
+  function getDateCountDown(date) {
+    const dt = parseDate(date);
+
+    if (!dt) {
+      return {
+        ms: '00',
+        s: '00',
+        m: '00',
+        h: '00',
+        d: '00',
+        timeOut: true,
+      };
+    }
+
+    const start = Date.now();
+    const end = dt.getTime();
+
+    const diff = end - start;
+
+    if (diff < 0) {
+      return getDateCountDown();
+    }
+
+    const fr = Math.floor;
+
+    // h、m、s 用单位总数取余就是该单位对应的ms，除单位总数获得单位
+    let d = fr(diff / oneD);
+    let h = fr((diff % oneD) / oneH);
+    let m = fr((diff % oneH) / oneM);
+    let s = fr((diff % oneM) / oneS);
+    let ms = fr(diff % oneMS);
+
+    return {
+      d: padSingleNumber(d),
+      h: padSingleNumber(h),
+      m: padSingleNumber(m),
+      s: padSingleNumber(s),
+      ms: padSingleNumber(ms),
+      timeOut: false,
+    };
+  }
+
+  function getDateStringFirst(dataString = '') {
+    if (!dataString) return '';
+    return dataString.split(' ')[0];
+  }
+
+  function isBetweenDate(startDate, endDate, currentDate) {
+    const s = parseDate(startDate);
+    const e = parseDate(endDate);
+
+    if (!s || !e) return false;
+
+    const c = currentDate ? parseDate(currentDate) : new Date();
+
+    return c <= e && c >= s;
   }
 
   /**
@@ -496,7 +496,7 @@
    * @returns {object}
    */
   function form2obj(el) {
-    if (!utils.isDom(el)) {
+    if (!isDom(el)) {
       console.error('Please pass in the dom element');
       return;
     }
@@ -562,7 +562,7 @@
   };
 
   function pickOrOmit(obj, props, isPick) {
-    if (utils.isString(props)) {
+    if (isString(props)) {
       props = props.split(',').map(key => key.trim());
     }
     const keys = Object.keys(obj);
@@ -586,11 +586,11 @@
 
   /** 根据NamePath在对象中获取值` */
   function getNamePathValue(obj, name) {
-    if (utils.isString(name)) {
+    if (isString(name)) {
       return obj?.[name];
     }
 
-    if (utils.isArray(name) && name.length) {
+    if (isArray(name) && name.length) {
       return name.reduce((p, i) => {
         return p?.[i];
       }, obj);
@@ -599,14 +599,14 @@
 
   /** 将 ['user', 'name'], ['list', '0', 'title'] 格式的字段数组转换为字符串  */
   function stringifyNamePath(name) {
-    if (utils.isString(name)) return name;
+    if (isString(name)) return name;
 
     return name.reduce((p, i) => {
-      if (utils.isNumber(Number(i))) {
+      if (isNumber(Number(i))) {
         return `${p}[${i}]`;
       }
 
-      if (utils.isString(i)) {
+      if (isString(i)) {
         return p.length ? `${p}.${i}` : i;
       }
 
@@ -616,11 +616,11 @@
 
   /** 在通过name在obj上设置值 */
   function setNamePathValue(obj, name, val) {
-    if (utils.isString(name)) {
+    if (isString(name)) {
       obj[name] = val;
     }
 
-    if (utils.isArray(name) && name.length) {
+    if (isArray(name) && name.length) {
       let lastObj = obj;
 
       for (let i = 0; i < name.length; i++) {
@@ -634,12 +634,12 @@
         }
 
         // 确保要操作的对象存在
-        if (utils.isNumerical(nextN)) {
-          if (!utils.isArray(lastObj[n])) {
+        if (isNumerical(nextN)) {
+          if (!isArray(lastObj[n])) {
             lastObj[n] = [];
           }
           // 不是数字的话则为对象
-        } else if (!utils.isObject(lastObj[n])) {
+        } else if (!isObject(lastObj[n])) {
           lastObj[n] = {};
         }
 
@@ -725,25 +725,25 @@
 
   function sum(...nums) {
     return nums.reduce((p, i) => {
-      return p + (utils.isWeakNumber(i) ? Number(i) : 0);
+      return p + (isWeakNumber(i) ? Number(i) : 0);
     }, 0);
   }
 
   function subtract(...nums) {
     return nums.reduce((p, i) => {
       if (p === null) return i;
-      if (!utils.isWeakNumber(i)) return p;
+      if (!isWeakNumber(i)) return p;
       return p - i;
     }, null);
   }
 
   function weakNumber(arg) {
-    return utils.isWeakNumber(arg) ? Number(arg) : null;
+    return isWeakNumber(arg) ? Number(arg) : null;
   }
 
   function clamp(val, min, max) {
-    if (utils.isNumber(min) && val < min) return min;
-    if (utils.isNumber(max) && val > max) return max;
+    if (isNumber(min) && val < min) return min;
+    if (isNumber(max) && val > max) return max;
     return val;
   }
 
@@ -825,13 +825,13 @@
 
       // 有效区域左上取最小值，最小不小于0
       // 有效区域右下取最大值，最大不大于窗口对应方向尺寸
-      aXMin = utils.clamp(Math.max(xMinBase, xMin), xMinBase, xMaxBase);
-      aYMin = utils.clamp(Math.max(yMinBase, yMin), yMinBase, yMaxBase);
-      aXMax = utils.clamp(Math.min(xMaxBase, xMax), xMinBase, xMaxBase);
-      aYMax = utils.clamp(Math.min(yMaxBase, yMax), yMinBase, yMaxBase);
+      aXMin = clamp(Math.max(xMinBase, xMin), xMinBase, xMaxBase);
+      aYMin = clamp(Math.max(yMinBase, yMin), yMinBase, yMaxBase);
+      aXMax = clamp(Math.min(xMaxBase, xMax), xMinBase, xMaxBase);
+      aYMax = clamp(Math.min(yMaxBase, yMax), yMinBase, yMaxBase);
     }
 
-    const bound = utils.isDom(target) ? target.getBoundingClientRect() : target;
+    const bound = isDom(target) ? target.getBoundingClientRect() : target;
 
     const { top, left, bottom, right } = offsetCalc(bound, ofs);
 
@@ -866,12 +866,12 @@
 
     if (!offset) return ofs;
 
-    if (utils.isNumber(offset)) {
+    if (isNumber(offset)) {
       return { left: offset, top: offset, right: offset, bottom: offset };
     }
 
     Object.keys(ofs).forEach(key => {
-      if (utils.isNumber(offset[key])) {
+      if (isNumber(offset[key])) {
         ofs[key] = offset[key];
       }
     });
@@ -890,7 +890,7 @@
   }
 
   function triggerHighlight(t, conf) {
-    if (utils.isDom(t)) {
+    if (isDom(t)) {
       mountHighlight(t, conf);
     } else {
       const temp = document.querySelectorAll(t);
@@ -1018,12 +1018,12 @@
   }
 
   function setDocScrollOffset(conf = {}) {
-    if (utils.isNumber(conf.x)) {
+    if (isNumber(conf.x)) {
       // eslint-disable-next-line no-multi-assign
       document.body.scrollLeft = document.documentElement.scrollLeft = conf.x;
     }
 
-    if (utils.isNumber(conf.y)) {
+    if (isNumber(conf.y)) {
       // eslint-disable-next-line no-multi-assign
       document.body.scrollTop = document.documentElement.scrollTop = conf.y;
     }
@@ -1185,7 +1185,7 @@
     return array;
   }
 
-  const ensureArray = val => (utils.isArray(val) ? val : [val]);
+  const ensureArray = val => (isArray(val) ? val : [val]);
 
   function uniq(array) {
     const arr = [];

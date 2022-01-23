@@ -1,4 +1,4 @@
-import { isNumber, isWeakNumber } from '@lxjx/utils';
+import { isNumber, isWeakNumber } from './is';
 
 export function getRandRange(min, max) {
   return Math.round((max - min) * Math.random() + min);

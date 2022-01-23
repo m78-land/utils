@@ -1,4 +1,4 @@
-import { isString, isArray, isNumber, isNumerical, isObject } from '@lxjx/utils';
+import { isString, isArray, isNumber, isNumerical, isObject } from './is';
 
 export const shakeFalsy = source => {
   Object.keys(source).forEach(key => {

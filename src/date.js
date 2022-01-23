@@ -1,4 +1,4 @@
-import { padSingleNumber } from '@lxjx/utils';
+import { padSingleNumber } from './format';
 
 export function parseDate(date) {
   let d = date;

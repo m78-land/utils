@@ -1,4 +1,4 @@
-import { isDom } from '@lxjx/utils';
+import { isDom } from './is';
 
 /**
  * 收集指定对象内带name属性的所有输入控件(input,select,textarea)的值，并按一定规则整合

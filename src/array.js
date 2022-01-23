@@ -1,4 +1,4 @@
-import { isArray } from '@lxjx/utils';
+import { isArray } from './is';
 
 export function swap(arr, sourceInd, targetInd) {
   if (sourceInd < 0 || targetInd < 0) return arr;
