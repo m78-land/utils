@@ -1,6 +1,6 @@
 {
   "name": "@lxjx/utils",
-  "version": "1.7.6",
+  "version": "1.7.7",
   "description": "utils for lixianjie",
   "keywords": [
     "javascript utils"
@@ -27,13 +27,17 @@
     "build:example": "vite build --config config/vite.config.ts"
   },
   "dependencies": {
+    "@babel/runtime": "^7.17.2",
     "lodash": "^4.17.21",
     "tslib": "^2.1.0"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-optional-chaining": "^7.16.7",
+    "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/preset-env": "^7.13.12",
     "@babel/preset-react": "^7.12.13",
     "@lxjx/preset-config": "^0.1.0",
+    "@rollup/plugin-babel": "^5.3.1",
     "@rollup/plugin-commonjs": "^17.1.0",
     "@rollup/plugin-node-resolve": "^11.2.0",
     "@rollup/plugin-typescript": "^8.2.0",

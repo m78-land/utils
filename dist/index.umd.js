@@ -4,6 +4,16 @@
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.utils = {}));
 }(this, (function (exports) { 'use strict';
 
+  function _typeof(obj) {
+    "@babel/helpers - typeof";
+
+    return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
+      return typeof obj;
+    } : function (obj) {
+      return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    }, _typeof(obj);
+  }
+
   /**
    * 获取表示对象原始类型的字符串
    * @param {*} o - 需要查询的字符
@@ -12,107 +22,101 @@
   function getProtoStr(o) {
     return Object.prototype.toString.call(o);
   }
-
   /**
    * 检测是否为数组
    * @param {*} arg - 需待查询的对象
    * @returns {boolean}
    * */
+
   function isArray(arg) {
     if (Array.isArray) {
       return Array.isArray(arg);
     }
+
     return getProtoStr(arg) === '[object Array]';
   }
-
   function isTruthyArray(arg) {
     if (!isArray(arg)) return false;
     return arg.length !== 0;
   }
-
   /**
    * 检测是否为数字且非NAN
    * @param {*} arg - 需待查询的对象
    * @returns {boolean}
    * */
+
   function isNumber(arg) {
     return typeof arg === 'number' && !isNaN(arg);
   }
-
   function isWeakNumber(arg) {
     return isNumber(Number(arg));
   }
-
   /**
    * 检测是否为字符串
    * @param {*} arg - 需待查询的对象
    * @returns {boolean}
    * */
+
   function isString(arg) {
     return typeof arg === 'string';
   }
-
   /**
    * 检测是否为整数
    * @param {*} value - 需待查询的对象
    * @returns {boolean}
    * */
+
   function isInt(value) {
     if (isNaN(value) || isString(value)) {
       return false;
     }
+
     var x = parseFloat(value);
     return (x | 0) === x;
   }
-
   /**
    * 检测是否为symbol
    * @param {*} arg - 需待查询的对象
    * @returns {boolean}
    * */
-  function isSymbol(arg) {
-    return typeof arg === 'symbol';
-  }
 
+  function isSymbol(arg) {
+    return _typeof(arg) === 'symbol';
+  }
   /**
    * 检测是不是原始类型, null、string、boolean、number、symbol、undefined
    * @param {*} arg - 需待查询的对象
    * @returns {boolean}
    * */
-  function isPrimitive(arg) {
-    return (
-      arg === null ||
-      typeof arg === 'boolean' ||
-      typeof arg === 'number' ||
-      typeof arg === 'string' ||
-      typeof arg === 'symbol' || // ES6 symbol
-      typeof arg === 'undefined'
-    );
-  }
 
+  function isPrimitive(arg) {
+    return arg === null || typeof arg === 'boolean' || typeof arg === 'number' || typeof arg === 'string' || _typeof(arg) === 'symbol' || // ES6 symbol
+    typeof arg === 'undefined';
+  }
   /**
    * 检测是否为Error对象
    * @param {*} e - 需待查询的对象
    * @returns {boolean}
    * */
+
   function isError(e) {
     return getProtoStr(e) === '[object Error]' || e instanceof Error;
   }
-
   /**
    * 检测是否为对象
    * @param {*} arg - 需待查询的对象
    * @returns {boolean}
    * */
+
   function isObject(arg) {
     return getProtoStr(arg) === '[object Object]';
   }
-
   /**
    * 检测是否为DOM
    * @param {*} o - 需待查询的对象
    * @returns {boolean}
    * */
+
   function isDom(o) {
     if (!o) {
       return false;
@@ -126,88 +130,89 @@
       return true;
     }
 
-    if (typeof HTMLElement === 'object') {
+    if ((typeof HTMLElement === "undefined" ? "undefined" : _typeof(HTMLElement)) === 'object') {
       return o instanceof HTMLElement;
     } else {
-      return o && typeof o === 'object' && o.nodeType === 1 && typeof o.nodeName === 'string';
+      return o && _typeof(o) === 'object' && o.nodeType === 1 && typeof o.nodeName === 'string';
     }
   }
-
   /**
    * 检测是否为正则
    * @param {*} arg - 需待查询的对象
    * @returns {boolean}
    * */
+
   function isRegExp(arg) {
     return getProtoStr(arg) === '[object RegExp]';
   }
-
   /**
    * 检测是否为数组
    * @param {*} arg - 需待查询的对象
    * @returns {boolean}
    * */
+
   function isFunction(arg) {
     return typeof arg === 'function';
   }
-
   /**
    * 检测是否为日期对象
    * @param {*} d - 需待查询的对象
    * @returns {boolean}
    * */
+
   function isDate(d) {
     return getProtoStr(d) === '[object Date]';
   }
-
   /**
    * 检测是否为布尔值
    * @param {*} arg - 需待查询的对象
    * @returns {boolean}
    * */
+
   function isBoolean(arg) {
     return typeof arg === 'boolean';
   }
-
   /**
    * 检测是否为Null
    * @param {*} arg - 需待查询的对象
    * @returns {boolean}
    * */
+
   function isNull(arg) {
     return arg === null;
   }
-
   /**
    * 检测是否为undefined
    * @param {*} arg - 需待查询的对象
    * @returns {boolean}
    * */
+
   function isUndefined(arg) {
     return arg === void 0;
   }
-
   /**
    * 检测是否为null/undefined
    * @param {*} arg - 需待查询的对象
    * @returns {boolean}
    * */
+
   function isNullOrUndefined(arg) {
     return arg == null;
   }
-
   /**
    * 检测传入对象是否为: undefined、null、''、NaN
    *
    * */
+
   function isTrueEmpty(obj) {
     if (obj === undefined || obj === null || obj === '') return true;
     return !!(isNumber(obj) && isNaN(obj));
   }
-
   /* 检测传入对象是否为: undefined, null ,'', NaN, [], {}, 0, false  */
+
   function isEmpty(obj) {
     if (isTrueEmpty(obj)) return true;
+
     if (isRegExp(obj)) {
       return false;
     } else if (isDate(obj)) {
@@ -223,27 +228,75 @@
     } else if (isBoolean(obj)) {
       return !obj;
     } else if (isObject(obj)) {
-      for (const key in obj) {
+      for (var key in obj) {
         return false;
       }
+
       return true;
     }
+
     return false;
   }
-
   function isNumerical(numLike) {
     return !isNaN(Number(numLike));
   }
-
   function isTruthyOrZero(arg) {
     return !!arg || arg === 0;
   }
 
-  /**
-   * 将小于10且大于0的数字转为填充0的字符 如 '01' '05', 小于1的数字始终返回'00'
-   * @param {number} number
-   */
+  function _arrayLikeToArray$1(arr, len) {
+    if (len == null || len > arr.length) len = arr.length;
 
+    for (var i = 0, arr2 = new Array(len); i < len; i++) {
+      arr2[i] = arr[i];
+    }
+
+    return arr2;
+  }
+
+  function _arrayWithoutHoles(arr) {
+    if (Array.isArray(arr)) return _arrayLikeToArray$1(arr);
+  }
+
+  function _iterableToArray(iter) {
+    if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
+  }
+
+  function _unsupportedIterableToArray$1(o, minLen) {
+    if (!o) return;
+    if (typeof o === "string") return _arrayLikeToArray$1(o, minLen);
+    var n = Object.prototype.toString.call(o).slice(8, -1);
+    if (n === "Object" && o.constructor) n = o.constructor.name;
+    if (n === "Map" || n === "Set") return Array.from(o);
+    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$1(o, minLen);
+  }
+
+  function _nonIterableSpread() {
+    throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+  }
+
+  function _toConsumableArray(arr) {
+    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray$1(arr) || _nonIterableSpread();
+  }
+
+  function _defineProperty(obj, key, value) {
+    if (key in obj) {
+      Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+      });
+    } else {
+      obj[key] = value;
+    }
+
+    return obj;
+  }
+
+  function ownKeys$3(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+  function _objectSpread$3(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$3(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$3(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
   function padSingleNumber(number) {
     if (number < 1) {
       return '00';
@@ -255,49 +308,48 @@
 
     return String(number);
   }
-
   /* 以指定规则格式化字符 */
 
-  const validateFormatString = /^(\s?\d\s?,?)+$/;
-
-  const defaultConfig$1 = {
+  var validateFormatString = /^(\s?\d\s?,?)+$/;
+  var defaultConfig$1 = {
     delimiter: ' ',
     repeat: false,
     lastRepeat: false,
-    reverse: false,
+    reverse: false
   };
 
-  function getPatterns(str, pattern, options = {}) {
-    const { repeat, lastRepeat, reverse } = { ...defaultConfig$1, ...options };
+  function getPatterns(str, pattern) {
+    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+    var _defaultConfig$option = _objectSpread$3(_objectSpread$3({}, defaultConfig$1), options),
+        repeat = _defaultConfig$option.repeat,
+        lastRepeat = _defaultConfig$option.lastRepeat,
+        reverse = _defaultConfig$option.reverse;
 
     if (!validateFormatString.test(pattern)) {
-      console.warn(`invalid pattern: ${pattern}, must match the /^[\\s?\\d\\s?,?]+$/ rule`);
+      console.warn("invalid pattern: ".concat(pattern, ", must match the /^[\\s?\\d\\s?,?]+$/ rule"));
       return;
-    }
+    } // 生成模式数组
 
-    // 生成模式数组
-    let patterns = pattern
-      .split(',')
-      .map(p => p.trim())
-      .filter(p => !!p);
 
-    if (!patterns.length) return;
+    var patterns = pattern.split(',').map(function (p) {
+      return p.trim();
+    }).filter(function (p) {
+      return !!p;
+    });
+    if (!patterns.length) return; // 字符转为数组方便操作
 
-    // 字符转为数组方便操作
-    const strArr = reverse ? str.split('').reverse() : str.split('');
+    var strArr = reverse ? str.split('').reverse() : str.split(''); // repeat处理
 
-    // repeat处理
     if (repeat || lastRepeat) {
       // 传入模式能匹配到的最大长度
-      const maxLength = patterns.reduce((prevIndex, index) => {
+      var maxLength = patterns.reduce(function (prevIndex, index) {
         return prevIndex + Number(index);
-      }, 0);
+      }, 0); // 需要额外填充的模式长度
 
-      // 需要额外填充的模式长度
-      let fillLength;
+      var fillLength; // 模式组最后一位，用于lastRepeat
 
-      // 模式组最后一位，用于lastRepeat
-      const lastPatter = Number(patterns[patterns.length - 1]);
+      var lastPatter = Number(patterns[patterns.length - 1]);
 
       if (repeat) {
         // (字符长度 - 最大匹配长度) / 最大匹配长度
@@ -309,32 +361,33 @@
         fillLength = Math.ceil((strArr.length - maxLength) / lastPatter);
       }
 
-      const originArr = lastRepeat ? [lastPatter] : [...patterns];
-
-      Array.from({ length: fillLength }).forEach(() => {
-        patterns = [...patterns, ...originArr];
+      var originArr = lastRepeat ? [lastPatter] : _toConsumableArray(patterns);
+      Array.from({
+        length: fillLength
+      }).forEach(function () {
+        patterns = [].concat(_toConsumableArray(patterns), _toConsumableArray(originArr));
       });
     }
 
     return {
-      patterns,
-      strArr,
+      patterns: patterns,
+      strArr: strArr
     };
   }
 
-  function formatString(str, pattern, options = {}) {
-    const opt = { ...defaultConfig$1, ...options };
-    const patternMeta = getPatterns(str, pattern, opt);
+  function formatString(str, pattern) {
+    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
+    var opt = _objectSpread$3(_objectSpread$3({}, defaultConfig$1), options);
+
+    var patternMeta = getPatterns(str, pattern, opt);
     if (!patternMeta) return;
+    var patterns = patternMeta.patterns,
+        strArr = patternMeta.strArr;
+    patterns.reduce(function (prevPattern, _pattern, ind) {
+      var currentIndex = prevPattern + Number(_pattern); // 替换位置为 前面所有pattern + 当前pattern + 已匹配次数
 
-    const { patterns, strArr } = patternMeta;
-
-    patterns.reduce((prevPattern, _pattern, ind) => {
-      const currentIndex = prevPattern + Number(_pattern);
-
-      // 替换位置为 前面所有pattern + 当前pattern + 已匹配次数
-      const replaceIndex = currentIndex + ind;
+      var replaceIndex = currentIndex + ind;
 
       if (replaceIndex < strArr.length) {
         strArr.splice(replaceIndex, 0, opt.delimiter);
@@ -342,94 +395,98 @@
 
       return currentIndex;
     }, 0);
-
     return opt.reverse ? strArr.reverse().join('') : strArr.join('');
   }
+  function unFormatString(str, pattern) {
+    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-  function unFormatString(str, pattern, options = {}) {
-    const opt = { ...defaultConfig$1, ...options };
-    const { delimiter } = opt;
-    const patternMeta = getPatterns(str, pattern, opt);
+    var opt = _objectSpread$3(_objectSpread$3({}, defaultConfig$1), options);
 
+    var delimiter = opt.delimiter;
+    var patternMeta = getPatterns(str, pattern, opt);
     if (!patternMeta) return;
-
-    const { patterns, strArr } = patternMeta;
-
-    patterns.reduce((prev, pt) => {
-      const index = Number(pt) + prev;
-
+    var patterns = patternMeta.patterns,
+        strArr = patternMeta.strArr;
+    patterns.reduce(function (prev, pt) {
+      var index = Number(pt) + prev;
       /* 只在字符首位匹配时才执行替换, 在某些场景会有用（fr的input处理双向绑定时） */
+
       if (strArr[index] === delimiter[0]) {
         strArr.splice(index, delimiter.length);
       }
 
       return index;
     }, 0);
-
     return opt.reverse ? strArr.reverse().join('') : strArr.join('');
   }
+  function getFirstTruthyOrZero() {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
 
-  function getFirstTruthyOrZero(...args) {
-    for (const arg of args) {
+    for (var _i = 0, _args = args; _i < _args.length; _i++) {
+      var arg = _args[_i];
+
       if (isTruthyOrZero(arg)) {
         return arg;
       }
     }
+
     return false;
   }
-
-  function vie(arg, feedback = '-') {
+  function vie(arg) {
+    var feedback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '-';
     return isTruthyOrZero(arg) ? arg : feedback;
   }
 
   function parseDate(date) {
-    let d = date;
+    var d = date;
+
     if (typeof date === 'string') {
       d = date.replace(/-/g, '/'); // Safari无法解析 2020-01-01 格式的日期
     }
-    d = new Date(d);
 
-    // 处理Invalid Date
+    d = new Date(d); // 处理Invalid Date
+
     if (d instanceof Date && isNaN(d.getTime())) {
       return null;
     }
 
     return d;
   }
-
-  function datetime(date = new Date(), format = 'YYYY-MM-DD hh:mm:ss') {
-    const d = parseDate(date);
+  function datetime() {
+    var date = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new Date();
+    var format = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'YYYY-MM-DD hh:mm:ss';
+    var d = parseDate(date);
 
     if (!d) {
       return '';
     }
 
-    const fn = d => {
+    var fn = function fn(d) {
       return ('0' + d).slice(-2);
     };
 
-    const formats = {
+    var formats = {
       YY: String(d.getFullYear() + 1).slice(2),
       YYYY: d.getFullYear(),
       MM: fn(d.getMonth() + 1),
       DD: fn(d.getDate()),
       hh: fn(d.getHours()),
       mm: fn(d.getMinutes()),
-      ss: fn(d.getSeconds()),
+      ss: fn(d.getSeconds())
     };
-
-    return format.replace(/([a-z])\1+/gi, a => {
+    return format.replace(/([a-z])\1+/gi, function (a) {
       return formats[a] || a;
     });
   }
-
-  const oneMS = 100;
-  const oneS = oneMS * 10;
-  const oneM = 60 * oneS;
-  const oneH = 60 * oneM;
-  const oneD = 24 * oneH;
+  var oneMS = 100;
+  var oneS = oneMS * 10;
+  var oneM = 60 * oneS;
+  var oneH = 60 * oneM;
+  var oneD = 24 * oneH;
   function getDateCountDown(date) {
-    const dt = parseDate(date);
+    var dt = parseDate(date);
 
     if (!dt) {
       return {
@@ -438,51 +495,44 @@
         m: '00',
         h: '00',
         d: '00',
-        timeOut: true,
+        timeOut: true
       };
     }
 
-    const start = Date.now();
-    const end = dt.getTime();
-
-    const diff = end - start;
+    var start = Date.now();
+    var end = dt.getTime();
+    var diff = end - start;
 
     if (diff < 0) {
       return getDateCountDown();
     }
 
-    const fr = Math.floor;
+    var fr = Math.floor; // h、m、s 用单位总数取余就是该单位对应的ms，除单位总数获得单位
 
-    // h、m、s 用单位总数取余就是该单位对应的ms，除单位总数获得单位
-    let d = fr(diff / oneD);
-    let h = fr((diff % oneD) / oneH);
-    let m = fr((diff % oneH) / oneM);
-    let s = fr((diff % oneM) / oneS);
-    let ms = fr(diff % oneMS);
-
+    var d = fr(diff / oneD);
+    var h = fr(diff % oneD / oneH);
+    var m = fr(diff % oneH / oneM);
+    var s = fr(diff % oneM / oneS);
+    var ms = fr(diff % oneMS);
     return {
       d: padSingleNumber(d),
       h: padSingleNumber(h),
       m: padSingleNumber(m),
       s: padSingleNumber(s),
       ms: padSingleNumber(ms),
-      timeOut: false,
+      timeOut: false
     };
   }
-
-  function getDateStringFirst(dataString = '') {
+  function getDateStringFirst() {
+    var dataString = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
     if (!dataString) return '';
     return dataString.split(' ')[0];
   }
-
   function isBetweenDate(startDate, endDate, currentDate) {
-    const s = parseDate(startDate);
-    const e = parseDate(endDate);
-
+    var s = parseDate(startDate);
+    var e = parseDate(endDate);
     if (!s || !e) return false;
-
-    const c = currentDate ? parseDate(currentDate) : new Date();
-
+    var c = currentDate ? parseDate(currentDate) : new Date();
     return c <= e && c >= s;
   }
 
@@ -495,25 +545,29 @@
    * @param {Element} el
    * @returns {object}
    */
+
   function form2obj(el) {
     if (!isDom(el)) {
       console.error('Please pass in the dom element');
       return;
     }
+
     if (!el.querySelectorAll) {
       console.error('The passed in element does not support the querySelectorAll API');
       return;
     }
-    const tempObj = {};
-    let inputs = el.querySelectorAll('input[name],select[name],textarea[name]');
+
+    var tempObj = {};
+    var inputs = el.querySelectorAll('input[name],select[name],textarea[name]');
     inputs = Array.prototype.slice.call(inputs);
-    inputs.forEach(v => {
+    inputs.forEach(function (v) {
       // name => ""
       if (!v.name) return;
 
       if (v.type === 'radio' || v.type === 'checkbox') {
         if (!tempObj[v.name]) tempObj[v.name] = v.type === 'checkbox' ? [] : '';
       }
+
       if (v.type === 'radio') {
         v.checked && (tempObj[v.name] = v.value);
       } else if (v.type === 'checkbox') {
@@ -524,22 +578,20 @@
         tempObj[v.name] = v.value;
       }
     });
-
     return tempObj;
   }
-
   /**
    * 将一个object转为对应键值对的 FormData 对象
    * @param {object} obj
    * @returns {FormData}
    */
-  function obj2FormData(obj) {
-    const keys = Object.keys(obj);
-    const form = new FormData();
 
-    keys.forEach(key => {
+  function obj2FormData(obj) {
+    var keys = Object.keys(obj);
+    var form = new FormData();
+    keys.forEach(function (key) {
       if (Array.isArray(obj[key])) {
-        obj[key].forEach(val => {
+        obj[key].forEach(function (val) {
           // form.append(`${key}[]`, val)
           form.append(key, val);
         });
@@ -547,13 +599,13 @@
         form.append(key, obj[key]);
       }
     });
-
     return form;
   }
 
-  const shakeFalsy = source => {
-    Object.keys(source).forEach(key => {
-      const val = source[key];
+  var shakeFalsy = function shakeFalsy(source) {
+    Object.keys(source).forEach(function (key) {
+      var val = source[key];
+
       if (!val && val !== 0) {
         delete source[key];
       }
@@ -563,12 +615,16 @@
 
   function pickOrOmit(obj, props, isPick) {
     if (isString(props)) {
-      props = props.split(',').map(key => key.trim());
+      props = props.split(',').map(function (key) {
+        return key.trim();
+      });
     }
-    const keys = Object.keys(obj);
-    const result = {};
-    keys.forEach(item => {
-      const cond = isPick ? props.indexOf(item) !== -1 : props.indexOf(item) === -1;
+
+    var keys = Object.keys(obj);
+    var result = {};
+    keys.forEach(function (item) {
+      var cond = isPick ? props.indexOf(item) !== -1 : props.indexOf(item) === -1;
+
       if (cond) {
         result[item] = obj[item];
       }
@@ -579,66 +635,66 @@
   function omit(obj, props) {
     return pickOrOmit(obj, props);
   }
-
   function pick(obj, props) {
     return pickOrOmit(obj, props, true);
   }
-
   /** 根据NamePath在对象中获取值` */
+
   function getNamePathValue(obj, name) {
     if (isString(name)) {
-      return obj?.[name];
+      return obj === null || obj === void 0 ? void 0 : obj[name];
     }
 
     if (isArray(name) && name.length) {
-      return name.reduce((p, i) => {
-        return p?.[i];
+      return name.reduce(function (p, i) {
+        return p === null || p === void 0 ? void 0 : p[i];
       }, obj);
     }
   }
-
   /** 将 ['user', 'name'], ['list', '0', 'title'] 格式的字段数组转换为字符串  */
+
   function stringifyNamePath(name) {
     if (isString(name)) return name;
-
-    return name.reduce((p, i) => {
+    return name.reduce(function (p, i) {
       if (isNumber(Number(i))) {
-        return `${p}[${i}]`;
+        return "".concat(p, "[").concat(i, "]");
       }
 
       if (isString(i)) {
-        return p.length ? `${p}.${i}` : i;
+        return p.length ? "".concat(p, ".").concat(i) : i;
       }
 
       return p;
     }, '');
   }
-
   /** 在通过name在obj上设置值 */
+
   function setNamePathValue(obj, name, val) {
     if (isString(name)) {
       obj[name] = val;
     }
 
     if (isArray(name) && name.length) {
-      let lastObj = obj;
+      var lastObj = obj;
 
-      for (let i = 0; i < name.length; i++) {
-        const n = name[i]; // 当前name
-        const nextN = name[i + 1]; // 下一个name
-        const hasNextN = nextN !== undefined; // 是否有下个
+      for (var i = 0; i < name.length; i++) {
+        var n = name[i]; // 当前name
+
+        var nextN = name[i + 1]; // 下一个name
+
+        var hasNextN = nextN !== undefined; // 是否有下个
 
         if (!hasNextN) {
           lastObj[n] = val;
           return;
-        }
+        } // 确保要操作的对象存在
 
-        // 确保要操作的对象存在
+
         if (isNumerical(nextN)) {
           if (!isArray(lastObj[n])) {
             lastObj[n] = [];
-          }
-          // 不是数字的话则为对象
+          } // 不是数字的话则为对象
+
         } else if (!isObject(lastObj[n])) {
           lastObj[n] = {};
         }
@@ -648,244 +704,262 @@
     }
   }
 
-  function replaceHtmlTags(str = '', val = '') {
-    const reg = /(<\/?.+?\/?>|&nbsp;|&mdash;)/g;
+  function ownKeys$2(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+  function _objectSpread$2(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$2(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$2(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+  function replaceHtmlTags() {
+    var str = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+    var val = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+    var reg = /(<\/?.+?\/?>|&nbsp;|&mdash;)/g;
     return str.replace(reg, val);
   }
-
-  function createRandString(number = 1) {
-    return Array.from({ length: number }).reduce(prev => {
+  function createRandString() {
+    var number = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+    return Array.from({
+      length: number
+    }).reduce(function (prev) {
       return prev + Math.random().toString(36).substr(2);
     }, '');
   }
-
-  const KB = 1024;
-  const MB = KB * 1024;
-  const GB = MB * 1024;
-  const TB = GB * 1024;
-  const byte2textDefaultConfig = {
-    precision: 1,
+  var KB = 1024;
+  var MB = KB * 1024;
+  var GB = MB * 1024;
+  var TB = GB * 1024;
+  var byte2textDefaultConfig = {
+    precision: 1
   };
+  var byte2text = function byte2text(_byte, conf) {
+    var cf = _objectSpread$2(_objectSpread$2({}, byte2textDefaultConfig), conf);
 
-  const byte2text = (byte, conf) => {
-    const cf = {
-      ...byte2textDefaultConfig,
-      ...conf,
-    };
+    var s = '';
 
-    let s = '';
-
-    if (byte >= TB) {
-      s = `${(byte / TB).toFixed(cf.precision)}T`;
-    } else if (byte >= GB) {
-      s = `${(byte / GB).toFixed(cf.precision)}G`;
-    } else if (byte >= MB) {
-      s = `${(byte / MB).toFixed(cf.precision)}M`;
+    if (_byte >= TB) {
+      s = "".concat((_byte / TB).toFixed(cf.precision), "T");
+    } else if (_byte >= GB) {
+      s = "".concat((_byte / GB).toFixed(cf.precision), "G");
+    } else if (_byte >= MB) {
+      s = "".concat((_byte / MB).toFixed(cf.precision), "M");
     } else {
-      s = `${(byte / KB).toFixed(cf.precision)}K`;
+      s = "".concat((_byte / KB).toFixed(cf.precision), "K");
     }
 
     return s;
   };
-
   byte2text.KB = KB;
   byte2text.MB = MB;
   byte2text.GB = GB;
   byte2text.TB = TB;
-
-  const heightLightMatchStringDefaultConf = {
-    color: '#F83D48',
+  var heightLightMatchStringDefaultConf = {
+    color: '#F83D48'
   };
-
   function heightLightMatchString(str, regExp, conf) {
     if (!str || !regExp) return str || '';
-    const cf = {
-      ...heightLightMatchStringDefaultConf,
-      ...conf,
-    };
 
-    const reg = new RegExp(regExp, 'g');
+    var cf = _objectSpread$2(_objectSpread$2({}, heightLightMatchStringDefaultConf), conf);
 
-    return str.replace(reg, s => {
-      return `<span style="color: ${cf.color}">${s}</span>`;
+    var reg = new RegExp(regExp, 'g');
+    return str.replace(reg, function (s) {
+      return "<span style=\"color: ".concat(cf.color, "\">").concat(s, "</span>");
     });
   }
 
   function getRandRange(min, max) {
     return Math.round((max - min) * Math.random() + min);
   }
-
-  function decimalPrecision(num, precision = 1) {
-    const mid = +`1${Array.from({ length: precision })
-    .map(() => '0')
-    .join('')}`;
-
+  function decimalPrecision(num) {
+    var precision = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+    var mid = +"1".concat(Array.from({
+      length: precision
+    }).map(function () {
+      return '0';
+    }).join(''));
     return Math.round(num * mid) / mid;
   }
+  function sum() {
+    for (var _len = arguments.length, nums = new Array(_len), _key = 0; _key < _len; _key++) {
+      nums[_key] = arguments[_key];
+    }
 
-  function sum(...nums) {
-    return nums.reduce((p, i) => {
+    return nums.reduce(function (p, i) {
       return p + (isWeakNumber(i) ? Number(i) : 0);
     }, 0);
   }
+  function subtract() {
+    for (var _len2 = arguments.length, nums = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      nums[_key2] = arguments[_key2];
+    }
 
-  function subtract(...nums) {
-    return nums.reduce((p, i) => {
+    return nums.reduce(function (p, i) {
       if (p === null) return i;
       if (!isWeakNumber(i)) return p;
       return p - i;
     }, null);
   }
-
   function weakNumber(arg) {
     return isWeakNumber(arg) ? Number(arg) : null;
   }
-
   function clamp(val, min, max) {
     if (isNumber(min) && val < min) return min;
     if (isNumber(max) && val > max) return max;
     return val;
   }
 
-  const portalsID = 'J__PORTALS__NODE__';
-  const getPortalsNode = namespace => {
-    const id = portalsID + (namespace ? namespace.toLocaleUpperCase() : 'DEFAULT');
+  function ownKeys$1(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-    let portalsEl = document.getElementById(id);
+  function _objectSpread$1(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys$1(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys$1(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+  var portalsID = 'J__PORTALS__NODE__';
+  var getPortalsNode = function getPortalsNode(namespace) {
+    var id = portalsID + (namespace ? namespace.toLocaleUpperCase() : 'DEFAULT');
+    var portalsEl = document.getElementById(id);
 
     if (!portalsEl) {
-      const el = document.createElement('div');
+      var el = document.createElement('div');
       el.id = id;
       portalsEl = document.body.appendChild(el);
     }
+
     return portalsEl;
   };
-
   function getScrollBarWidth(className) {
     // Create the measurement node
-    const scrollEl = document.createElement('div');
+    var scrollEl = document.createElement('div');
     if (className) scrollEl.className = className;
     scrollEl.style.overflow = 'scroll';
     scrollEl.style.height = '200px';
     scrollEl.style.width = '200px';
     scrollEl.style.border = '2px solid red';
-
     document.body.appendChild(scrollEl);
-
-    let wSize = scrollEl.offsetWidth - scrollEl.clientWidth;
-    let hSize = scrollEl.offsetWidth - scrollEl.clientWidth;
-
-    const sty = getStyle(scrollEl);
+    var wSize = scrollEl.offsetWidth - scrollEl.clientWidth;
+    var hSize = scrollEl.offsetWidth - scrollEl.clientWidth;
+    var sty = getStyle(scrollEl);
 
     if (sty) {
-      const trimPXStr = s => s.replace(/px/, '');
+      var trimPXStr = function trimPXStr(s) {
+        return s.replace(/px/, '');
+      };
+
       wSize = wSize - trimPXStr(sty.borderLeftWidth) - trimPXStr(sty.borderRightWidth);
       hSize = hSize - trimPXStr(sty.borderTopWidth) - trimPXStr(sty.borderBottomWidth);
     }
 
-    document.body.removeChild(scrollEl);
+    document.body.removeChild(scrollEl); // Get the scrollbar width
 
-    // Get the scrollbar width
     return [wSize, hSize];
   }
-
   function getStyle(dom) {
     if (!dom) return {};
     if (!dom.currentStyle && !window.getComputedStyle) return {};
     return dom.currentStyle ? dom.currentStyle : window.getComputedStyle(dom);
   }
-
-  function checkElementVisible(target, option = {}) {
-    const { fullVisible = false, wrapEl, offset = 0 } = option;
-
-    const ofs = getOffsetObj(offset);
-
-    // 核心是判定视口的可用区域所在的框，再检测元素是否在这个框坐标内
+  function checkElementVisible(target) {
+    var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    var _option$fullVisible = option.fullVisible,
+        fullVisible = _option$fullVisible === void 0 ? false : _option$fullVisible,
+        wrapEl = option.wrapEl,
+        _option$offset = option.offset,
+        offset = _option$offset === void 0 ? 0 : _option$offset;
+    var ofs = getOffsetObj(offset); // 核心是判定视口的可用区域所在的框，再检测元素是否在这个框坐标内
 
     /** 基础边界(用于窗口) */
-    const yMinBase = 0;
-    const xMinBase = 0;
-    const yMaxBase = window.innerHeight;
-    const xMaxBase = window.innerWidth;
 
+    var yMinBase = 0;
+    var xMinBase = 0;
+    var yMaxBase = window.innerHeight;
+    var xMaxBase = window.innerWidth;
     /** 有效边界 */
-    let aYMin = yMinBase;
-    let aXMin = xMinBase;
-    let aYMax = yMaxBase;
-    let aXMax = xMaxBase;
 
-    // 需要同时检测是否超出窗口、所在容器
+    var aYMin = yMinBase;
+    var aXMin = xMinBase;
+    var aYMax = yMaxBase;
+    var aXMax = xMaxBase; // 需要同时检测是否超出窗口、所在容器
+
     if (wrapEl) {
-      const { top, left, bottom, right } = wrapEl.getBoundingClientRect();
+      var _wrapEl$getBoundingCl = wrapEl.getBoundingClientRect(),
+          _top = _wrapEl$getBoundingCl.top,
+          _left = _wrapEl$getBoundingCl.left,
+          _bottom = _wrapEl$getBoundingCl.bottom,
+          _right = _wrapEl$getBoundingCl.right;
 
-      const yMin = yMinBase + top;
-      const xMin = xMinBase + left;
-      const yMax = bottom;
-      const xMax = right; // 减去元素右边到视口右边
-
+      var yMin = yMinBase + _top;
+      var xMin = xMinBase + _left;
+      var yMax = _bottom;
+      var xMax = _right; // 减去元素右边到视口右边
       // 有效区域左上取最小值，最小不小于0
       // 有效区域右下取最大值，最大不大于窗口对应方向尺寸
+
       aXMin = clamp(Math.max(xMinBase, xMin), xMinBase, xMaxBase);
       aYMin = clamp(Math.max(yMinBase, yMin), yMinBase, yMaxBase);
       aXMax = clamp(Math.min(xMaxBase, xMax), xMinBase, xMaxBase);
       aYMax = clamp(Math.min(yMaxBase, yMax), yMinBase, yMaxBase);
     }
 
-    const bound = isDom(target) ? target.getBoundingClientRect() : target;
+    var bound = isDom(target) ? target.getBoundingClientRect() : target;
 
-    const { top, left, bottom, right } = offsetCalc(bound, ofs);
-
+    var _offsetCalc = offsetCalc(bound, ofs),
+        top = _offsetCalc.top,
+        left = _offsetCalc.left,
+        bottom = _offsetCalc.bottom,
+        right = _offsetCalc.right;
     /** fullVisible检测 */
-    const topPos = fullVisible ? top : bottom;
-    const bottomPos = fullVisible ? bottom : top;
-    const leftPos = fullVisible ? left : right;
-    const rightPos = fullVisible ? right : left;
 
-    // 指定方向是否包含有效尺寸
-    const xFalse = aXMax === aXMin;
-    const yFalse = aYMax === aYMin;
 
-    const topVisible = yFalse ? false : topPos >= aYMin;
-    const leftVisible = xFalse ? false : leftPos >= aXMin;
-    const bottomVisible = yFalse ? false : bottomPos <= aYMax;
-    const rightVisible = xFalse ? false : rightPos <= aXMax;
+    var topPos = fullVisible ? top : bottom;
+    var bottomPos = fullVisible ? bottom : top;
+    var leftPos = fullVisible ? left : right;
+    var rightPos = fullVisible ? right : left; // 指定方向是否包含有效尺寸
 
+    var xFalse = aXMax === aXMin;
+    var yFalse = aYMax === aYMin;
+    var topVisible = yFalse ? false : topPos >= aYMin;
+    var leftVisible = xFalse ? false : leftPos >= aXMin;
+    var bottomVisible = yFalse ? false : bottomPos <= aYMax;
+    var rightVisible = xFalse ? false : rightPos <= aXMax;
     return {
       visible: topVisible && leftVisible && rightVisible && bottomVisible,
       top: topVisible,
       left: leftVisible,
       right: rightVisible,
       bottom: bottomVisible,
-      bound,
+      bound: bound
     };
   }
-
   /** 用于checkElementVisible获取offset四个方向的值 */
-  function getOffsetObj(offset) {
-    const ofs = { left: 0, top: 0, right: 0, bottom: 0 };
 
+  function getOffsetObj(offset) {
+    var ofs = {
+      left: 0,
+      top: 0,
+      right: 0,
+      bottom: 0
+    };
     if (!offset) return ofs;
 
     if (isNumber(offset)) {
-      return { left: offset, top: offset, right: offset, bottom: offset };
+      return {
+        left: offset,
+        top: offset,
+        right: offset,
+        bottom: offset
+      };
     }
 
-    Object.keys(ofs).forEach(key => {
+    Object.keys(ofs).forEach(function (key) {
       if (isNumber(offset[key])) {
         ofs[key] = offset[key];
       }
     });
-
     return ofs;
   }
-
   /** 用于checkElement，计算offset对象和当前位置对象的最终值 */
+
+
   function offsetCalc(bound, offset) {
     return {
       top: bound.top - offset.top,
       left: bound.left - offset.left,
       right: bound.right + offset.right,
-      bottom: bound.bottom + offset.bottom,
+      bottom: bound.bottom + offset.bottom
     };
   }
 
@@ -893,28 +967,29 @@
     if (isDom(t)) {
       mountHighlight(t, conf);
     } else {
-      const temp = document.querySelectorAll(t);
+      var temp = document.querySelectorAll(t);
+
       if (temp.length) {
-        Array.from(temp).forEach(item => mountHighlight(item, conf));
+        Array.from(temp).forEach(function (item) {
+          return mountHighlight(item, conf);
+        });
       }
     }
   }
-
-  const mountHighlightDefaultConf = {
+  var mountHighlightDefaultConf = {
     color: '#1890ff',
-    useOutline: true,
+    useOutline: true
   };
 
-  function mountHighlight(target, conf = {}) {
-    const cf = {
-      ...mountHighlightDefaultConf,
-      ...conf,
-    };
+  function mountHighlight(target) {
+    var conf = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+    var cf = _objectSpread$1(_objectSpread$1({}, mountHighlightDefaultConf), conf);
 
     if (cf.useOutline) {
-      target.style.outline = `1px auto ${cf.color}`;
+      target.style.outline = "1px auto ".concat(cf.color);
     } else {
-      target.style.boxShadow = `0 0 0 4px ${cf.color}`;
+      target.style.boxShadow = "0 0 0 4px ".concat(cf.color);
     }
 
     function clickHandle() {
@@ -933,9 +1008,8 @@
   }
 
   function getCurrentParent(node, matcher, depth) {
-    let hasMatch = false;
-
-    let cDepth = 0;
+    var hasMatch = false;
+    var cDepth = 0;
 
     function recur(n) {
       if (depth) {
@@ -946,10 +1020,12 @@
       if (!n) {
         return;
       }
-      const pNode = n.parentNode;
+
+      var pNode = n.parentNode;
 
       if (pNode) {
-        const res = matcher(pNode);
+        var res = matcher(pNode);
+
         if (res) {
           hasMatch = true;
           return;
@@ -960,29 +1036,26 @@
     }
 
     recur(node);
-
     return hasMatch;
   }
-
   function getScrollParent(ele, getAll) {
-    let node = getAll ? [] : null;
+    var node = getAll ? [] : null;
 
     function handle(el) {
-      const parent = el.parentNode;
+      var parent = el.parentNode;
 
       if (parent) {
-        const e = parent;
-        const h = e.clientHeight;
-        const sH = e.scrollHeight;
+        var e = parent;
+        var h = e.clientHeight;
+        var sH = e.scrollHeight;
 
         if (sH > h) {
-          const isRoot = e === document.documentElement || e === document.body;
-          const scrollStatus = hasScroll(e);
+          var isRoot = e === document.documentElement || e === document.body;
+          var scrollStatus = hasScroll(e); // 为body或doc时，统一取documentElement方便识别，部分浏览器支持body设置document.scrollXxx部分浏览器支持documentElement设置
 
-          // 为body或doc时，统一取documentElement方便识别，部分浏览器支持body设置document.scrollXxx部分浏览器支持documentElement设置
-          const element = isRoot ? document.documentElement : e;
-
+          var element = isRoot ? document.documentElement : e;
           /* body和html元素不需要检测滚动属性 */
+
           if (isRoot || scrollStatus.x || scrollStatus.y) {
             if (getAll) {
               if (isRoot) {
@@ -1002,22 +1075,20 @@
     }
 
     handle(ele);
-
     return node;
   }
-
   function getDocScrollOffset() {
-    const doc = document.documentElement;
-    const body = document.body;
-
+    var doc = document.documentElement;
+    var body = document.body;
     return {
       // Math.ceil用于解决高分屏缩放时的滚动位置小数问题
       x: Math.ceil(doc.scrollLeft + body.scrollLeft),
-      y: Math.ceil(doc.scrollTop + body.scrollTop),
+      y: Math.ceil(doc.scrollTop + body.scrollTop)
     };
   }
+  function setDocScrollOffset() {
+    var conf = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-  function setDocScrollOffset(conf = {}) {
     if (isNumber(conf.x)) {
       // eslint-disable-next-line no-multi-assign
       document.body.scrollLeft = document.documentElement.scrollLeft = conf.x;
@@ -1028,74 +1099,99 @@
       document.body.scrollTop = document.documentElement.scrollTop = conf.y;
     }
   }
-
   function hasScroll(el) {
-    let x = Math.max(0, el.scrollWidth - el.clientWidth) > 0;
-    let y = Math.max(0, el.scrollHeight - el.clientHeight) > 0;
+    var x = Math.max(0, el.scrollWidth - el.clientWidth) > 0;
+    var y = Math.max(0, el.scrollHeight - el.clientHeight) > 0;
 
     if (el === document.documentElement || el === document.body) ; else {
-      const { overflowX, overflowY } = getStyle(el);
+      var _getStyle = getStyle(el),
+          overflowX = _getStyle.overflowX,
+          overflowY = _getStyle.overflowY;
+
       if (overflowX !== 'scroll' && overflowX !== 'auto') {
         x = false;
       }
+
       if (overflowY !== 'scroll' && overflowY !== 'auto') {
         y = false;
       }
     }
 
     return {
-      x,
-      y,
+      x: x,
+      y: y
     };
   }
 
+  function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+  function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
   function promisify(fn, receiver) {
-    return (...args) => {
-      return new Promise((resolve, reject) => {
-        fn.apply(receiver, [
-          ...args,
-          (err, res) => {
-            return err ? reject(err) : resolve(res);
-          },
-        ]);
+    return function () {
+      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      return new Promise(function (resolve, reject) {
+        fn.apply(receiver, [].concat(args, [function (err, res) {
+          return err ? reject(err) : resolve(res);
+        }]));
       });
     };
   }
-
   function delay(ms, payload) {
-    return new Promise((res, rej) => {
-      setTimeout(() => (payload instanceof Error ? rej(payload) : res(payload)), ms);
+    return new Promise(function (res, rej) {
+      setTimeout(function () {
+        return payload instanceof Error ? rej(payload) : res(payload);
+      }, ms);
     });
   }
+  var dumpFn = function dumpFn() {
+    for (var _len2 = arguments.length, arg = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      arg[_key2] = arguments[_key2];
+    }
 
-  const dumpFn = (...arg) => arg;
-
-  const defer = (fn, ...args) => setTimeout(fn, 1, ...args);
-
-  const defaultConfig = {
-    rate: 0.2,
+    return arg;
   };
+  var defer = function defer(fn) {
+    for (var _len3 = arguments.length, args = new Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+      args[_key3 - 1] = arguments[_key3];
+    }
 
+    return setTimeout.apply(void 0, [fn, 1].concat(args));
+  };
+  var defaultConfig = {
+    rate: 0.2
+  };
   function retry(handle, delay, config) {
-    const { maxDelay, rate, fixed, maxRetry } = { ...defaultConfig, ...config };
+    var _defaultConfig$config = _objectSpread(_objectSpread({}, defaultConfig), config),
+        maxDelay = _defaultConfig$config.maxDelay,
+        rate = _defaultConfig$config.rate,
+        fixed = _defaultConfig$config.fixed,
+        maxRetry = _defaultConfig$config.maxRetry;
 
-    let t;
-    const clear = () => t && clearTimeout(t);
+    var t;
 
-    const res = handle();
+    var clear = function clear() {
+      return t && clearTimeout(t);
+    };
+
+    var res = handle();
     if (!res) return clear;
+    var d = delay;
+    var count = 1;
 
-    let d = delay;
-    let count = 1;
-
-    const trigger = () => {
-      t = setTimeout(() => {
+    var trigger = function trigger() {
+      t = setTimeout(function () {
         if (handle()) {
           if (maxRetry && maxRetry === count) return;
+
           if (!fixed) {
-            const nextD = count * rate * delay + d;
+            var nextD = count * rate * delay + d;
             d = maxDelay ? Math.min(nextD, maxDelay) : nextD;
           }
+
           count++;
           trigger();
         }
@@ -1103,16 +1199,13 @@
     };
 
     trigger();
-
     return clear;
   }
-
   function throwError(msg, prefix) {
-    throw new Error(`${prefix ? `${prefix}::` : ''}ERROR: ${msg}`);
+    throw new Error("".concat(prefix ? "".concat(prefix, "::") : '', "ERROR: ").concat(msg));
   }
-
   function throwWarning(msg, prefix) {
-    console.warn(`${prefix ? `${prefix}::` : ''}Warning: ${msg}`);
+    console.warn("".concat(prefix ? "".concat(prefix, "::") : '', "Warning: ").concat(msg));
   }
 
   function getGlobal() {
@@ -1121,101 +1214,115 @@
       // eslint-disable-next-line no-restricted-globals
       return self;
     }
+
     if (typeof window !== 'undefined') {
       return window;
     }
+
     if (typeof global !== 'undefined') {
       return global;
     }
+
     throw new Error('unable to locate global object');
   }
-
-  const __GLOBAL__ = getGlobal();
-
+  var __GLOBAL__ = getGlobal();
   function createEvent() {
-    const listeners = [];
+    var listeners = [];
 
     function on(listener) {
       listeners.push(listener);
     }
 
     function off(listener) {
-      const ind = listeners.indexOf(listener);
+      var ind = listeners.indexOf(listener);
       if (ind !== -1) listeners.splice(ind, 1);
     }
 
-    function emit(...args) {
-      listeners.forEach(listener => listener(...args));
+    function emit() {
+      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      listeners.forEach(function (listener) {
+        return listener.apply(void 0, args);
+      });
     }
 
     return {
-      on,
-      off,
-      emit,
+      on: on,
+      off: off,
+      emit: emit
     };
   }
 
-  const idCardRegexp = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+  var idCardRegexp = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
 
-  const storagePrefix = 'THIS_IS_A_UNIQUE_PREFIX_';
-
+  var storagePrefix = 'THIS_IS_A_UNIQUE_PREFIX_';
   function setStorage(key, val) {
-    localStorage.setItem(`${storagePrefix}${key}`.toUpperCase(), JSON.stringify(val));
+    localStorage.setItem("".concat(storagePrefix).concat(key).toUpperCase(), JSON.stringify(val));
   }
-
   function getStorage(key) {
-    const s = localStorage.getItem(`${storagePrefix}${key}`.toUpperCase());
-
+    var s = localStorage.getItem("".concat(storagePrefix).concat(key).toUpperCase());
     if (!s) return null;
-
     return JSON.parse(s);
   }
 
+  function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+  function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+  function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
   function swap(arr, sourceInd, targetInd) {
     if (sourceInd < 0 || targetInd < 0) return arr;
     if (sourceInd > arr.length - 1 || targetInd > arr.length - 1) return arr;
     arr.splice(targetInd, 1, arr.splice(sourceInd, 1, arr[targetInd])[0]);
     return arr;
   }
-
   function move(array, form, to) {
     if (form < 0 || to < 0) return array;
     if (form > array.length - 1 || to > array.length - 1) return array;
-    array.splice(to, 0, ...array.splice(form, 1));
+    array.splice.apply(array, [to, 0].concat(_toConsumableArray(array.splice(form, 1))));
     return array;
   }
-
-  const ensureArray = val => (isArray(val) ? val : [val]);
-
+  var ensureArray = function ensureArray(val) {
+    return isArray(val) ? val : [val];
+  };
   function uniq(array) {
-    const arr = [];
-
-    array.forEach(it => {
+    var arr = [];
+    array.forEach(function (it) {
       if (arr.indexOf(it) === -1) {
         arr.push(it);
       }
     });
-
     return arr;
   }
-
   function uniqWith(array, comparator) {
-    const arr = [];
+    var arr = [];
+    array.forEach(function (it) {
+      var flag = false;
 
-    array.forEach(it => {
-      let flag = false;
-      for (const item of arr) {
-        if (comparator(item, it)) {
-          flag = true;
-          break;
+      var _iterator = _createForOfIteratorHelper(arr),
+          _step;
+
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var item = _step.value;
+
+          if (comparator(item, it)) {
+            flag = true;
+            break;
+          }
         }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
       }
 
       if (!flag) {
         arr.push(it);
       }
     });
-
     return arr;
   }
 

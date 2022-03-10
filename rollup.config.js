@@ -5,6 +5,7 @@ import postcss from 'rollup-plugin-postcss';
 import del from 'rollup-plugin-delete';
 import path from 'path';
 import { externalsDependencies } from './config/getExternals';
+import babel from '@rollup/plugin-babel';
 
 const DIST = 'dist';
 
@@ -16,12 +17,15 @@ const outputCommon = {
   dir: DIST,
 };
 
+console.log(externalsDependencies());
+
 const pluginsCommon = [
   nodeResolve(),
   // typescript({
   //   tsconfig: './tsconfig.lib.json',
   // }),
   commonjs(),
+  babel({ babelHelpers: 'runtime' }),
   postcss({
     // extract: true,     // 根据chunk名输出到外部
     // extract: true,
