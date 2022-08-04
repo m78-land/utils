@@ -1,6 +1,6 @@
 {
   "name": "@m78/utils",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "utils for m78 projects",
   "keywords": [
     "javascript utils"
@@ -21,8 +21,8 @@
     "test": "jest",
     "build": "m78-lib-build build",
     "postbuild": "copyfiles package.json dist && copyfiles -u 1 './esm/**/*' dist && copyfiles './umd/**/*' dist && npm run gd && npm run clear",
-    "publish": "npm publish ./dist --access public",
-    "postpublish": "copyfiles dist/package.json ./",
+    "pub": "cd dist && npm publish --access public --registry https://registry.npmjs.org",
+    "postpub": "copyfiles dist/package.json ./package.json",
     "gd": "tsc -p ./ts-lib.config.json --outDir ./dist && tsc -p ./ts-lib.config.json --outDir ./dist/umd",
     "clear": "rimraf ./esm ./umd"
   },
