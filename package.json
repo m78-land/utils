@@ -21,7 +21,7 @@
     "test": "jest",
     "build": "m78-lib-build build",
     "postbuild": "copyfiles package.json dist && copyfiles -u 1 './esm/**/*' dist && copyfiles './umd/**/*' dist && npm run gd && npm run clear",
-    "publish": "npm publish ./dist --access public",
+    "publish": "cd dist && npm publish --access public",
     "postpublish": "copyfiles dist/package.json ./",
     "gd": "tsc -p ./ts-lib.config.json --outDir ./dist && tsc -p ./ts-lib.config.json --outDir ./dist/umd",
     "clear": "rimraf ./esm ./umd"
