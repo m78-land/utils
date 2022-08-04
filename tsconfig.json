@@ -2,7 +2,26 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@lxjx/utils": ["src/index.js"]
-    }
-  }
+      "@lxjx/util": ["src/index.ts"]
+    },
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "jsx": "react",
+    "strictPropertyInitialization": false,
+    "importHelpers": true,
+    "skipLibCheck": true,
+    "allowJs": false,
+    // 临时启用, 后续全部迁移到ts后关闭
+    "noImplicitAny": false
+  },
+  "include": [
+    "src/**/*"
+  ]
 }
