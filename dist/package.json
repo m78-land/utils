@@ -1,7 +1,7 @@
 {
-  "name": "@lxjx/utils",
-  "version": "1.8.0",
-  "description": "utils for lixianjie",
+  "name": "@m78/utils",
+  "version": "0.0.1",
+  "description": "utils for m78 projects",
   "keywords": [
     "javascript utils"
   ],
@@ -27,7 +27,7 @@
     "clear": "rimraf ./esm ./umd"
   },
   "devDependencies": {
-    "@m78/build-tools": "file:/Users/lixianjie/project/proj/lib-build"
+    "@m78/build-tools": "0.0.1"
   },
   "files": [
     "**"
