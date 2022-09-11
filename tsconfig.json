@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@lxjx/util": ["src/index.ts"]
+      "@m78/YOUR_PROJ": ["src/index.ts"]
     },
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -18,10 +18,14 @@
     "importHelpers": true,
     "skipLibCheck": true,
     "allowJs": false,
-    // 临时启用, 后续全部迁移到ts后关闭
     "noImplicitAny": false
   },
   "include": [
     "src/**/*"
+  ],
+  // 额外添加来确保不会生成多余的声明文件
+  "exclude": [
+    "./src/**/*.test.tsx",
+    "./src/**/*.test.ts",
   ]
 }

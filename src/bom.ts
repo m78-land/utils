@@ -9,7 +9,7 @@ export function setStorage(key: string, val: any) {
 }
 
 /** shortcut of localStorage api, automatic JSON.parse, can only take the value set by setStorage */
-export function getStorage(key) {
+export function getStorage(key: string) {
   const s = localStorage.getItem(`${storagePrefix}${key}`.toUpperCase());
 
   if (!s) return null;

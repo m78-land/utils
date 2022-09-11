@@ -1,11 +1,11 @@
 {
   "name": "@m78/utils",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "utils for m78 projects",
   "keywords": [
     "javascript utils"
   ],
-  "main": "dist/index.js",
+  "main": "index.js",
   "type": "module",
   "typings": "./",
   "repository": "https://github.com/xianjie-li",
@@ -22,7 +22,6 @@
     "build": "m78-lib-build build",
     "postbuild": "copyfiles package.json dist && copyfiles -u 1 './esm/**/*' dist && copyfiles './umd/**/*' dist && npm run gd && npm run clear",
     "pub": "cd dist && npm publish --access public --registry https://registry.npmjs.org",
-    "postpub": "copyfiles dist/package.json ./package.json",
     "gd": "tsc -p ./ts-lib.config.json --outDir ./dist && tsc -p ./ts-lib.config.json --outDir ./dist/umd",
     "clear": "rimraf ./esm ./umd"
   },
