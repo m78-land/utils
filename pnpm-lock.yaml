@@ -1,10 +1,10 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@m78/build-tools': 0.0.4
+  '@m78/build-tools': 0.0.6
 
 devDependencies:
-  '@m78/build-tools': 0.0.4
+  '@m78/build-tools': 0.0.6
 
 packages:
 
@@ -666,8 +666,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
 
-  /@m78/build-tools/0.0.4:
-    resolution: {integrity: sha512-NsL+YAltj4iN6v9zH9i8rhsPValqzOMnr0wbIwgRXuP3mAePr8cVR7uWb4zSVLZTkbY45397hjc5klgtVWEzuA==}
+  /@m78/build-tools/0.0.6:
+    resolution: {integrity: sha512-CmlP7QBOdGgCWlZ4eyAQrBfSawxdQPVz7TsMTXaExanYOqNlotfaQy3SUJOkpCnXc6HN4N64eVEvSk1msWz6rA==}
     hasBin: true
     dependencies:
       '@m78/utils': 0.0.3

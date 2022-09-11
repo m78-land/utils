@@ -26,7 +26,7 @@
     "clear": "rimraf ./esm ./umd"
   },
   "devDependencies": {
-    "@m78/build-tools": "0.0.4"
+    "@m78/build-tools": "0.0.6"
   },
   "files": [
     "**"

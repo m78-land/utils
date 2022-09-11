@@ -1,6 +1,6 @@
 {
   "name": "@m78/utils",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "utils for m78 projects",
   "keywords": [
     "javascript utils"
@@ -14,7 +14,7 @@
     "email": "1073830130@qq.com"
   },
   "license": "MIT",
-  "scripts": {
+  "scripts1": {
     "lint:style": "prettier . --write --no-error-on-unmatched-pattern",
     "lint:script": "eslint . --ext .js,.jsx,.ts,.tsx,.vue --fix",
     "lint": "npm run lint:script && npm run lint:style",
@@ -26,9 +26,17 @@
     "clear": "rimraf ./esm ./umd"
   },
   "devDependencies": {
-    "@m78/build-tools": "0.0.1"
+    "@m78/build-tools": "0.0.6"
   },
   "files": [
     "**"
-  ]
+  ],
+  "scripts": {
+    "lint:prettier": "prettier ./src ./test --write --no-error-on-unmatched-pattern",
+    "lint:script": "eslint ./src ./test --ext .js,.jsx,.ts,.tsx,.vue --fix",
+    "lint": "npm run lint:script && npm run lint:prettier",
+    "test": "jest",
+    "build": "m78-build-tools build",
+    "pub": "cd dist && npm publish --access public --registry https://registry.npmjs.org"
+  }
 }

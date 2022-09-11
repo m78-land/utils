@@ -3,22 +3,20 @@ import { defineConfig } from "@m78/build-tools/defineConfig.js";
 export default defineConfig([
   {
     inpDir: "src",
-    outDir: "esm",
+    outDir: "dist",
     swcConfig: {
       module: {
         type: "es6",
       },
     },
-    ignore: [],
   },
   {
     inpDir: "src",
-    outDir: "umd",
+    outDir: "dist/umd",
     swcConfig: {
       module: {
         type: "umd",
       },
     },
-    ignore: [],
   },
 ]);
